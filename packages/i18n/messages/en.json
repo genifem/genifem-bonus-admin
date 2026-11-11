@@ -1,0 +1,116 @@
+{
+  "common": {
+    "signOut": "Sign out",
+    "language": "Language",
+    "languages": {
+      "en": "English",
+      "es": "Spanish"
+    },
+    "backHome": "Back to the overview",
+    "page": {
+      "label": "Pages",
+      "previous": "Previous",
+      "next": "Next",
+      "range": "{first}–{last} of {total}"
+    }
+  },
+  "brand": {
+    "name": "Crew Stars",
+    "portal": "Owner portal"
+  },
+  "login": {
+    "title": "Sign in",
+    "lead": "Use the email and password for your owner account.",
+    "email": "Email",
+    "password": "Password",
+    "showPassword": "Show password",
+    "submit": "Sign in",
+    "signedOut": "Your session ended. Sign in again to carry on."
+  },
+  "portal": {
+    "nav": {
+      "label": "Owner portal",
+      "groups": {
+        "recognition": "Recognition",
+        "rules": "Rules you set",
+        "admin": "Admin"
+      },
+      "overview": "Overview",
+      "recognize": "Recognize anyone",
+      "people": "Stores & people",
+      "redemptions": "Redemptions",
+      "rewards": "Rewards",
+      "coins": "Coins & limits",
+      "spin": "Spin the wheel",
+      "badges": "Badges & tiers",
+      "awards": "Monthly awards",
+      "roster": "Roster",
+      "audit": "Audit log"
+    },
+    "signedInAs": "Signed in as",
+    "owner": "Owner",
+    "comingSoon": {
+      "title": "Arrives in phase {phase}",
+      "lead": "Sign-in, navigation and this page's frame are ready. The data and controls for it come with that phase."
+    }
+  },
+  "pages": {
+    "overview": {
+      "title": "Hi {name}, here's {month}",
+      "titleNoName": "Here's {month}",
+      "lead": "Recognition across your stores this month. Pick a store to drill in."
+    },
+    "recognize": {
+      "title": "Recognize anyone",
+      "lead": "Owners can recognize directors, supervisors, GMs and crew directly. Filter by role or store instead of scrolling through everyone."
+    },
+    "people": {
+      "title": "Stores & people",
+      "lead": "Everyone in the program, store by store."
+    },
+    "redemptions": {
+      "title": "Redemptions",
+      "lead": "Every reward request across your stores. GMs approve these in their app; you can step in here too."
+    },
+    "rewards": {
+      "title": "Rewards",
+      "lead": "What crew can spend their coins on, what each costs, and which tier or badge unlocks it."
+    },
+    "coins": {
+      "title": "Coins & limits",
+      "lead": "How many coins people can give, who they can give them to, and how much they can redeem."
+    },
+    "spin": {
+      "title": "Spin the wheel",
+      "lead": "When crew earn a spin, how many they can get, and what's on the wheel. Spins are always earned, never bought."
+    },
+    "badges": {
+      "title": "Badges & tiers",
+      "lead": "Tiers go up with coins earned all time and never reset. Badges reward specific things. Both can unlock rewards."
+    },
+    "awards": {
+      "title": "Monthly awards",
+      "lead": "Award categories each store competes in, and the coins each winner gets. Winners are picked from the month's numbers."
+    },
+    "roster": {
+      "title": "Roster",
+      "lead": "The people, stores and areas in the program. Add someone, import a CSV, or end someone's access."
+    },
+    "audit": {
+      "title": "Audit log",
+      "lead": "Every change to rules, rewards, approvals and the roster: who made it, when, and what it was before."
+    }
+  },
+  "notFound": {
+    "title": "We can't find that page",
+    "lead": "The link may be old, or the page may have moved."
+  },
+  "errors": {
+    "credentials_invalid": "That email and password don't match.",
+    "account_locked": "Too many wrong tries. Wait 15 minutes, then try again.",
+    "account_inactive": "This account is switched off. Ask another owner to turn it back on.",
+    "rate_limited": "Too many attempts from here. Wait a few minutes and try again.",
+    "network": "Can't reach Crew Stars right now. Check your connection and try again.",
+    "generic": "Something went wrong. Please try again."
+  }
+}

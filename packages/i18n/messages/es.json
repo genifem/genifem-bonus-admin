@@ -1,0 +1,116 @@
+{
+  "common": {
+    "signOut": "Cerrar sesión",
+    "language": "Idioma",
+    "languages": {
+      "en": "Inglés",
+      "es": "Español"
+    },
+    "backHome": "Volver al resumen",
+    "page": {
+      "label": "Páginas",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "range": "{first}–{last} de {total}"
+    }
+  },
+  "brand": {
+    "name": "Crew Stars",
+    "portal": "Portal de dueños"
+  },
+  "login": {
+    "title": "Inicia sesión",
+    "lead": "Usa el correo y la contraseña de tu cuenta de dueño.",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "showPassword": "Mostrar contraseña",
+    "submit": "Iniciar sesión",
+    "signedOut": "Tu sesión terminó. Vuelve a iniciar sesión para continuar."
+  },
+  "portal": {
+    "nav": {
+      "label": "Portal de dueños",
+      "groups": {
+        "recognition": "Reconocimiento",
+        "rules": "Reglas que tú defines",
+        "admin": "Administración"
+      },
+      "overview": "Resumen",
+      "recognize": "Reconocer a alguien",
+      "people": "Tiendas y personas",
+      "redemptions": "Canjes",
+      "rewards": "Recompensas",
+      "coins": "Monedas y límites",
+      "spin": "Gira la ruleta",
+      "badges": "Insignias y niveles",
+      "awards": "Premios del mes",
+      "roster": "Personal",
+      "audit": "Registro de auditoría"
+    },
+    "signedInAs": "Sesión iniciada como",
+    "owner": "Dueño",
+    "comingSoon": {
+      "title": "Llega en la fase {phase}",
+      "lead": "El inicio de sesión, la navegación y el marco de esta página ya están listos. Los datos y los controles llegan con esa fase."
+    }
+  },
+  "pages": {
+    "overview": {
+      "title": "Hola, {name}. Así va {month}",
+      "titleNoName": "Así va {month}",
+      "lead": "El reconocimiento en todas tus tiendas este mes. Elige una tienda para ver el detalle."
+    },
+    "recognize": {
+      "title": "Reconocer a alguien",
+      "lead": "Los dueños pueden reconocer directamente a directores, supervisores, gerentes generales y al equipo. Filtra por puesto o por tienda en lugar de recorrer la lista completa."
+    },
+    "people": {
+      "title": "Tiendas y personas",
+      "lead": "Todas las personas del programa, tienda por tienda."
+    },
+    "redemptions": {
+      "title": "Canjes",
+      "lead": "Todas las solicitudes de recompensa de tus tiendas. Los gerentes generales las aprueban en su app; tú también puedes intervenir aquí."
+    },
+    "rewards": {
+      "title": "Recompensas",
+      "lead": "En qué puede gastar el equipo sus monedas, cuánto cuesta cada recompensa y qué nivel o insignia la desbloquea."
+    },
+    "coins": {
+      "title": "Monedas y límites",
+      "lead": "Cuántas monedas puede dar cada persona, a quién puede dárselas y cuánto puede canjear."
+    },
+    "spin": {
+      "title": "Gira la ruleta",
+      "lead": "Cuándo gana el equipo un giro, cuántos puede conseguir y qué hay en la ruleta. Los giros siempre se ganan, nunca se compran."
+    },
+    "badges": {
+      "title": "Insignias y niveles",
+      "lead": "Los niveles suben con las monedas ganadas desde siempre y nunca se reinician. Las insignias premian logros concretos. Ambos pueden desbloquear recompensas."
+    },
+    "awards": {
+      "title": "Premios del mes",
+      "lead": "Las categorías de premios en las que compite cada tienda y las monedas que recibe cada ganador. Los ganadores se eligen con los números del mes."
+    },
+    "roster": {
+      "title": "Personal",
+      "lead": "Las personas, tiendas y áreas del programa. Agrega a alguien, importa un CSV o retira el acceso a una persona."
+    },
+    "audit": {
+      "title": "Registro de auditoría",
+      "lead": "Cada cambio en reglas, recompensas, aprobaciones y personal: quién lo hizo, cuándo y cómo estaba antes."
+    }
+  },
+  "notFound": {
+    "title": "No encontramos esa página",
+    "lead": "Puede que el enlace sea antiguo o que la página se haya movido."
+  },
+  "errors": {
+    "credentials_invalid": "Ese correo y esa contraseña no coinciden.",
+    "account_locked": "Demasiados intentos fallidos. Espera 15 minutos y vuelve a intentarlo.",
+    "account_inactive": "Esta cuenta está desactivada. Pide a otro dueño que la vuelva a activar.",
+    "rate_limited": "Demasiados intentos desde aquí. Espera unos minutos y vuelve a intentarlo.",
+    "network": "No podemos conectar con Crew Stars en este momento. Revisa tu conexión y vuelve a intentarlo.",
+    "generic": "Algo salió mal. Vuelve a intentarlo."
+  }
+}

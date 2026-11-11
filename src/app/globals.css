@@ -1,0 +1,124 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* The only theme values that are not generated: the font variable is injected by next/font at
+   runtime, so it has no place in the shared token object. Shadows, durations and easings come
+   from tokens.css. */
+@theme inline {
+  --font-sans: var(--font-nunito), "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font-nunito), "Avenir Next", "Segoe UI", system-ui, sans-serif;
+}
+
+/* The prototype's one layout switch: at 860px the owner portal's rail stands up as a column;
+   below it, it folds into a horizontal strip (`rail:` in class names). */
+@theme {
+  --breakpoint-rail: 53.75rem;
+}
+
+/* Everything below the utilities is layered. An unlayered rule beats every Tailwind utility
+   whatever its specificity, which is how `outline-none` on a field would lose to the global
+   focus ring and draw two rings. */
+@layer base {
+  html {
+    /* Room for the scrollbar is always kept, so a page does not jump sideways when moving
+       between a short route and a long one. */
+    scrollbar-gutter: stable;
+  }
+
+  /* A modal <dialog> (side panels, confirmations) does not stop the page behind it scrolling
+     on its own. */
+  html:has(dialog:modal) {
+    overflow: hidden;
+  }
+
+  /* A dialog is drawn above the page but still inherits text styles from where it sits in the
+     markup; each one starts from the page's own text instead. A popover panel keeps the size it
+     inherits (menus set their own) but not the alignment or the no-wrap. */
+  dialog {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.45;
+    font-variant-numeric: normal;
+  }
+
+  :is(dialog, [popover]) {
+    text-align: start;
+    white-space: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    font-style: normal;
+  }
+
+  /* The prototype's base: Nunito at 14px on cream, ink text. */
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  h1 {
+    letter-spacing: var(--tracking-tight);
+  }
+
+  /* Numbers in tables line up only if the figures are tabular. */
+  table :is(td, th) {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Visible keyboard focus everywhere (NF-11): one ring, in the action red, which holds 3:1
+     on cream and on white. Text fields opt out and draw a single edge instead (ui/focus.ts),
+     so a field never shows a ring and a highlighted border at once. */
+  :focus-visible {
+    outline: 3px solid var(--brand-ink);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Display numbers, tight. A tracking utility beside it still wins. */
+  .font-display {
+    letter-spacing: var(--tracking-tight);
+  }
+
+  /* Eyebrow: small section labels (the prototype's `.lbl`: 10.5px, 900, +0.9px, uppercase).
+     Named `eyebrow` because Tailwind's own `overline` utility draws a line over the text. */
+  .eyebrow {
+    font-size: 0.65625rem;
+    line-height: 1rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}
+
+/* A scroll box whose bar is not drawn: the rail's link strip on a phone. It still scrolls by
+   wheel, touch and keyboard; only the bar is hidden. */
+@utility scrollbar-hidden {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,8 @@
+# The repository root is the web app; packages/* are the libraries it shares with
+# bonus-app (the Crew Stars mobile app), kept in step by hand across the two repositories.
+packages:
+  - packages/*
+
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver
