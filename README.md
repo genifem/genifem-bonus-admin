@@ -47,11 +47,18 @@ pnpm typecheck && pnpm lint && pnpm test && pnpm build
 pnpm tokens       # regenerate src/app/tokens.css after editing packages/shared/src/tokens.ts
 pnpm check:messages   # every translation key the code uses exists in en.json
 pnpm gen:api      # regenerate the API client from ../bonus-backend (or CREWSTARS_BACKEND)
-pnpm e2e          # Playwright: starts the API (db crew-stars-e2e) and the portal on :3100
+pnpm e2e          # Playwright: seeds and starts the API (db crew-stars-e2e) and the portal on :3100
 ```
 
 `pnpm test` checks that `tokens.css` is current, that every message key exists, and runs the
-package tests (token contrast, catalog parity between `en` and `es`).
+unit tests: the portal's own helpers (`src/**/*.test.ts`: URL filters, request bodies, error
+mapping, token handling) and the packages' (token contrast, catalog parity between `en` and
+`es`).
+
+`pnpm e2e` needs a MongoDB replica set on this machine (`CS_MONGODB_URI` pointing at
+localhost): it creates and seeds the `crew-stars-e2e` database, and it refuses to start when
+the API's MongoDB is remote, because on a shared cluster those collections count against the
+cluster's cap. `E2E_ALLOW_REMOTE_DB=1` overrides, for a cluster that is yours alone.
 
 `pnpm gen:api` runs `python -m uv run python -m app.scripts.export_openapi` inside
 `../bonus-backend`; without that checkout it regenerates from the committed `openapi.json`.

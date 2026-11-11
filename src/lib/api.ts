@@ -9,7 +9,9 @@ import { SIGNED_OUT } from "@/lib/session-paths";
  *
  * Errors carry the API's stable `code`, which the UI translates (`errors.<code>`); the
  * server's English message is a developer fallback only. `details` is the API's structured
- * context (field errors on a 422), for the screens that show it.
+ * context, for the screens that show it: `{field}` on a 422, `{fields: {path: message}}` when
+ * the schema refused the request (`validation_failed`), `{name}` on a 409, `{until,
+ * retry_after_s}` on a lockout. lib/api-errors.ts turns it into messages beside the fields.
  *
  * A 401 on anything but an /auth/ call means the session is over - the proxy has already
  * tried a refresh and dropped the cookies - so the owner is sent to sign in again, whatever
@@ -72,10 +74,10 @@ async function call<T>(method: string, path: string, body?: unknown, options?: C
   if (!response.ok) {
     const error = (payload as { error?: { code?: string; message?: string; details?: unknown } } | null)
       ?.error;
-    const code = error?.code ?? `http_${response.status}`;
     if (response.status === 401 && !path.startsWith("/auth/") && typeof window !== "undefined") {
       window.location.assign(SIGNED_OUT);
     }
+    const code = error?.code ?? `http_${response.status}`;
     throw new ApiCallError(response.status, code, error?.message ?? response.statusText, error?.details);
   }
   return payload as T;

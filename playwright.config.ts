@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-import { backendPath, E2E_DB } from "./e2e/global-setup";
+import { assertLocalDatabase, backendPath, E2E_DB, E2E_TENANT } from "./e2e/global-setup";
 
 /**
  * Browser tests run against a disposable database (crew-stars-e2e), never the dev one, and
@@ -9,9 +9,13 @@ import { backendPath, E2E_DB } from "./e2e/global-setup";
  * localhost and names its operator upstream from CREWSTARS_TENANT. Phone and desktop
  * projects cover both layouts of the rail (NF-01).
  */
+// Before anything starts: the API below would otherwise create the e2e database wherever its
+// .env points, a shared cluster included.
+assertLocalDatabase();
+
 const API_PORT = 8001;
 const WEB_PORT = 3100;
-const TENANT = process.env.CREWSTARS_TENANT ?? "e2e";
+const TENANT = E2E_TENANT;
 
 export default defineConfig({
   testDir: "./e2e",

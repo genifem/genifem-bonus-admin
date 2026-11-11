@@ -52,13 +52,29 @@ export function clearSessionCookies(response: NextResponse): void {
   }
 }
 
-/** Pull tokens out of an auth response body, whatever shape it came in. */
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+/**
+ * Where an auth response keeps its tokens, whatever shape it came in:
+ *   TokenOut                   { access_token, refresh_token, user, ... }       (refresh)
+ *   OwnerAuthOut               { step, tokens: TokenOut | null, mfa_token }      (owner sign-in,
+ *                                                                                 MFA verify)
+ *   MfaEnabledOut              { recovery_codes, auth: OwnerAuthOut }            (MFA confirm)
+ * Returns the object that holds (or would hold) access_token, so the caller can take them out
+ * of the very body that goes on to the browser.
+ */
+function tokenHolder(body: unknown): Record<string, unknown> | null {
+  if (!isRecord(body)) return null;
+  const step = isRecord(body.auth) ? body.auth : body;
+  return isRecord(step.tokens) ? step.tokens : step;
+}
+
+/** Pull tokens out of an auth response body, and strip them from it: the body is what the
+ *  browser receives next, and page scripts never see a token. */
 export function takeTokens(body: unknown): IssuedTokens | null {
-  if (typeof body !== "object" || body === null) return null;
-  const record = body as Record<string, unknown>;
-  const holder = (
-    typeof record.tokens === "object" && record.tokens !== null ? record.tokens : record
-  ) as Record<string, unknown>;
+  const holder = tokenHolder(body);
+  if (!holder) return null;
   if (typeof holder.access_token !== "string" || typeof holder.expires_in !== "number") return null;
   const tokens: IssuedTokens = {
     access_token: holder.access_token,
@@ -74,13 +90,8 @@ export function takeTokens(body: unknown): IssuedTokens | null {
 /** The language saved on the owner's record wins once they sign in (NF-02). Readable by the
  *  language switcher, which writes the same cookie. */
 export function takeLocale(body: unknown): string | null {
-  if (typeof body !== "object" || body === null) return null;
-  const record = body as Record<string, unknown>;
-  const holder = (
-    typeof record.tokens === "object" && record.tokens !== null ? record.tokens : record
-  ) as Record<string, unknown>;
-  const user = holder.user as { language?: unknown } | undefined;
-  return typeof user?.language === "string" ? user.language : null;
+  const user = tokenHolder(body)?.user;
+  return isRecord(user) && typeof user.language === "string" ? user.language : null;
 }
 
 /** API errors after which the session cannot continue and its cookies go, with no refresh. */

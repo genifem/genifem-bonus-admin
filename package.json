@@ -10,7 +10,7 @@
     "gen:api": "pnpm --filter @crewstars/api-client gen",
     "lint": "eslint",
     "start": "next start",
-    "test": "node scripts/tokens.mjs --check && node scripts/check-messages.mjs && pnpm --filter \"./packages/*\" --if-present test",
+    "test": "node scripts/tokens.mjs --check && node scripts/check-messages.mjs && vitest run && pnpm --filter \"./packages/*\" --if-present test",
     "typecheck": "next typegen && tsc --noEmit",
     "tokens": "node scripts/tokens.mjs",
     "tokens:check": "node scripts/tokens.mjs --check"
@@ -35,7 +35,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
     "tailwindcss": "^4",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.1"
   },
   "packageManager": "pnpm@10.28.1",
   "engines": {

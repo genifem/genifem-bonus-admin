@@ -1,6 +1,7 @@
+import type { Schemas } from "@crewstars/api-client";
 import { cache } from "react";
 
-import { serverGetJson } from "@/lib/server-api";
+import { serverApi } from "@/lib/server-api";
 
 /** The signed-in owner, as much as the portal chrome needs of them. */
 export interface Owner {
@@ -10,25 +11,27 @@ export interface Owner {
   firstName: string;
 }
 
-const text = (value: unknown): string => (typeof value === "string" ? value.trim() : "");
+/** The chrome's view of GET /me (MeOut): the full name, and the first name the API works out,
+ *  or the name's first word when it sends none. Null when there is no name to show. */
+export function ownerFrom(me: Pick<Schemas["MeOut"], "name" | "first_name">): Owner | null {
+  const name = me.name.trim().replace(/\s+/g, " ");
+  if (!name) return null;
+  const first = me.first_name.trim();
+  return { name, firstName: first || name.split(" ")[0]! };
+}
 
 /**
  * Whoever is signed in (GET /api/v1/me), fetched once per request so the sidebar and the page
- * share one call. The chrome decides nothing with it: when the endpoint is not there yet (it
- * arrives in P1) or the call fails, this is null and the portal draws without a name.
- *
- * Read tolerantly, because the response is not in the committed schema yet: `first_name` /
- * `last_name` as the API's other people records use, or a single `name`.
+ * share one call. The chrome decides nothing with it: when the call fails for any reason this
+ * is null and the portal draws without a name. src/proxy.ts and the API are what keep a
+ * signed-out browser out.
  */
 export const loadOwner = cache(async (): Promise<Owner | null> => {
-  const body = await serverGetJson("/api/v1/me");
-  if (typeof body !== "object" || body === null) return null;
-  const record = body as Record<string, unknown>;
-  const holder = (
-    typeof record.user === "object" && record.user !== null ? record.user : record
-  ) as Record<string, unknown>;
-  const first = text(holder.first_name);
-  const full = [first, text(holder.last_name)].filter(Boolean).join(" ") || text(holder.name);
-  if (!full) return null;
-  return { name: full, firstName: first || full.split(/\s+/)[0]! };
+  try {
+    const api = await serverApi();
+    const { data } = await api.GET("/api/v1/me");
+    return data ? ownerFrom(data) : null;
+  } catch {
+    return null;
+  }
 });

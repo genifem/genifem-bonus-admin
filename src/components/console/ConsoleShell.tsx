@@ -13,7 +13,7 @@ import { PORTAL_NAV } from "./nav";
  * with the grouped destinations, and the signed-in owner with the way out at its foot (OP-21).
  *
  * The owner's name comes from GET /api/v1/me. The chrome decides nothing with it, so when the
- * call fails (the endpoint arrives in P1) the rail is drawn without a name rather than not at
+ * call fails the rail is drawn without a name rather than not at
  * all; src/proxy.ts and the API are what keep a signed-out browser out.
  */
 export async function ConsoleShell({ children }: { children: React.ReactNode }) {

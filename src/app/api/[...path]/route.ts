@@ -48,9 +48,17 @@ const DROP_RESPONSE_HEADERS = new Set([
 const SAFE_METHODS = new Set(["GET", "HEAD"]);
 
 /** The calls whose responses carry tokens to keep in cookies (and strip from the body). Any
- *  new endpoint that issues tokens - the owner MFA step, if D8 is switched on - belongs here,
- *  or its tokens would reach page scripts. */
-const TOKEN_CALLS = new Set(["auth/owner/login", "auth/refresh", "auth/logout"]);
+ *  new endpoint that issues tokens belongs here, or its tokens would reach page scripts. The
+ *  owner's second factor (plan D8) finishes a sign-in in mfa/verify, or in mfa/confirm the
+ *  first time, where the tokens sit under `auth.tokens` beside the recovery codes
+ *  (lib/session.ts takeTokens finds them there). */
+const TOKEN_CALLS = new Set([
+  "auth/owner/login",
+  "auth/owner/mfa/verify",
+  "auth/owner/mfa/confirm",
+  "auth/refresh",
+  "auth/logout",
+]);
 /** The calls that need the refresh cookie as their body. */
 const REFRESH_BODY_PATHS = new Set(["auth/refresh", "auth/logout"]);
 
