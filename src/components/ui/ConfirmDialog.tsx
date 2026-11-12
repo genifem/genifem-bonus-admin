@@ -5,6 +5,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Alert } from "./Alert";
 import { Button } from "./Button";
 import { cx } from "./cx";
+import { restoreFocus } from "./focus";
 import { dialogMotion, afterExit } from "./motion";
 
 /**
@@ -49,6 +50,7 @@ export function ConfirmDialog({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const done = useRef(false);
+  const opener = useRef<HTMLElement | null>(null);
   const id = useId();
   const [busy, setBusy] = useState(false);
 
@@ -57,6 +59,7 @@ export function ConfirmDialog({
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog || dialog.open) return;
+    opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     dialog.showModal();
     focusCancel();
   }, []);
@@ -102,6 +105,8 @@ export function ConfirmDialog({
             heading.tabIndex = -1;
             heading.focus();
           }
+        } else {
+          restoreFocus(opener.current, ref.current);
         }
         // Unmounting at once would cut the fade short, so the parent hears after it.
         const confirmed = done.current;

@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { useEffect, useId, useRef } from "react";
 
 import { cx } from "./cx";
+import { restoreFocus } from "./focus";
 import { IconButton } from "./IconButton";
 import { dialogMotion } from "./motion";
 
@@ -49,6 +50,7 @@ export function FormDialog({
   titleHidden?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const opener = useRef<HTMLElement | null>(null);
   const titleId = useId();
   const descriptionId = description ? `${titleId}-description` : undefined;
 
@@ -57,7 +59,10 @@ export function FormDialog({
     if (!panel) return;
     // showModal() is the only way to get the focus trap and the inert background; the `open`
     // attribute alone gives a non-modal dialog that does neither.
-    if (open && !panel.open) panel.showModal();
+    if (open && !panel.open) {
+      opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      panel.showModal();
+    }
     if (!open && panel.open) panel.close();
   }, [open]);
 
@@ -67,7 +72,10 @@ export function FormDialog({
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
       // `close` covers Escape and the form-method=dialog path; both must tell the parent.
-      onClose={onClose}
+      onClose={() => {
+        restoreFocus(opener.current, ref.current);
+        onClose();
+      }}
       onCancel={(event) => {
         if (busy) event.preventDefault();
       }}

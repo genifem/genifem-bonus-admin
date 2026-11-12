@@ -36,3 +36,15 @@ export const fieldInvalidWithin =
 /** Inside a box that scrolls sideways (a table region), a ring drawn outside a link is
  *  clipped by the box. This draws the same single ring inside the element instead. */
 export const ringInside = "focus-visible:outline-offset-[-3px]";
+
+/**
+ * Puts focus back on what opened a dialog once it has closed (NF-11). Browsers do this for a
+ * modal <dialog> themselves; this covers one that does not, which leaves focus on the page's
+ * body and a keyboard user back at the top. It does nothing when focus has already gone
+ * somewhere on purpose, or when the opener left with what it opened (a deleted row).
+ */
+export function restoreFocus(opener: HTMLElement | null, dialog: HTMLElement | null): void {
+  const now = document.activeElement;
+  const lost = now === null || now === document.body || (dialog !== null && dialog.contains(now));
+  if (lost && opener?.isConnected) opener.focus();
+}

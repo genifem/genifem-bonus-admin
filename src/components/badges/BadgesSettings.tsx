@@ -261,7 +261,6 @@ export function BadgesPanel({
                   value={badge.tag ?? "guest"}
                   label={t("rules.tag.tagLabel", { badge: name(badge) })}
                   options={tagOptions}
-                  width="sm"
                 />
               </div>
             ) : null}

@@ -78,11 +78,7 @@
       "audit": "Audit log"
     },
     "signedInAs": "Signed in as",
-    "owner": "Owner",
-    "comingSoon": {
-      "title": "Arrives in phase {phase}",
-      "lead": "Sign-in, navigation and this page's frame are ready. The data and controls for it come with that phase."
-    }
+    "owner": "Owner"
   },
   "pages": {
     "overview": {
@@ -272,6 +268,7 @@
       "edit": "Edit",
       "terminate": "Terminate",
       "reactivate": "Reactivate",
+      "history": "History",
       "emptyTitle": "No one is on the roster yet",
       "emptyLead": "Add people one at a time, or import everyone at once from a CSV.",
       "importInstead": "Import a CSV",
@@ -386,11 +383,38 @@
       "seePeople": "See the people",
       "previewHeading": "What this file would do",
       "rejected": "This file can't be imported: {reason}",
+      "rejectedReasons": {
+        "not_csv": "it isn't a CSV file. Save it as CSV from Excel or Google Sheets and choose it again.",
+        "no_header": "it has no header row. The first line must name the columns.",
+        "forbidden_columns": "remove these columns: {columns}. Crew Stars never keeps them.",
+        "missing_columns": "these required columns are missing: {columns}.",
+        "too_many_rows": "it has more than {max} rows. Split it into smaller files."
+      },
       "counts": "{lines, plural, one {# line} other {# lines}} read: {create} to add, {update} to update, {error} with problems.",
       "skipped": "Lines with problems are skipped. Fix them in the file and import it again to bring them in.",
       "caption": "Lines in the file",
       "truncated": "Showing {shown} of {total} lines. The counts above cover the whole file.",
       "noProblems": "None",
+      "problems": {
+        "eid_required": "The Employee ID (eid) is missing.",
+        "eid_invalid": "Employee ID “{value}” should be 3 to 20 letters or digits.",
+        "eid_repeated": "This Employee ID is on another line of the file too.",
+        "name_required": "The name is missing.",
+        "role_required": "The role is missing.",
+        "role_invalid": "Role “{value}” isn't one of crew, shift, gm, supervisor or director.",
+        "store_unknown": "There's no store number “{value}” on the roster.",
+        "store_unknownPlain": "That store isn't on the roster.",
+        "area_unknown": "There's no area called “{value}” on the roster.",
+        "area_unknownPlain": "That area isn't on the roster.",
+        "phone_invalid": "Phone “{value}” doesn't look like a phone number.",
+        "hire_date_invalid": "Hire date “{value}” isn't a date. Use YYYY-MM-DD.",
+        "language_invalid": "Language “{value}” should be en or es.",
+        "store_required": "Crew, shift managers and GMs need a store number.",
+        "stores_required": "Supervisors need the stores they cover (numbers separated by ;).",
+        "area_required": "Directors need an area name.",
+        "gm_twice": "{other} is also the GM of that store in this file.",
+        "store_has_gm": "That store already has a GM: {name}."
+      },
       "columns": {
         "line": "Line",
         "action": "Will",
@@ -434,6 +458,7 @@
       "searchPlaceholder": "Name",
       "count": "{count, plural, =0 {No one to show} one {# person} other {# people}}",
       "listLabel": "People you can recognize",
+      "stores": "Stores {list}",
       "noMatch": "No one matches these filters.",
       "notFound": "That person isn't on the roster any more, so they can't be recognized.",
       "pick": "Pick someone from the list",
@@ -1053,6 +1078,138 @@
       "done": "{month} winners are announced. Next month's are picked automatically when it ends.",
       "doneWhen": "{month} winners were announced on {when}. Next month's are picked automatically when it ends.",
       "doneBy": "{by} announced {month} winners on {when}. Next month's are picked automatically when it ends."
+    }
+  },
+  "audit": {
+    "loadError": "The audit log couldn't be loaded.",
+    "retry": "Try again",
+    "loading": "Loading the audit log…",
+    "heading": "Changes, newest first",
+    "listLabel": "Audit log entries, newest first",
+    "filters": {
+      "label": "Filter by kind of change",
+      "all": "Everything"
+    },
+    "kinds": {
+      "settings": "Settings",
+      "rewards": "Rewards",
+      "requests": "Reward requests",
+      "recognition": "Shout-outs",
+      "roster": "Roster",
+      "awards": "Monthly awards",
+      "sign_in": "Sign-in"
+    },
+    "history": {
+      "of": "Showing the history of {name}.",
+      "ofUnknown": "Showing the history of one person or record.",
+      "everyone": "Show everyone's changes",
+      "link": "History",
+      "linkFor": "of {name}"
+    },
+    "more": "Load more",
+    "loaded": "{count, plural, one {# more entry loaded.} other {# more entries loaded.}}",
+    "moreError": "More entries couldn't be loaded.",
+    "end": "That's the start of the log.",
+    "changes": {
+      "show": "What changed",
+      "showDetails": "Details",
+      "was": "Before:",
+      "now": "After:"
+    },
+    "empty": {
+      "all": "Nothing in the audit log yet",
+      "allLead": "Changes to rules, rewards, approvals and the roster show here as they're made, with who made them and when.",
+      "kind": "Nothing of this kind yet",
+      "kindLead": "Pick another kind of change, or show everything.",
+      "target": "Nothing recorded for this yet",
+      "targetLead": "Changes made from now on show here.",
+      "showAll": "Show everything"
+    },
+    "actor": {
+      "system": "Crew Stars",
+      "owner": "An owner",
+      "person": "Someone"
+    },
+    "unknown": {
+      "person": "someone",
+      "reward": "a reward",
+      "store": "a store",
+      "area": "an area",
+      "award": "An award",
+      "prize": "A prize"
+    },
+    "sentences": {
+      "settings": "<b>{actor}</b> changed {sections}",
+      "settingsOther": "<b>{actor}</b> changed the settings",
+      "rewardCreate": "<b>{actor}</b> added the reward {reward}",
+      "rewardUpdate": "<b>{actor}</b> edited the reward {reward}",
+      "rewardHide": "<b>{actor}</b> hid {reward} from the app",
+      "rewardShow": "<b>{actor}</b> showed {reward} in the app again",
+      "rewardDelete": "<b>{actor}</b> deleted the reward {reward}",
+      "requestApprove": "<b>{actor}</b> approved {reward}",
+      "requestApproveFor": "<b>{actor}</b> approved {reward} for {person}",
+      "requestDecline": "<b>{actor}</b> declined {reward}",
+      "requestDeclineFor": "<b>{actor}</b> declined {reward} for {person}",
+      "requestCollect": "<b>{actor}</b> marked {reward} collected",
+      "requestCollectFor": "<b>{actor}</b> marked {reward} collected for {person}",
+      "shoutoutHide": "<b>{actor}</b> hid a shout-out",
+      "shoutoutHideAt": "<b>{actor}</b> hid a shout-out at {store}",
+      "ownerSend": "<b>{actor}</b> recognized {person} with {coins, plural, one {{shown} coin} other {{shown} coins}} for {tag}",
+      "ownerSendPlain": "<b>{actor}</b> recognized {person}",
+      "personCreate": "<b>{actor}</b> added {person} to the roster",
+      "personUpdate": "<b>{actor}</b> edited {person}",
+      "terminate": "<b>{actor}</b> terminated {person}",
+      "reactivate": "<b>{actor}</b> reactivated {person}",
+      "storeCreate": "<b>{actor}</b> added store {store}",
+      "storeUpdate": "<b>{actor}</b> edited store {store}",
+      "areaCreate": "<b>{actor}</b> added the area {area}",
+      "areaUpdate": "<b>{actor}</b> edited the area {area}",
+      "import": "<b>{actor}</b> imported people from a CSV",
+      "announce": "<b>{actor}</b> announced the {month} winners at {store}",
+      "announcePlain": "<b>{actor}</b> announced the winners at {store}",
+      "setupComplete": "<b>{actor}</b> set up their account",
+      "passwordReset": "<b>{actor}</b> reset their password",
+      "mfaEnable": "<b>{actor}</b> turned on two-step sign-in",
+      "mfaRecovery": "<b>{actor}</b> signed in with a recovery code",
+      "lockout": "<b>{person}</b> was locked out after too many wrong passwords",
+      "codeLockout": "<b>{person}</b> was locked out after too many wrong codes",
+      "refreshReuse": "Crew Stars signed <b>{person}</b> out everywhere: an old sign-in was used again",
+      "other": "<b>{actor}</b>: {action}"
+    },
+    "fields": {
+      "of": "{name}: {field}",
+      "amounts": "{role}: shout-out sizes",
+      "nameEs": "Spanish name",
+      "labelEs": "Spanish label",
+      "descriptionEs": "Spanish description",
+      "count": "How many",
+      "badge": "Badge",
+      "tag": "Tag",
+      "unlockId": "Tier or badge",
+      "prizeAdded": "Prize added: {name}",
+      "prizeRemoved": "Prize removed: {name}",
+      "winners": "Winners",
+      "cancelledRequests": "Reward requests cancelled",
+      "importCreated": "People added",
+      "importUpdated": "People updated",
+      "importFailed": "Lines skipped",
+      "wrongTries": "Wrong tries in a row",
+      "lockedFor": "Locked for",
+      "recoveryLeft": "Recovery codes left",
+      "reason": "Reason"
+    },
+    "values": {
+      "notSet": "Not set",
+      "on": "On",
+      "off": "Off",
+      "yes": "Yes",
+      "no": "No",
+      "prize": "{kind} · chance weight {weight}",
+      "prizeAmount": "{kind} {amount} · chance weight {weight}",
+      "minutes": "{count, plural, one {# minute} other {# minutes}}",
+      "winner": "{coins, plural, one {{shown} coin} other {{shown} coins}}",
+      "winnerNamed": "{name}, {coins, plural, one {{shown} coin} other {{shown} coins}}",
+      "noWinners": "Nobody qualified this month"
     }
   }
 }

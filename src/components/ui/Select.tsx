@@ -291,7 +291,10 @@ export function Select({
         )}
       >
         {icon}
-        <span className={cx("min-w-0 flex-1 truncate", (!selected || selected.value === "") && "text-muted")}>
+        <span
+          title={selected?.label || undefined}
+          className={cx("min-w-0 flex-1 truncate", (!selected || selected.value === "") && "text-muted")}
+        >
           {selected?.label ?? ""}
         </span>
         <ChevronDown
@@ -343,7 +346,8 @@ export function Select({
               onPointerMove={() => (choice.disabled ? undefined : setActive(index))}
               onClick={() => choose(index)}
               className={cx(
-                "flex min-h-10 cursor-pointer items-center gap-2.5 rounded-md px-2.5 text-sm",
+                // 44px rows: a finger picks one as surely as a mouse (NF-11).
+                "flex min-h-11 cursor-pointer items-center gap-2.5 rounded-md px-2.5 text-sm",
                 index === active && !choice.disabled && "bg-surface",
                 isSelected ? "font-bold text-brand-strong" : "font-semibold",
                 choice.disabled && "cursor-not-allowed text-muted",

@@ -78,11 +78,7 @@
       "audit": "Registro de auditoría"
     },
     "signedInAs": "Sesión iniciada como",
-    "owner": "Dueño",
-    "comingSoon": {
-      "title": "Llega en la fase {phase}",
-      "lead": "El inicio de sesión, la navegación y el marco de esta página ya están listos. Los datos y los controles llegan con esa fase."
-    }
+    "owner": "Dueño"
   },
   "pages": {
     "overview": {
@@ -152,9 +148,9 @@
     "validation_failed": "Hay datos que no están bien. Revisa el formulario y vuelve a intentarlo.",
     "not_found": "Ese registro ya no existe. Vuelve a cargar la página para ver lo más reciente.",
     "eid_taken": "Alguien del personal ya tiene ese ID de empleado.",
-    "store_has_gm": "{name} ya es el gerente general de esa tienda. Cámbialo primero o elige otra tienda.",
+    "store_has_gm": "{name} ya es gerente general de esa tienda. Primero asígnale otra tienda, o elige otra.",
     "store_has_supervisor": "{name} ya supervisa una de esas tiendas. Cada tienda tiene un solo supervisor.",
-    "area_has_director": "{name} ya es el director de esa área.",
+    "area_has_director": "{name} ya dirige esa área.",
     "store_required": "Elige su tienda.",
     "stores_required": "Elige al menos una tienda que supervise.",
     "area_required": "Elige su área.",
@@ -184,7 +180,7 @@
   },
   "roster": {
     "loadError": "No pudimos cargar el personal.",
-    "retry": "Reintentar",
+    "retry": "Intentar de nuevo",
     "someone": "Alguien",
     "tabs": {
       "label": "Secciones del personal",
@@ -210,7 +206,7 @@
       }
     },
     "roles": {
-      "crew": "Crew",
+      "crew": "Equipo",
       "shift": "Gerente de turno",
       "gm": "Gerente general",
       "supervisor": "Supervisor",
@@ -249,8 +245,8 @@
       "add": "Agregar persona",
       "added": "{name} ya está en el personal.",
       "saved": "Se guardaron los cambios de {name}.",
-      "terminated": "{name} quedó dado de baja.",
-      "reactivated": "{name} está activo otra vez.",
+      "terminated": "Se dio de baja a {name}.",
+      "reactivated": "Se reactivó a {name}.",
       "columns": {
         "name": "Nombre",
         "eid": "ID de empleado",
@@ -267,11 +263,12 @@
       "setupNotYet": "Todavía no",
       "noPhone": "Ninguno",
       "active": "Activo",
-      "terminatedBadge": "Dado de baja",
+      "terminatedBadge": "De baja",
       "locked": "Bloqueado",
       "edit": "Editar",
       "terminate": "Dar de baja",
       "reactivate": "Reactivar",
+      "history": "Historial",
       "emptyTitle": "Todavía no hay nadie en el personal",
       "emptyLead": "Agrega a las personas una por una o impórtalas todas a la vez desde un CSV.",
       "importInstead": "Importar un CSV",
@@ -279,7 +276,7 @@
       "clearFilters": "Quitar los filtros",
       "terminateTitle": "¿Dar de baja a {name}?",
       "terminateBody": "{name} ya no podrá iniciar sesión en Crew Stars, y cualquier sesión que tenga abierta termina ahora.",
-      "terminateKeep": "Sus monedas y su historial se conservan. Puedes reactivarlo más adelante.",
+      "terminateKeep": "Sus monedas y su historial se conservan. Puedes reactivar su acceso más adelante.",
       "reactivateTitle": "¿Reactivar a {name}?",
       "reactivateBody": "{name} podrá volver a iniciar sesión con la contraseña que tenía. Sus monedas y su historial siguen como los dejó."
     },
@@ -373,7 +370,7 @@
       "heading": "Importar personas desde un CSV",
       "lead": "Exporta el personal desde la nómina o Recursos Humanos, revisa lo que cambiaría y luego impórtalo. Nada cambia hasta que presiones Importar.",
       "ruleColumns": "Columnas: eid, name y role son obligatorias; store, stores, area, phone, hire_date y language son opcionales.",
-      "rulePlacement": "Crew, gerentes de turno y gerentes generales necesitan un número de tienda. Los supervisores necesitan stores (números separados por ;). Los directores necesitan el nombre de un área.",
+      "rulePlacement": "El equipo, los gerentes de turno y los gerentes generales necesitan un número de tienda (store). Los supervisores necesitan stores (números separados por ;). Los directores necesitan el nombre de un área (area).",
       "ruleUpdate": "Si el ID de empleado ya está en el personal, se actualiza a esa persona. Una celda vacía conserva lo que ya tiene el personal.",
       "ruleNever": "Se rechazan los archivos de Excel y las columnas como número de seguro social, fecha de nacimiento o domicilio: Crew Stars nunca los guarda.",
       "template": "Descargar la plantilla",
@@ -386,11 +383,38 @@
       "seePeople": "Ver a las personas",
       "previewHeading": "Lo que haría este archivo",
       "rejected": "Este archivo no se puede importar: {reason}",
+      "rejectedReasons": {
+        "not_csv": "no es un archivo CSV. Guárdalo como CSV desde Excel o Google Sheets y vuelve a elegirlo.",
+        "no_header": "no tiene fila de encabezado. La primera línea debe nombrar las columnas.",
+        "forbidden_columns": "quita estas columnas: {columns}. Crew Stars nunca las guarda.",
+        "missing_columns": "faltan estas columnas obligatorias: {columns}.",
+        "too_many_rows": "tiene más de {max} filas. Divídelo en archivos más pequeños."
+      },
       "counts": "{lines, plural, one {# línea leída} other {# líneas leídas}}: {create} para agregar, {update} para actualizar, {error} con problemas.",
       "skipped": "Las líneas con problemas se omiten. Corrígelas en el archivo y vuelve a importarlo para agregarlas.",
       "caption": "Líneas del archivo",
       "truncated": "Se muestran {shown} de {total} líneas. Los totales de arriba cubren todo el archivo.",
       "noProblems": "Ninguno",
+      "problems": {
+        "eid_required": "Falta el ID de empleado (eid).",
+        "eid_invalid": "El ID de empleado “{value}” debe tener de 3 a 20 letras o números.",
+        "eid_repeated": "Este ID de empleado también está en otra línea del archivo.",
+        "name_required": "Falta el nombre.",
+        "role_required": "Falta el puesto.",
+        "role_invalid": "El puesto “{value}” no es crew, shift, gm, supervisor ni director.",
+        "store_unknown": "No hay ninguna tienda con el número “{value}” en el personal.",
+        "store_unknownPlain": "Esa tienda no está en el personal.",
+        "area_unknown": "No hay ninguna área llamada “{value}” en el personal.",
+        "area_unknownPlain": "Esa área no está en el personal.",
+        "phone_invalid": "El teléfono “{value}” no parece un número de teléfono.",
+        "hire_date_invalid": "La fecha de contratación “{value}” no es una fecha. Usa AAAA-MM-DD.",
+        "language_invalid": "El idioma “{value}” debe ser en o es.",
+        "store_required": "El equipo, los gerentes de turno y los gerentes generales necesitan un número de tienda.",
+        "stores_required": "Los supervisores necesitan las tiendas que supervisan (números separados por ;).",
+        "area_required": "Los directores necesitan el nombre de un área.",
+        "gm_twice": "{other} también es gerente general de esa tienda en este archivo.",
+        "store_has_gm": "Esa tienda ya tiene gerente general: {name}."
+      },
       "columns": {
         "line": "Línea",
         "action": "Acción",
@@ -411,12 +435,12 @@
   },
   "recognition": {
     "loadError": "No pudimos cargar esta página.",
-    "retry": "Reintentar",
+    "retry": "Intentar de nuevo",
     "store": "Tienda {number}",
     "storeNamed": "Tienda {number}, {name}",
     "coins": "{count, plural, one {# moneda} other {# monedas}}",
     "plusCoins": "+{count, plural, one {# moneda} other {# monedas}}",
-    "percent": "{value} %",
+    "percent": "{value}%",
     "recognizeAction": "Reconocer",
     "recognize": {
       "who": "¿A quién vas a reconocer?",
@@ -434,6 +458,7 @@
       "searchPlaceholder": "Nombre",
       "count": "{count, plural, =0 {Nadie que mostrar} one {# persona} other {# personas}}",
       "listLabel": "Personas que puedes reconocer",
+      "stores": "Tiendas {list}",
       "noMatch": "Nadie coincide con estos filtros.",
       "notFound": "Esa persona ya no está en el personal, así que no se le puede reconocer.",
       "pick": "Elige a alguien de la lista",
@@ -470,9 +495,9 @@
     },
     "tags": {
       "guest": "Héroe del cliente",
-      "rush": "Héroe de la hora pico",
-      "team": "Buen compañero",
-      "clean": "Máquina de limpieza",
+      "rush": "A todo ritmo en hora pico",
+      "team": "Espíritu de equipo",
+      "clean": "Todo impecable",
       "above": "Más allá del deber",
       "lead": "Gran liderazgo"
     },
@@ -517,7 +542,7 @@
       "ofCrew": "({recognized}/{total})",
       "budgetBar": "Presupuesto de recompensas usado en la tienda {number}",
       "budgetValue": "{used} / {budget}",
-      "noStores": "Todavía no hay tiendas abiertas. Agrégalas en la página de Personal.",
+      "noStores": "Todavía no hay tiendas abiertas. Agrégalas en la página Personal.",
       "notRecognized": "Sin reconocimiento todavía en {month} ({count})",
       "notRecognizedLead": "Personas del equipo que no han recibido un reconocimiento este mes. Una nota rápida hace mucho.",
       "everyoneRecognized": "Todo el equipo ha recibido un reconocimiento este mes.",
@@ -551,7 +576,7 @@
       "kudosValue": "{left} / {allowance}",
       "noneYet": "monedas este mes, todavía sin reconocimiento",
       "emptyTitle": "Todavía no hay nadie en el programa",
-      "emptyLead": "Agrega personas en la página de Personal, de una en una o con un CSV.",
+      "emptyLead": "Agrega personas en la página Personal, una por una o con un CSV.",
       "noMatch": "Nadie coincide con estos filtros.",
       "clearFilters": "Quitar los filtros",
       "card": {
@@ -635,7 +660,7 @@
       "collect": "Marcar como entregada",
       "for": "{reward} para {name}",
       "approved": "Aprobada: {reward} para {name}.",
-      "collected": "{reward} marcada como entregada a {name}.",
+      "collected": "Se marcó como entregada la recompensa {reward} de {name}.",
       "declined": "Rechazada. {name} recuperó {coins, plural, one {# moneda} other {# monedas}}.",
       "declineTitle": "¿Rechazar esta solicitud?",
       "declineBody": "{name} pidió {reward}. Al rechazarla recupera {coins, plural, one {su # moneda} other {sus # monedas}} y deja de contar para sus límites del mes y para el presupuesto de la tienda.",
@@ -644,7 +669,7 @@
     },
     "payroll": {
       "heading": "Exportación para nómina",
-      "lead": "Las recompensas en efectivo y tarjetas de regalo aprobadas en un mes, de todas las tiendas: persona, EID, tienda, recompensa, valor y fecha de aprobación. Cuentan como salario sujeto a impuestos.",
+      "lead": "Las recompensas en efectivo y tarjetas de regalo aprobadas en un mes, de todas las tiendas: persona, ID de empleado, tienda, recompensa, valor y fecha de aprobación. Cuentan como salario sujeto a impuestos.",
       "month": "Mes",
       "download": "Descargar exportación para nómina",
       "downloaded": "Se descargó la exportación para nómina de {month}."
@@ -766,11 +791,11 @@
     "live": "Los cambios se guardan mientras escribes y se aplican al instante en la app del equipo y de los gerentes.",
     "how": {
       "heading": "Cómo funcionan las monedas",
-      "allowance": "La empresa le da a cada persona monedas para reconocer cada mes",
-      "give": "Las usan para reconocer a otras personas",
+      "allowance": "La empresa le da a cada persona kudos para dar cada mes",
+      "give": "Los usan para reconocer a otras personas",
       "earn": "Quien recibe el reconocimiento gana monedas",
       "redeem": "Las monedas ganadas se canjean por recompensas, dentro de tus límites",
-      "note": "Las monedas para reconocer no se pueden canjear y se reinician el día 1, así que nadie paga el reconocimiento con su propio saldo."
+      "note": "Los kudos no se pueden canjear y se renuevan el día 1, así que nadie paga el reconocimiento con su propio saldo."
     },
     "roles": {
       "crew": "Equipo",
@@ -781,18 +806,18 @@
       "owner": "Dueños"
     },
     "allowance": {
-      "heading": "Monedas para reconocer cada mes y cantidades por reconocimiento",
-      "caption": "Las monedas para reconocer que recibe cada puesto al mes y las tres cantidades que puede elegir",
+      "heading": "Kudos al mes y cantidades por reconocimiento",
+      "caption": "Los kudos que recibe cada puesto al mes y las tres cantidades que puede elegir por reconocimiento",
       "columns": {
         "role": "Puesto",
-        "allowance": "Monedas para reconocer cada mes",
+        "allowance": "Kudos para dar cada mes",
         "amounts": "Cantidades que puede elegir"
       },
-      "allowanceLabel": "{role}: monedas para reconocer al mes",
+      "allowanceLabel": "{role}: kudos al mes",
       "amountLabel": "{role}: cantidad {n}",
       "ownerCustom": "Además, cualquier cantidad del 1 al 5,000.",
-      "worstCase": "En el peor de los casos, las monedas para reconocer del equipo suman <b>{coins} monedas</b> al mes entre {crew, plural, one {# persona del equipo} other {# personas del equipo}} (≈ {usd}).",
-      "worstCaseUnknown": "No se pudo calcular el peor de los casos para el equipo: no se cargó cuántas personas hay."
+      "worstCase": "En el peor de los casos, los kudos del equipo suman <b>{coins} monedas</b> al mes entre {crew, plural, one {# persona del equipo} other {# personas del equipo}} (≈ {usd}).",
+      "worstCaseUnknown": "No se pudo calcular el peor de los casos de los kudos del equipo: no se cargó cuántas personas hay."
     },
     "scope": {
       "heading": "Quién puede reconocer a quién",
@@ -809,7 +834,7 @@
       "ownersHint": "Los dueños pueden reconocer directamente a cualquiera, incluidos directores, supervisores y gerentes generales.",
       "everyone": "Todos",
       "upward": "El equipo puede reconocer a los gerentes de su tienda",
-      "upwardHint": "Permite que el equipo y los gerentes de turno den monedas a su gerente general y a los gerentes de turno de su tienda."
+      "upwardHint": "Permite que el equipo y los gerentes de turno den kudos a su gerente general y a los gerentes de turno de su tienda."
     },
     "limits": {
       "heading": "Límites de canje",
@@ -865,7 +890,7 @@
     },
     "units": {
       "coins": "monedas",
-      "kudos": "monedas para reconocer",
+      "kudos": "kudos",
       "spins": "giros"
     },
     "preview": {
@@ -895,9 +920,9 @@
       "weight": "Peso de probabilidad, premio {n}",
       "kinds": {
         "coins": "Monedas",
-        "kudos": "Monedas extra para reconocer",
+        "kudos": "Kudos extra",
         "item": "Artículo gratis",
-        "badge": "Insignia Estrella de la suerte"
+        "badge": "Insignia de la suerte"
       },
       "item": "Se recoge en la tienda",
       "badge": "Da la insignia {name}",
@@ -921,7 +946,7 @@
     "loadError": "No se pudieron cargar las insignias y los niveles.",
     "retry": "Intentar de nuevo",
     "countsError": "No se pudo cargar cuántas personas hay en cada nivel ni quién tiene cada insignia. Aun así puedes cambiar la configuración.",
-    "unknown": "Se desconoce",
+    "unknown": "Sin datos",
     "people": "{count, plural, one {{shown} persona} other {{shown} personas}}",
     "tiers": {
       "heading": "Niveles",
@@ -1019,7 +1044,7 @@
       },
       "coinsLabel": "{award}: monedas del premio",
       "coins": "monedas",
-      "activeLabel": "{award} está activada",
+      "activeLabel": "Categoría {award} activada",
       "cost": "Hasta <b>{coins} monedas</b> al mes entre {stores, plural, one {# tienda} other {# tiendas}} (≈ {usd}).",
       "costUnknown": "No se pudo calcular lo máximo que puede costar al mes: no se cargaron las tiendas."
     },
@@ -1053,6 +1078,138 @@
       "done": "Los ganadores de {month} ya están anunciados. Los del mes que viene se eligen solos cuando termine.",
       "doneWhen": "Los ganadores de {month} se anunciaron el {when}. Los del mes que viene se eligen solos cuando termine.",
       "doneBy": "{by} anunció los ganadores de {month} el {when}. Los del mes que viene se eligen solos cuando termine."
+    }
+  },
+  "audit": {
+    "loadError": "No se pudo cargar el registro de auditoría.",
+    "retry": "Intentar de nuevo",
+    "loading": "Cargando el registro de auditoría…",
+    "heading": "Cambios, del más reciente al más antiguo",
+    "listLabel": "Entradas del registro de auditoría, de la más reciente a la más antigua",
+    "filters": {
+      "label": "Filtrar por tipo de cambio",
+      "all": "Todo"
+    },
+    "kinds": {
+      "settings": "Configuración",
+      "rewards": "Recompensas",
+      "requests": "Solicitudes de recompensa",
+      "recognition": "Reconocimientos",
+      "roster": "Personal",
+      "awards": "Premios del mes",
+      "sign_in": "Inicio de sesión"
+    },
+    "history": {
+      "of": "Se muestra el historial de {name}.",
+      "ofUnknown": "Se muestra el historial de una persona o un registro.",
+      "everyone": "Ver los cambios de todos",
+      "link": "Historial",
+      "linkFor": "de {name}"
+    },
+    "more": "Cargar más",
+    "loaded": "{count, plural, one {Se cargó # entrada más.} other {Se cargaron # entradas más.}}",
+    "moreError": "No se pudieron cargar más entradas.",
+    "end": "Este es el inicio del registro.",
+    "changes": {
+      "show": "Qué cambió",
+      "showDetails": "Detalles",
+      "was": "Antes:",
+      "now": "Después:"
+    },
+    "empty": {
+      "all": "Todavía no hay nada en el registro de auditoría",
+      "allLead": "Aquí aparecen los cambios en reglas, recompensas, aprobaciones y personal a medida que se hacen, con quién los hizo y cuándo.",
+      "kind": "Todavía no hay cambios de este tipo",
+      "kindLead": "Elige otro tipo de cambio o muestra todo.",
+      "target": "Todavía no hay nada registrado sobre esto",
+      "targetLead": "Aquí aparecerán los cambios que se hagan a partir de ahora.",
+      "showAll": "Mostrar todo"
+    },
+    "actor": {
+      "system": "Crew Stars",
+      "owner": "Un dueño",
+      "person": "Alguien"
+    },
+    "unknown": {
+      "person": "alguien",
+      "reward": "una recompensa",
+      "store": "una tienda",
+      "area": "un área",
+      "award": "Un premio",
+      "prize": "Un premio de la ruleta"
+    },
+    "sentences": {
+      "settings": "<b>{actor}</b> hizo cambios en {sections}",
+      "settingsOther": "<b>{actor}</b> cambió la configuración",
+      "rewardCreate": "<b>{actor}</b> agregó la recompensa {reward}",
+      "rewardUpdate": "<b>{actor}</b> editó la recompensa {reward}",
+      "rewardHide": "<b>{actor}</b> ocultó {reward} de la app",
+      "rewardShow": "<b>{actor}</b> volvió a mostrar {reward} en la app",
+      "rewardDelete": "<b>{actor}</b> eliminó la recompensa {reward}",
+      "requestApprove": "<b>{actor}</b> aprobó {reward}",
+      "requestApproveFor": "<b>{actor}</b> aprobó {reward} para {person}",
+      "requestDecline": "<b>{actor}</b> rechazó {reward}",
+      "requestDeclineFor": "<b>{actor}</b> rechazó {reward} para {person}",
+      "requestCollect": "<b>{actor}</b> marcó como entregada la recompensa {reward}",
+      "requestCollectFor": "<b>{actor}</b> marcó como entregada la recompensa {reward} de {person}",
+      "shoutoutHide": "<b>{actor}</b> ocultó un reconocimiento",
+      "shoutoutHideAt": "<b>{actor}</b> ocultó un reconocimiento en {store}",
+      "ownerSend": "<b>{actor}</b> reconoció a {person} con {coins, plural, one {{shown} moneda} other {{shown} monedas}} por {tag}",
+      "ownerSendPlain": "<b>{actor}</b> reconoció a {person}",
+      "personCreate": "<b>{actor}</b> agregó a {person} al personal",
+      "personUpdate": "<b>{actor}</b> editó los datos de {person}",
+      "terminate": "<b>{actor}</b> dio de baja a {person}",
+      "reactivate": "<b>{actor}</b> reactivó a {person}",
+      "storeCreate": "<b>{actor}</b> agregó la tienda {store}",
+      "storeUpdate": "<b>{actor}</b> editó la tienda {store}",
+      "areaCreate": "<b>{actor}</b> agregó el área {area}",
+      "areaUpdate": "<b>{actor}</b> editó el área {area}",
+      "import": "<b>{actor}</b> importó personas desde un CSV",
+      "announce": "<b>{actor}</b> anunció los ganadores de {month} en {store}",
+      "announcePlain": "<b>{actor}</b> anunció los ganadores en {store}",
+      "setupComplete": "<b>{actor}</b> configuró su cuenta",
+      "passwordReset": "<b>{actor}</b> restableció su contraseña",
+      "mfaEnable": "<b>{actor}</b> activó la verificación en dos pasos",
+      "mfaRecovery": "<b>{actor}</b> inició sesión con un código de recuperación",
+      "lockout": "Se bloqueó el acceso de <b>{person}</b> por demasiadas contraseñas incorrectas",
+      "codeLockout": "Se bloqueó el acceso de <b>{person}</b> por demasiados códigos incorrectos",
+      "refreshReuse": "Crew Stars cerró todas las sesiones de <b>{person}</b>: se volvió a usar un inicio de sesión antiguo",
+      "other": "<b>{actor}</b>: {action}"
+    },
+    "fields": {
+      "of": "{name}: {field}",
+      "amounts": "{role}: cantidades por reconocimiento",
+      "nameEs": "Nombre en español",
+      "labelEs": "Etiqueta en español",
+      "descriptionEs": "Descripción en español",
+      "count": "Cuántos",
+      "badge": "Insignia",
+      "tag": "Etiqueta",
+      "unlockId": "Nivel o insignia",
+      "prizeAdded": "Premio agregado: {name}",
+      "prizeRemoved": "Premio quitado: {name}",
+      "winners": "Ganadores",
+      "cancelledRequests": "Solicitudes de recompensa canceladas",
+      "importCreated": "Personas agregadas",
+      "importUpdated": "Personas actualizadas",
+      "importFailed": "Líneas omitidas",
+      "wrongTries": "Intentos fallidos seguidos",
+      "lockedFor": "Tiempo de bloqueo",
+      "recoveryLeft": "Códigos de recuperación restantes",
+      "reason": "Motivo"
+    },
+    "values": {
+      "notSet": "Sin definir",
+      "on": "Activado",
+      "off": "Desactivado",
+      "yes": "Sí",
+      "no": "No",
+      "prize": "{kind} · peso de probabilidad {weight}",
+      "prizeAmount": "{kind} {amount} · peso de probabilidad {weight}",
+      "minutes": "{count, plural, one {# minuto} other {# minutos}}",
+      "winner": "{coins, plural, one {{shown} moneda} other {{shown} monedas}}",
+      "winnerNamed": "{name}, {coins, plural, one {{shown} moneda} other {{shown} monedas}}",
+      "noWinners": "Nadie calificó este mes"
     }
   }
 }

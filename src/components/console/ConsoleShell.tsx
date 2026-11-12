@@ -46,7 +46,7 @@ export async function ConsoleShell({ children }: { children: React.ReactNode }) 
       compactAccount={
         <>
           <LanguageSwitcher />
-          <SignOutButton size="sm" />
+          <SignOutButton compact />
         </>
       }
     >
@@ -77,9 +77,11 @@ function AccountCard({
           {owner ? <span className="block truncate text-xs text-muted">{role}</span> : null}
         </span>
       </div>
-      <div className="flex items-center gap-2 px-3 pt-1">
+      {/* Sign out sits beside the languages when its words fit, and under them, full width,
+          when they do not ("Cerrar sesión" in a 240px rail). */}
+      <div className="flex flex-wrap items-center gap-2 px-3 pt-1">
         <LanguageSwitcher />
-        <SignOutButton size="sm" className="flex-1" />
+        <SignOutButton size="sm" className="grow" />
       </div>
     </section>
   );

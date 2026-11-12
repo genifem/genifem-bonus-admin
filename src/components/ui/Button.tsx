@@ -35,7 +35,10 @@ const variants: Record<ButtonVariant, string> = {
 };
 
 /** Minimum heights, so a translation or a larger text setting grows the button rather than
- *  clipping it. Anything under 44px still sits in a 44px row on touch layouts (NF-11). */
+ *  clipping it. Anything under 44px still sits in a 44px row on touch layouts (NF-11).
+ *  A label longer than the space it has (Spanish on a 360px phone, NF-02) wraps onto a second
+ *  line inside the button instead of running out of it; in a table's actions column the cell's
+ *  no-wrap keeps it on one line, and the table scrolls instead. */
 const sizes: Record<ButtonSize, string> = {
   xs: "min-h-9 px-3 text-caption",
   sm: "min-h-10 px-3.5 text-caption",
@@ -57,7 +60,7 @@ export function buttonClass({
   className?: string;
 } = {}) {
   return cx(
-    "relative inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-compact border font-extrabold",
+    "relative inline-flex max-w-full shrink-0 select-none items-center justify-center gap-2 rounded-compact border py-1.5 text-center text-balance font-extrabold",
     "transition-[background-color,border-color,color,filter,translate] duration-fast ease-standard",
     "active:not-disabled:not-aria-disabled:translate-y-px",
     // A button that is busy keeps its colours (it is working, not off); only a disabled one

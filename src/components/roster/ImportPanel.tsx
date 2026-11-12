@@ -4,7 +4,7 @@ import type { Schemas } from "@crewstars/api-client";
 import { Download, FileUp } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useId, useRef, useState } from "react";
 
 import {
@@ -22,11 +22,22 @@ import {
 } from "@/components/ui";
 import { apiPost, ApiCallError } from "@/lib/api";
 
-import { fileProblem, importSummary, reviewOrder } from "./csv-import";
+import {
+  fileProblem,
+  importSummary,
+  refusalMessage,
+  rejectedMessage,
+  reviewOrder,
+  rowProblems,
+  type ImportMessage,
+} from "./csv-import";
 
 type CsvPreview = Schemas["CsvPreview"];
 type CsvResult = Schemas["CsvResult"];
 type CsvRow = Schemas["CsvRow"];
+
+/** The roles a line can name, said in the owner's language when the cell is one of them. */
+const ROLES = new Set(["crew", "shift", "gm", "supervisor", "director"]);
 
 /** Lines drawn in the preview; the counts above it are always the whole file's. */
 const SHOWN = 500;
@@ -44,10 +55,16 @@ const ACTION_TONE: Record<CsvRow["action"], BadgeTone> = {
  * or one with a column Crew Stars never keeps (an SSN, a birth date) is refused as a whole.
  *
  * The file is read here, in the browser, and sent as text: it never touches a disk on the way.
+ *
+ * What is wrong with a line or a file comes from the API as codes with their values
+ * (CsvProblem, `rejected_code`), said here in the owner's language (NF-02); a code newer than
+ * this portal is shown in the API's English rather than not at all.
  */
 export function ImportPanel() {
   const t = useTranslations("roster.import");
   const te = useTranslations("errors");
+  const tRoles = useTranslations("roster.roles");
+  const locale = useLocale();
   const router = useRouter();
   const inputId = useId();
   const input = useRef<HTMLInputElement>(null);
@@ -58,10 +75,13 @@ export function ImportPanel() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<"read" | "preview" | "import" | null>(null);
 
+  const say = (message: ImportMessage) => ("key" in message ? t(message.key, message.values) : message.text);
+
   function failure(err: unknown): string {
     if (!(err instanceof ApiCallError)) return te("generic");
-    // The API says why a file was refused only in English (its message): shown after ours.
-    if (err.code === "csv_rejected") return `${te("csv_rejected")} ${err.message}`;
+    // The file changed between the check and the import, or was never checked: the 422 says
+    // why as a code (details.reason), like the preview.
+    if (err.code === "csv_rejected") return t("rejected", { reason: say(refusalMessage(err.details, err.message, locale)) });
     return te.has(err.code) ? te(err.code) : te("generic");
   }
 
@@ -118,6 +138,9 @@ export function ImportPanel() {
 
   const summary = preview ? importSummary(preview) : null;
   const rows = preview ? reviewOrder(preview.rows) : [];
+  const rejected = preview
+    ? rejectedMessage(preview.rejected_code, preview.rejected_params, preview.rejected, locale)
+    : null;
 
   const columns: Column<CsvRow>[] = [
     { key: "line", header: t("columns.line"), align: "end", width: "min", cell: (row) => row.line },
@@ -128,21 +151,31 @@ export function ImportPanel() {
     },
     { key: "eid", header: t("columns.eid"), overflow: "nowrap", cell: (row) => <span className="font-mono">{row.eid ?? "—"}</span> },
     { key: "name", header: t("columns.name"), overflow: "wrap", cell: (row) => row.name ?? "—" },
-    { key: "role", header: t("columns.role"), overflow: "nowrap", cell: (row) => row.role ?? "—" },
+    {
+      key: "role",
+      header: t("columns.role"),
+      overflow: "nowrap",
+      cell: (row) => {
+        const role = row.role?.trim().toLowerCase() ?? "";
+        return ROLES.has(role) ? tRoles(role) : (row.role ?? "—");
+      },
+    },
     {
       key: "errors",
       header: t("columns.problems"),
       overflow: "wrap",
-      cell: (row) =>
-        row.errors && row.errors.length > 0 ? (
+      cell: (row) => {
+        const problems = rowProblems(row);
+        return problems.length > 0 ? (
           <ul className="flex list-disc flex-col gap-0.5 pl-4 text-danger-ink">
-            {row.errors.map((problem) => (
-              <li key={problem}>{problem}</li>
+            {problems.map((problem, index) => (
+              <li key={index}>{say(problem)}</li>
             ))}
           </ul>
         ) : (
           <span className="text-muted">{t("noProblems")}</span>
-        ),
+        );
+      },
     },
   ];
 
@@ -228,8 +261,8 @@ export function ImportPanel() {
           <h2 id="preview-heading" className="text-title font-black tracking-normal">
             {t("previewHeading")}
           </h2>
-          {preview.rejected ? (
-            <Alert kind="error">{t("rejected", { reason: preview.rejected })}</Alert>
+          {rejected ? (
+            <Alert kind="error">{t("rejected", { reason: say(rejected) })}</Alert>
           ) : (
             <>
               <p role="status" className="text-sm">

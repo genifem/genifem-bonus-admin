@@ -79,7 +79,9 @@ function RailLink({ item }: { item: NavItem }) {
     <Link
       href={item.href}
       exact={item.exact}
-      className="flex min-h-11 items-center gap-2.5 whitespace-nowrap rounded-compact px-2.5 text-caption font-extrabold transition-colors duration-fast rail:px-3 rail:text-sm"
+      // One line in the phone strip, which scrolls; in the 240px rail a long label ("Registro de
+      // auditoría" in a bigger text size) wraps rather than running under the edge.
+      className="flex min-h-11 items-center gap-2.5 whitespace-nowrap rounded-compact px-2.5 text-caption font-extrabold transition-colors duration-fast rail:whitespace-normal rail:px-3 rail:py-1.5 rail:text-sm"
       activeClassName="bg-sidebar-active-bg text-sidebar-active-fg"
       inactiveClassName="text-sidebar-fg hover:bg-sidebar-hover-bg"
     >

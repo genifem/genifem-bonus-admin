@@ -155,9 +155,17 @@ export default async function RecognizePage({ searchParams }: PageProps<"/recogn
             <ul aria-label={t("listLabel")} className="-mx-1 flex max-h-130 flex-col gap-1.5 overflow-y-auto px-1 py-0.5">
               {candidates.map((person) => {
                 const current = person.id === selected?.id;
+                // A supervisor has no one store but the stores they cover: their numbers here,
+                // in full on hover and once picked.
                 const where = person.store
                   ? tr("storeNamed", { number: person.store.number, name: person.store.name })
-                  : (person.area?.name ?? "");
+                  : person.stores.length > 0
+                    ? t("stores", { list: person.stores.map((store) => store.number).join(", ") })
+                    : (person.area?.name ?? "");
+                const whereTitle =
+                  !person.store && person.stores.length > 0
+                    ? person.stores.map((store) => `${store.number} · ${store.name}`).join(", ")
+                    : undefined;
                 return (
                   <li key={person.id}>
                     <Link
@@ -173,7 +181,11 @@ export default async function RecognizePage({ searchParams }: PageProps<"/recogn
                       <Avatar name={person.name} colored seed={person.id} className="size-9 text-caption" />
                       <span className="min-w-0 flex-1">
                         <span className="block break-words font-extrabold">{person.name}</span>
-                        {where ? <span className="block text-caption text-muted">{where}</span> : null}
+                        {where ? (
+                          <span className="block text-caption text-muted" title={whereTitle}>
+                            {where}
+                          </span>
+                        ) : null}
                       </span>
                       <span className="flex shrink-0 flex-col items-end gap-1">
                         <RoleChip role={person.role} />

@@ -14,7 +14,17 @@ import { SIGN_IN } from "@/lib/session-paths";
  * proxy adds it; the browser never holds it), and then /api/session/end drops the cookies
  * whatever the API said, so a sign-out works even when the API cannot be reached.
  */
-export function SignOutButton({ size = "console", className }: { size?: ButtonSize; className?: string }) {
+export function SignOutButton({
+  size = "console",
+  compact = false,
+  className,
+}: {
+  size?: ButtonSize;
+  /** On a phone, the icon alone, named for a screen reader and on hover: beside the lockup
+   *  there is no room for "Cerrar sesión" (NF-02). The words come back from `sm`. */
+  compact?: boolean;
+  className?: string;
+}) {
   const t = useTranslations("common");
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -35,9 +45,10 @@ export function SignOutButton({ size = "console", className }: { size?: ButtonSi
       className={className}
       icon={<LogOut aria-hidden="true" className="size-4" strokeWidth={2} />}
       loading={pending}
+      title={compact ? t("signOut") : undefined}
       onClick={() => void signOut()}
     >
-      {t("signOut")}
+      {compact ? <span className="sr-only sm:not-sr-only">{t("signOut")}</span> : t("signOut")}
     </Button>
   );
 }

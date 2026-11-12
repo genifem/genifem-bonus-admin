@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
+import { historyHref } from "@/components/audit/audit-query";
 import {
   Avatar,
   Badge,
@@ -36,7 +37,8 @@ type Confirming = { person: PersonOut; action: "terminate" | "reactivate" };
 
 /**
  * The People tab's table and everything done from it: add and edit in the side panel,
- * terminate and reactivate behind a confirmation. Each change is saved through the BFF and
+ * terminate and reactivate behind a confirmation, and a link to each person's history in the
+ * audit log (NF-09). Each change is saved through the BFF and
  * the page is drawn again from the server (router.refresh), so the table, the counts and the
  * stores' GMs all show what the API now holds.
  *
@@ -192,6 +194,11 @@ export function PeoplePanel({
               <VisuallyHidden>{` ${person.name}`}</VisuallyHidden>
             </Button>
           )}
+          {/* Everything done to them, from the audit log (NF-09). */}
+          <Link href={historyHref(person.id)} className={buttonClass({ variant: "ghost", size: "console" })}>
+            {t("history")}
+            <VisuallyHidden>{` ${person.name}`}</VisuallyHidden>
+          </Link>
         </span>
       ),
     },

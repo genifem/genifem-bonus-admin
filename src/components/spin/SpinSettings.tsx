@@ -203,7 +203,6 @@ export function SpinSettings({ spin, coinValue, badges }: { spin: Spin; coinValu
           value={prize.kind}
           label={t("prizes.type", { n: row(prize) })}
           options={kindOptions(prize)}
-          width="sm"
           send={async (changes) => {
             const kind = changes[`spin.prizes.${prize.id}.kind`] as PrizeKind;
             const out = await patchSettings(kindChanges(prize, kind, badgeId));

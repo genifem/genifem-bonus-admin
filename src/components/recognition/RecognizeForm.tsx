@@ -167,9 +167,16 @@ export function RecognizeForm({
     startRefresh(() => router.refresh());
   }
 
+  // A supervisor covers several stores (OP-06: their role, store and balance), named in full.
   const where = person.store
     ? tRec("storeNamed", { number: person.store.number, name: person.store.name })
-    : (person.area?.name ?? null);
+    : person.stores.length > 0
+      ? t("stores", {
+          list: person.stores
+            .map((store) => tRec("storeFilter.option", { number: store.number, name: store.name }))
+            .join(", "),
+        })
+      : (person.area?.name ?? null);
   return (
     <section aria-labelledby={`${id}-heading`} className="flex flex-col gap-4">
       <div className="flex items-center gap-3">
