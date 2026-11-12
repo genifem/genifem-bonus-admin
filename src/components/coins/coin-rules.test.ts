@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
 
-import { budgetEstimate, formatDollars, parseDollars, parseWhole, RANGES, worstCase } from "./coin-rules";
+import {
+  budgetEstimate,
+  formatDollars,
+  NAME_MAX,
+  parseDollars,
+  parseName,
+  parseWhole,
+  RANGES,
+  worstCase,
+} from "./coin-rules";
 
 describe("parseWhole", () => {
   it("reads whole coins, with or without separators", () => {
@@ -47,6 +56,24 @@ describe("parseDollars and formatDollars", () => {
   it("always shows the cents", () => {
     expect(formatDollars(0.1)).toBe("0.10");
     expect(formatDollars(2)).toBe("2.00");
+  });
+});
+
+describe("parseName", () => {
+  it("tidies spaces the way the API does", () => {
+    expect(parseName("  Guest   Hero ")).toEqual({ ok: true, value: "Guest Hero" });
+  });
+
+  it("needs an English name, but lets a Spanish one be blank (the app uses the English)", () => {
+    expect(parseName("   ")).toEqual({ ok: false, problem: "required" });
+    expect(parseName("   ", { optional: true })).toEqual({ ok: true, value: null });
+    expect(parseName(" Bebida  gratis", { optional: true })).toEqual({ ok: true, value: "Bebida gratis" });
+  });
+
+  it("holds the API's 40 characters", () => {
+    expect(NAME_MAX).toBe(40);
+    expect(parseName("x".repeat(40))).toEqual({ ok: true, value: "x".repeat(40) });
+    expect(parseName("x".repeat(41))).toEqual({ ok: false, problem: "long" });
   });
 });
 

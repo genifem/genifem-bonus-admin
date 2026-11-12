@@ -97,7 +97,7 @@ const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, 
 
 export class FieldSaver<T> {
   private readonly path: string;
-  private readonly send: (changes: Record<string, unknown>) => Promise<unknown>;
+  private send: (changes: Record<string, unknown>) => Promise<unknown>;
   private readonly onStatus: (status: SaveStatus) => void;
   private readonly delayMs: number;
   private readonly busyRetryMs: number;
@@ -168,6 +168,12 @@ export class FieldSaver<T> {
    *  baseline only while nothing of this field's is waiting or on its way. */
   rebase(value: T): void {
     if (!this.busy) this.saved = value;
+  }
+
+  /** The send to use from now on: the page's latest, which may read what the page last drew
+   *  (a prize's type change sends what the prize lacks for it). */
+  sendWith(send: (changes: Record<string, unknown>) => Promise<unknown>): void {
+    this.send = send;
   }
 
   /** The field is going away: anything still waiting is sent now rather than lost. */

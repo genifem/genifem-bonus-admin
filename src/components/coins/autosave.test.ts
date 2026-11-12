@@ -207,6 +207,17 @@ describe("FieldSaver", () => {
     await vi.advanceTimersByTimeAsync(600);
     expect(api.calls).toEqual([{ "allowance.crew": 45 }]);
   });
+
+  it("sends with the page's latest send, even for an edit made before it changed", async () => {
+    const first = fakeApi();
+    const second = fakeApi();
+    const { saver } = saverFor("spin.prizes.p3.kind", 30, first.send);
+    saver.edit({ ok: true, value: 40 });
+    saver.sendWith(second.send);
+    await vi.advanceTimersByTimeAsync(600);
+    expect(first.send).not.toHaveBeenCalled();
+    expect(second.calls).toEqual([{ "spin.prizes.p3.kind": 40 }]);
+  });
 });
 
 describe("fieldMessage", () => {

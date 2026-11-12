@@ -179,7 +179,8 @@
     "cannot_decide": "You can't decide this request.",
     "reward_not_found": "That reward isn't there any more. Reload the page to see the latest.",
     "reward_has_pending": "Requests are still waiting for this reward, so it can't be deleted. Hide it from the app instead.",
-    "unlock_invalid": "That badge isn't in the settings any more. Choose another."
+    "unlock_invalid": "That badge isn't in the settings any more. Choose another.",
+    "awards_already_announced": "This month's winners were already announced. The page now shows who won."
   },
   "roster": {
     "loadError": "The roster couldn't be loaded.",
@@ -837,8 +838,221 @@
         "required": "Enter a number.",
         "whole": "Use a whole number.",
         "cents": "Use dollars and cents, like 0.10.",
-        "range": "Use a number from {min} to {max}."
+        "range": "Use a number from {min} to {max}.",
+        "long": "Keep it to {max} characters."
       }
+    }
+  },
+  "spin": {
+    "loadError": "The spin settings couldn't be loaded.",
+    "retry": "Try again",
+    "switch": {
+      "heading": "Spins on or off",
+      "label": "Spin the wheel",
+      "hint": "Turning it off hides the wheel and its Home tile in the app and stops anyone earning spins, for everyone, straight away. Spins people already have are kept for when it's back on.",
+      "off": "Spins are off for everyone. The rules and prizes below are kept, and apply again when you turn spins back on."
+    },
+    "earn": {
+      "heading": "When crew earn a spin",
+      "everyCoins": "Every time they earn this many coins",
+      "everyCoinsHint": "Set to 0 to turn this off. Badge bonuses and coins won on the wheel don't count toward the next spin.",
+      "onBadge": "When they earn a new badge",
+      "onBadgeHint": "Only badges marked “gives a spin” on Badges & tiers.",
+      "onMilestone": "At milestones",
+      "onMilestoneHint": "Like 90 days on the team: milestone badges marked “gives a spin”.",
+      "maxPerMonth": "Most spins one person can earn a month",
+      "maxPerMonthHint": "From 0 to 30. Once someone reaches it, they earn no more spins that month."
+    },
+    "units": {
+      "coins": "coins",
+      "kudos": "kudos",
+      "spins": "spins"
+    },
+    "preview": {
+      "heading": "What crew see",
+      "lead": "Every prize gets the same slice. How often each one comes up is its chance weight.",
+      "name": "The prize wheel, {count, plural, one {# prize} other {# prizes}}: {prizes}"
+    },
+    "prizes": {
+      "heading": "Prizes and odds",
+      "lead": "Chance is a weight: a prize with weight 30 comes up three times as often as one with weight 10. The wheel holds 3 to {max} prizes. Coins won on the wheel don't count toward the next spin.",
+      "caption": "The prizes on the wheel: label, type, amount, chance weight and odds",
+      "add": "Add prize",
+      "full": "The wheel is full: {max} prizes is the most it holds.",
+      "columns": {
+        "prize": "Prize",
+        "type": "Type",
+        "amount": "Amount",
+        "weight": "Chance weight",
+        "odds": "Odds",
+        "remove": "Remove"
+      },
+      "row": "prize {n}",
+      "label": "Label",
+      "labelEs": "Spanish (optional)",
+      "type": "Type, prize {n}",
+      "amount": "Amount, prize {n}",
+      "weight": "Chance weight, prize {n}",
+      "kinds": {
+        "coins": "Coins",
+        "kudos": "Extra kudos",
+        "item": "Free item",
+        "badge": "Lucky Star badge"
+      },
+      "item": "Collected at the store",
+      "badge": "Gives the {name} badge",
+      "remove": "Remove prize {n}, {label}",
+      "removed": "{label} is off the wheel.",
+      "added": "Prize added. Give it a label and a chance.",
+      "odds": "{value}%",
+      "average": "Average coins per spin: <b>{coins}</b> (≈ {usd}).",
+      "averageItems": "Average coins per spin: <b>{coins}</b> (≈ {usd}), plus free items.",
+      "problems": {
+        "name": "Enter a label.",
+        "nameRule": "Use a label of up to 40 characters.",
+        "amountRule": "Use a whole number from 1 to 1,000,000.",
+        "weightRule": "Use a whole number from 0 to 100,000, with at least one prize above 0.",
+        "total": "At least one prize needs a chance above 0.",
+        "listRule": "The wheel needs 3 to 10 prizes, and at least one with a chance above 0."
+      }
+    }
+  },
+  "badges": {
+    "loadError": "The badges and tiers couldn't be loaded.",
+    "retry": "Try again",
+    "countsError": "How many people are at each tier and hold each badge couldn't be loaded. You can still change the settings.",
+    "unknown": "Not known",
+    "people": "{count, plural, one {{shown} person} other {{shown} people}}",
+    "tiers": {
+      "heading": "Tiers",
+      "lead": "Tiers come from coins earned all time and never go down when coins are spent. Each tier starts above the one before it.",
+      "caption": "Tiers: the coins earned all time each one starts at, and the people at each tier now",
+      "columns": {
+        "tier": "Tier",
+        "min": "Reached at (coins earned all time)",
+        "people": "People at this tier now"
+      },
+      "everyone": "Everyone starts here",
+      "label": "{tier} starts at",
+      "unit": "coins",
+      "problems": {
+        "low": "Must be more than {tier}'s {min}.",
+        "high": "Must be less than {tier}'s {min}.",
+        "rule": "Each tier must start above the one before it."
+      },
+      "note": "A change moves people between tiers straight away. Nobody is told about a tier change you cause; tier-up notices are for coins people earn.",
+      "stale": "The people counts couldn't be refreshed after your change. Reload the page to see them."
+    },
+    "badges": {
+      "heading": "Badges",
+      "lead": "A badge is given once, as soon as its rule is met. Its bonus coins count toward tiers but not toward the next spin.",
+      "caption": "Badges: name, how each is earned, bonus coins, whether it gives a spin, and how many people have it",
+      "columns": {
+        "badge": "Badge",
+        "rule": "How it's earned",
+        "bonus": "Bonus coins",
+        "spin": "Gives a spin",
+        "people": "Earned by"
+      },
+      "name": "Name",
+      "nameEs": "Spanish (optional)",
+      "problems": {
+        "name": "Enter a name.",
+        "nameRule": "Use a name of up to 40 characters."
+      },
+      "rules": {
+        "tag": {
+          "verb": "Get",
+          "unit": "shout-outs",
+          "label": "{badge}: how many shout-outs",
+          "with": "tagged",
+          "tagLabel": "{badge}: shout-out tag"
+        },
+        "given": {
+          "verb": "Give",
+          "unit": "shout-outs",
+          "label": "{badge}: how many shout-outs given"
+        },
+        "days": {
+          "verb": "Reach",
+          "unit": "days on the team",
+          "label": "{badge}: days on the team"
+        },
+        "spin": {
+          "only": "Won on the wheel only"
+        }
+      },
+      "bonusLabel": "{badge}: bonus coins",
+      "coins": "coins",
+      "spinLabel": "{badge} gives a spin",
+      "spinNotApplicable": "Doesn't apply",
+      "spinOff": "Spins are off on <link>Spin the wheel</link>, so no badge gives a spin right now.",
+      "spinOffBoth": "Spins for new badges and milestones are off on <link>Spin the wheel</link>, so no badge gives a spin right now.",
+      "spinOffBadge": "Spins for new badges are off on <link>Spin the wheel</link>: only milestone badges (days on the team) give a spin right now.",
+      "spinOffMilestone": "Spins at milestones are off on <link>Spin the wheel</link>: milestone badges (days on the team) don't give a spin right now."
+    }
+  },
+  "awards": {
+    "loadError": "The monthly awards couldn't be loaded.",
+    "retry": "Try again",
+    "categories": {
+      "heading": "Award categories",
+      "lead": "Each store's crew and shift managers compete on this month's numbers. A winner needs more than 0.",
+      "caption": "Award categories: name, what the winner is picked on, prize coins, and whether it's on",
+      "columns": {
+        "award": "Award",
+        "metric": "Winner is",
+        "coins": "Prize",
+        "active": "On"
+      },
+      "name": "Name",
+      "nameEs": "Spanish (optional)",
+      "problems": {
+        "name": "Enter a name.",
+        "nameRule": "Use a name of up to 40 characters."
+      },
+      "metrics": {
+        "earned": "Most coins earned this month",
+        "improved": "Biggest jump in coins over last month",
+        "guest": "Most Guest Hero shout-outs this month",
+        "peer": "Most shout-outs from crew and shift managers this month"
+      },
+      "coinsLabel": "{award}: prize coins",
+      "coins": "coins",
+      "activeLabel": "{award} is on",
+      "cost": "Up to <b>{coins} coins</b> a month across {stores, plural, one {# store} other {# stores}} (≈ {usd}).",
+      "costUnknown": "The most this can cost a month couldn't be worked out: the stores didn't load."
+    },
+    "leaders": {
+      "heading": "Leading right now",
+      "lead": "Winners are picked and paid automatically when each store's month ends: one per category per store, from crew and shift managers, with a tie going to whoever got there first. They get the coins, a post on their store's wall and a notification.",
+      "caption": "Each store's current leader in every award category that's on",
+      "columns": {
+        "store": "Store"
+      },
+      "announced": "Winners announced",
+      "none": "No leader yet",
+      "winner": "Winner",
+      "coins": "{count, plural, one {{shown} coin} other {{shown} coins}}",
+      "jump": "{count, plural, one {+{shown} coin} other {+{shown} coins}}",
+      "shoutouts": "{count, plural, one {{shown} shout-out} other {{shown} shout-outs}}",
+      "loadError": "The current leaders couldn't be loaded.",
+      "noStores": "No open stores",
+      "noStoresLead": "Leaders show here once a store is open on the Roster.",
+      "allOff": "Every award category is off",
+      "allOffLead": "Turn a category on above and its leaders show here."
+    },
+    "announce": {
+      "button": "Announce {month} winners",
+      "title": "Announce {month} winners now?",
+      "body": "Each store's current leader in every category that's on wins now: they get the prize coins straight away, a post on their store's wall and a notification. Their coins can't be taken back.",
+      "once": "You can do this once a month. The winners won't be paid again when the month ends.",
+      "confirm": "Announce and pay",
+      "announced": "Winners announced",
+      "announcedToast": "{month} winners announced and paid.",
+      "done": "{month} winners are announced. Next month's are picked automatically when it ends.",
+      "doneWhen": "{month} winners were announced on {when}. Next month's are picked automatically when it ends.",
+      "doneBy": "{by} announced {month} winners on {when}. Next month's are picked automatically when it ends."
     }
   }
 }

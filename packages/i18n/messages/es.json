@@ -179,7 +179,8 @@
     "cannot_decide": "No puedes decidir esta solicitud.",
     "reward_not_found": "Esa recompensa ya no está. Vuelve a cargar la página para ver lo más reciente.",
     "reward_has_pending": "Todavía hay solicitudes pendientes de esta recompensa, así que no se puede eliminar. Ocúltala de la app en su lugar.",
-    "unlock_invalid": "Esa insignia ya no está en la configuración. Elige otra."
+    "unlock_invalid": "Esa insignia ya no está en la configuración. Elige otra.",
+    "awards_already_announced": "Los ganadores de este mes ya se anunciaron. La página ahora muestra quién ganó."
   },
   "roster": {
     "loadError": "No pudimos cargar el personal.",
@@ -837,8 +838,221 @@
         "required": "Escribe un número.",
         "whole": "Usa un número entero.",
         "cents": "Usa dólares y centavos, como 0.10.",
-        "range": "Usa un número del {min} al {max}."
+        "range": "Usa un número del {min} al {max}.",
+        "long": "Usa {max} caracteres como máximo."
       }
+    }
+  },
+  "spin": {
+    "loadError": "No se pudo cargar la configuración de los giros.",
+    "retry": "Intentar de nuevo",
+    "switch": {
+      "heading": "Giros activados o desactivados",
+      "label": "Gira la ruleta",
+      "hint": "Al desactivarla, la ruleta y su recuadro de Inicio desaparecen de la app y nadie gana giros, para todos y al instante. Los giros que ya tienen se guardan para cuando vuelva a estar activada.",
+      "off": "Los giros están desactivados para todos. Las reglas y los premios de abajo se guardan y vuelven a aplicarse cuando reactives los giros."
+    },
+    "earn": {
+      "heading": "Cuándo gana el equipo un giro",
+      "everyCoins": "Cada vez que ganan esta cantidad de monedas",
+      "everyCoinsHint": "Pon 0 para desactivarlo. Los bonos de insignias y las monedas ganadas en la ruleta no cuentan para el siguiente giro.",
+      "onBadge": "Cuando ganan una insignia nueva",
+      "onBadgeHint": "Solo las insignias marcadas con “da un giro” en Insignias y niveles.",
+      "onMilestone": "Al cumplir hitos",
+      "onMilestoneHint": "Como 90 días en el equipo: insignias de hito marcadas con “da un giro”.",
+      "maxPerMonth": "Máximo de giros que una persona puede ganar al mes",
+      "maxPerMonthHint": "Del 0 al 30. Cuando alguien llega al máximo, no gana más giros ese mes."
+    },
+    "units": {
+      "coins": "monedas",
+      "kudos": "monedas para reconocer",
+      "spins": "giros"
+    },
+    "preview": {
+      "heading": "Lo que ve el equipo",
+      "lead": "Cada premio ocupa la misma porción. Lo seguido que sale cada uno depende de su peso de probabilidad.",
+      "name": "La ruleta de premios, {count, plural, one {# premio} other {# premios}}: {prizes}"
+    },
+    "prizes": {
+      "heading": "Premios y probabilidades",
+      "lead": "La probabilidad es un peso: un premio con peso 30 sale tres veces más que uno con peso 10. La ruleta tiene de 3 a {max} premios. Las monedas ganadas en la ruleta no cuentan para el siguiente giro.",
+      "caption": "Los premios de la ruleta: etiqueta, tipo, cantidad, peso de probabilidad y probabilidad",
+      "add": "Agregar premio",
+      "full": "La ruleta está llena: {max} premios es el máximo.",
+      "columns": {
+        "prize": "Premio",
+        "type": "Tipo",
+        "amount": "Cantidad",
+        "weight": "Peso de probabilidad",
+        "odds": "Probabilidad",
+        "remove": "Quitar"
+      },
+      "row": "premio {n}",
+      "label": "Etiqueta",
+      "labelEs": "En español (opcional)",
+      "type": "Tipo, premio {n}",
+      "amount": "Cantidad, premio {n}",
+      "weight": "Peso de probabilidad, premio {n}",
+      "kinds": {
+        "coins": "Monedas",
+        "kudos": "Monedas extra para reconocer",
+        "item": "Artículo gratis",
+        "badge": "Insignia Estrella de la suerte"
+      },
+      "item": "Se recoge en la tienda",
+      "badge": "Da la insignia {name}",
+      "remove": "Quitar el premio {n}, {label}",
+      "removed": "{label} ya no está en la ruleta.",
+      "added": "Premio agregado. Dale una etiqueta y una probabilidad.",
+      "odds": "{value}%",
+      "average": "Promedio de monedas por giro: <b>{coins}</b> (≈ {usd}).",
+      "averageItems": "Promedio de monedas por giro: <b>{coins}</b> (≈ {usd}), más artículos gratis.",
+      "problems": {
+        "name": "Escribe una etiqueta.",
+        "nameRule": "Usa una etiqueta de 40 caracteres como máximo.",
+        "amountRule": "Usa un número entero del 1 al 1,000,000.",
+        "weightRule": "Usa un número entero del 0 al 100,000, con al menos un premio por encima de 0.",
+        "total": "Al menos un premio necesita una probabilidad mayor que 0.",
+        "listRule": "La ruleta necesita de 3 a 10 premios, y al menos uno con probabilidad mayor que 0."
+      }
+    }
+  },
+  "badges": {
+    "loadError": "No se pudieron cargar las insignias y los niveles.",
+    "retry": "Intentar de nuevo",
+    "countsError": "No se pudo cargar cuántas personas hay en cada nivel ni quién tiene cada insignia. Aun así puedes cambiar la configuración.",
+    "unknown": "Se desconoce",
+    "people": "{count, plural, one {{shown} persona} other {{shown} personas}}",
+    "tiers": {
+      "heading": "Niveles",
+      "lead": "Los niveles dependen de las monedas ganadas desde siempre y no bajan al gastar monedas. Cada nivel empieza por encima del anterior.",
+      "caption": "Niveles: las monedas ganadas desde siempre con las que empieza cada uno, y las personas en cada nivel ahora",
+      "columns": {
+        "tier": "Nivel",
+        "min": "Se alcanza con (monedas ganadas desde siempre)",
+        "people": "Personas en este nivel ahora"
+      },
+      "everyone": "Todos empiezan aquí",
+      "label": "{tier} empieza en",
+      "unit": "monedas",
+      "problems": {
+        "low": "Debe ser mayor que {min} ({tier}).",
+        "high": "Debe ser menor que {min} ({tier}).",
+        "rule": "Cada nivel debe empezar por encima del anterior."
+      },
+      "note": "Un cambio mueve a las personas de nivel al instante. Nadie recibe aviso por un cambio de nivel que causes tú; los avisos de nivel son por las monedas que se ganan.",
+      "stale": "No se pudo actualizar cuántas personas hay después de tu cambio. Vuelve a cargar la página para verlo."
+    },
+    "badges": {
+      "heading": "Insignias",
+      "lead": "Una insignia se da una sola vez, en cuanto se cumple su regla. Sus monedas de bono cuentan para los niveles, pero no para el siguiente giro.",
+      "caption": "Insignias: nombre, cómo se gana cada una, monedas de bono, si da un giro y cuántas personas la tienen",
+      "columns": {
+        "badge": "Insignia",
+        "rule": "Cómo se gana",
+        "bonus": "Monedas de bono",
+        "spin": "Da un giro",
+        "people": "La tienen"
+      },
+      "name": "Nombre",
+      "nameEs": "En español (opcional)",
+      "problems": {
+        "name": "Escribe un nombre.",
+        "nameRule": "Usa un nombre de 40 caracteres como máximo."
+      },
+      "rules": {
+        "tag": {
+          "verb": "Recibir",
+          "unit": "reconocimientos",
+          "label": "{badge}: cuántos reconocimientos",
+          "with": "con la etiqueta",
+          "tagLabel": "{badge}: etiqueta del reconocimiento"
+        },
+        "given": {
+          "verb": "Dar",
+          "unit": "reconocimientos",
+          "label": "{badge}: cuántos reconocimientos dados"
+        },
+        "days": {
+          "verb": "Cumplir",
+          "unit": "días en el equipo",
+          "label": "{badge}: días en el equipo"
+        },
+        "spin": {
+          "only": "Solo se gana en la ruleta"
+        }
+      },
+      "bonusLabel": "{badge}: monedas de bono",
+      "coins": "monedas",
+      "spinLabel": "{badge} da un giro",
+      "spinNotApplicable": "No aplica",
+      "spinOff": "Los giros están desactivados en <link>Gira la ruleta</link>, así que ninguna insignia da un giro ahora.",
+      "spinOffBoth": "Los giros por insignias nuevas y por hitos están desactivados en <link>Gira la ruleta</link>, así que ninguna insignia da un giro ahora.",
+      "spinOffBadge": "Los giros por insignias nuevas están desactivados en <link>Gira la ruleta</link>: ahora solo las insignias de hito (días en el equipo) dan un giro.",
+      "spinOffMilestone": "Los giros por hitos están desactivados en <link>Gira la ruleta</link>: ahora las insignias de hito (días en el equipo) no dan un giro."
+    }
+  },
+  "awards": {
+    "loadError": "No se pudieron cargar los premios del mes.",
+    "retry": "Intentar de nuevo",
+    "categories": {
+      "heading": "Categorías de premios",
+      "lead": "El equipo y los gerentes de turno de cada tienda compiten con los números de este mes. Para ganar hay que tener más de 0.",
+      "caption": "Categorías de premios: nombre, en qué se basa el ganador, monedas del premio y si está activada",
+      "columns": {
+        "award": "Premio",
+        "metric": "Gana quien tenga",
+        "coins": "Premio",
+        "active": "Activada"
+      },
+      "name": "Nombre",
+      "nameEs": "En español (opcional)",
+      "problems": {
+        "name": "Escribe un nombre.",
+        "nameRule": "Usa un nombre de 40 caracteres como máximo."
+      },
+      "metrics": {
+        "earned": "Más monedas ganadas este mes",
+        "improved": "Mayor aumento de monedas respecto al mes pasado",
+        "guest": "Más reconocimientos de Héroe del cliente este mes",
+        "peer": "Más reconocimientos del equipo y los gerentes de turno este mes"
+      },
+      "coinsLabel": "{award}: monedas del premio",
+      "coins": "monedas",
+      "activeLabel": "{award} está activada",
+      "cost": "Hasta <b>{coins} monedas</b> al mes entre {stores, plural, one {# tienda} other {# tiendas}} (≈ {usd}).",
+      "costUnknown": "No se pudo calcular lo máximo que puede costar al mes: no se cargaron las tiendas."
+    },
+    "leaders": {
+      "heading": "Quién va ganando",
+      "lead": "Los ganadores se eligen y se pagan solos cuando termina el mes de cada tienda: uno por categoría y tienda, entre el equipo y los gerentes de turno; en caso de empate gana quien llegó primero. Reciben las monedas, una publicación en el muro de su tienda y un aviso.",
+      "caption": "Quién va ganando cada categoría activada en cada tienda",
+      "columns": {
+        "store": "Tienda"
+      },
+      "announced": "Ganadores anunciados",
+      "none": "Nadie va ganando aún",
+      "winner": "Ganador",
+      "coins": "{count, plural, one {{shown} moneda} other {{shown} monedas}}",
+      "jump": "{count, plural, one {+{shown} moneda} other {+{shown} monedas}}",
+      "shoutouts": "{count, plural, one {{shown} reconocimiento} other {{shown} reconocimientos}}",
+      "loadError": "No se pudo cargar quién va ganando.",
+      "noStores": "No hay tiendas abiertas",
+      "noStoresLead": "Quién va ganando aparece aquí cuando haya una tienda abierta en Personal.",
+      "allOff": "Todas las categorías están desactivadas",
+      "allOffLead": "Activa una categoría arriba y aquí verás quién va ganando."
+    },
+    "announce": {
+      "button": "Anunciar ganadores de {month}",
+      "title": "¿Anunciar los ganadores de {month} ahora?",
+      "body": "Quien va ganando cada categoría activada en cada tienda gana ahora: recibe las monedas del premio al instante, una publicación en el muro de su tienda y un aviso. Sus monedas no se pueden quitar.",
+      "once": "Solo puedes hacerlo una vez al mes. Los ganadores no se vuelven a pagar cuando termine el mes.",
+      "confirm": "Anunciar y pagar",
+      "announced": "Ganadores anunciados",
+      "announcedToast": "Ganadores de {month} anunciados y pagados.",
+      "done": "Los ganadores de {month} ya están anunciados. Los del mes que viene se eligen solos cuando termine.",
+      "doneWhen": "Los ganadores de {month} se anunciaron el {when}. Los del mes que viene se eligen solos cuando termine.",
+      "doneBy": "{by} anunció los ganadores de {month} el {when}. Los del mes que viene se eligen solos cuando termine."
     }
   }
 }

@@ -16,8 +16,10 @@ export interface Autosave<D> {
   status: SaveStatus;
 }
 
-/** One field path of the settings, as PATCH /portal/settings takes it. */
-const send = (changes: Record<string, unknown>) => apiPatch<unknown>("/portal/settings", { changes });
+/** One field path of the settings, as PATCH /portal/settings takes it. Answers with the
+ *  settings as they now stand (SettingsOut). */
+export const patchSettings = (changes: Record<string, unknown>) =>
+  apiPatch<unknown>("/portal/settings", { changes });
 
 /**
  * `useAutosave(path)` (plan §9): puts one setting on one control. The control shows `draft`
@@ -27,6 +29,10 @@ const send = (changes: Record<string, unknown>) => apiPatch<unknown>("/portal/se
  * `value` is what the API holds. When the page is drawn again with a different one (a refresh,
  * another owner's change), the control takes it - unless the owner is in the middle of
  * changing it, whose typing always wins.
+ *
+ * `send` replaces the plain PATCH for a field whose change needs more than its own path (a
+ * prize's type brings its amount along) or whose answer the page reads; it gets the
+ * `{path: value}` the saver would send, and the latest render's `send` is the one called.
  */
 export function useAutosave<D, T>({
   path,
@@ -34,6 +40,8 @@ export function useAutosave<D, T>({
   parse,
   format,
   delayMs,
+  send = patchSettings,
+  equal,
 }: {
   path: string;
   value: T;
@@ -43,10 +51,15 @@ export function useAutosave<D, T>({
   format: (value: T) => D;
   /** The pause before saving: typing waits (the default, 600 ms), a switch or a list need not. */
   delayMs?: number;
+  send?: (changes: Record<string, unknown>) => Promise<unknown>;
+  /** When two values are the same setting (the default: Object.is). */
+  equal?: (a: T, b: T) => boolean;
 }): Autosave<D> {
   const [draft, setDraft] = useState<D>(() => format(value));
   const [status, setStatus] = useState<SaveStatus>({ kind: "idle" });
-  const [saver] = useState(() => new FieldSaver<T>({ path, saved: value, send, onStatus: setStatus, delayMs }));
+  const [saver] = useState(
+    () => new FieldSaver<T>({ path, saved: value, send, onStatus: setStatus, delayMs, equal }),
+  );
   const [seen, setSeen] = useState(value);
 
   if (!Object.is(value, seen)) {
@@ -57,6 +70,11 @@ export function useAutosave<D, T>({
   useEffect(() => {
     saver.rebase(value);
   }, [saver, value]);
+
+  // The saver lives as long as the control; the send it calls is always the latest one.
+  useEffect(() => {
+    saver.sendWith(send);
+  }, [saver, send]);
 
   // Leaving the page sends what is still waiting rather than dropping it.
   useEffect(() => () => saver.dispose(), [saver]);

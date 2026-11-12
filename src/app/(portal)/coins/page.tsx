@@ -1,8 +1,9 @@
-import { ChevronRight, Coins, Gift, Info, Send, Wallet, type LucideIcon } from "lucide-react";
+import { ChevronRight, Coins, Gift, Send, Wallet, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import { CoinsSettings } from "@/components/coins/CoinsSettings";
+import { LiveNote } from "@/components/coins/LiveNote";
 import { portalMetadata } from "@/components/console/PortalPage";
 import { Panel } from "@/components/recognition/Panel";
 import { Alert, cx, PageHeader } from "@/components/ui";
@@ -81,10 +82,7 @@ export default async function CoinsPage() {
     <>
       <PageHeader title={tPage("title")} lead={tPage("lead")} />
 
-      <p className="flex items-start gap-2.5 rounded-lg bg-info-subtle p-3 text-sm">
-        <Info aria-hidden="true" className="mt-0.5 size-4.5 shrink-0 text-info-ink" strokeWidth={2.2} />
-        <span>{t("live")}</span>
-      </p>
+      <LiveNote>{t("live")}</LiveNote>
 
       <Panel id="how-heading" title={t("how.heading")} icon={Coins}>
         <ol className="flex flex-col gap-1 lg:flex-row lg:items-stretch lg:gap-2">

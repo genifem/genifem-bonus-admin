@@ -12,33 +12,51 @@ import { Spinner } from "@/components/ui/Spinner";
 import { Toggle } from "@/components/ui/Toggle";
 import { inlineInputClass, inputClass } from "@/components/ui/controls";
 
-import type { SaveStatus } from "./autosave";
-import { formatDollars, parseDollars, parseWhole, type Range } from "./coin-rules";
+import type { Parsed, SaveStatus } from "./autosave";
+import { formatDollars, NAME_MAX, parseDollars, parseName, parseWhole, type Range } from "./coin-rules";
 import { useAutosave } from "./useAutosave";
 
 /**
- * The controls of the rule pages, each saving itself (useAutosave): a number box, a switch and
- * a list. Each shows how its save went beside it - a spinner, then a quiet "Saved" - and says
- * why when it could not save, under it, in the owner's language.
+ * The controls of the rule pages, each saving itself (useAutosave): a number box, a name box,
+ * a switch and a list. Each shows how its save went beside it - a spinner, then a quiet
+ * "Saved" - and says why when it could not save, under it, in the owner's language.
  */
 
-/** What to say under a control that did not save, or null. */
-function useProblemText(range?: Range, dollars = false) {
+/** A page's own words for a control's problems: by problem key for its own checks
+ *  (`validate`), and `rule` for when the API refused the field (the range, by default). */
+export interface ProblemWords {
+  problems?: Record<string, string>;
+  rule?: string;
+}
+
+/** What to say under a control that did not save, or null. Exported for a page's own saves
+ *  (the prize list's) that draw their problem in their own place. */
+export function useProblemText({
+  range,
+  dollars = false,
+  words,
+}: { range?: Range; dollars?: boolean; words?: ProblemWords } = {}) {
   const t = useTranslations("coins.save");
   const te = useTranslations("errors");
   const locale = useLocale();
   const say = (value: number) => (dollars ? formatUsd(value, locale) : formatCount(value, locale));
-  const rule = () =>
+  const inRange = () =>
     range ? t("problems.range", { min: say(range.min), max: say(range.max) }) : te("settings_invalid");
+  // The API's refusal names only the field, so it is said as the field's whole rule.
+  const rule = () => words?.rule ?? inRange();
   return (status: SaveStatus): string | null => {
     if (status.kind === "invalid") {
+      const own = words?.problems?.[status.problem];
+      if (own) return own;
       return status.problem === "range"
-        ? rule()
+        ? inRange()
         : status.problem === "cents"
           ? t("problems.cents")
           : status.problem === "whole"
             ? t("problems.whole")
-            : t("problems.required");
+            : status.problem === "long"
+              ? t("problems.long", { max: NAME_MAX })
+              : t("problems.required");
     }
     if (status.kind !== "failed") return null;
     // The API named this field: say its rule in the owner's words rather than the API's English.
@@ -90,6 +108,9 @@ export function NumberSetting({
   compact = false,
   describedBy,
   onLive,
+  validate,
+  words,
+  send,
   className,
 }: {
   path: string;
@@ -105,17 +126,28 @@ export function NumberSetting({
   /** The id of the row's description, read with the box. */
   describedBy?: string;
   onLive?: (value: number) => void;
+  /** A check of the page's own beyond the range (a tier above the one before it): the
+   *  problem's key, said through `words`, or null when the value is fine. */
+  validate?: (value: number) => string | null;
+  words?: ProblemWords;
+  /** In place of the plain PATCH of `path` (useAutosave). */
+  send?: (changes: Record<string, unknown>) => Promise<unknown>;
   className?: string;
 }) {
   const id = useId();
-  const parse = (raw: string) => (dollars ? parseDollars(raw, range) : parseWhole(raw, range));
+  const parse = (raw: string): Parsed<number> => {
+    const parsed = dollars ? parseDollars(raw, range) : parseWhole(raw, range);
+    const problem = parsed.ok && validate ? validate(parsed.value) : null;
+    return problem ? { ok: false, problem } : parsed;
+  };
   const field = useAutosave<string, number>({
     path,
     value,
     parse,
     format: dollars ? formatDollars : String,
+    send,
   });
-  const problem = useProblemText(range, dollars)(field.status);
+  const problem = useProblemText({ range, dollars, words })(field.status);
   const messageId = `${id}-message`;
   return (
     <div className={cx("flex min-w-0 flex-col gap-1", className)}>
@@ -158,17 +190,25 @@ export function NumberSetting({
   );
 }
 
-/** An on/off setting, saved the moment it is flipped. The whole row is its label. */
+/** An on/off setting, saved the moment it is flipped. The whole row is its label; in a table
+ *  cell (`hideLabel`) the column says what it is, and the label is for a screen reader. */
 export function SwitchSetting({
   path,
   value,
   label,
   description,
+  hideLabel = false,
+  compact = false,
+  onLive,
 }: {
   path: string;
   value: boolean;
   label: string;
   description?: string;
+  hideLabel?: boolean;
+  compact?: boolean;
+  /** Hears every flip, for what the page works out from it. */
+  onLive?: (value: boolean) => void;
 }) {
   const field = useAutosave<boolean, boolean>({
     path,
@@ -183,14 +223,22 @@ export function SwitchSetting({
       <div className="flex items-center gap-3">
         <Toggle
           checked={field.draft}
-          onChange={field.change}
+          onChange={(next) => {
+            field.change(next);
+            onLive?.(next);
+          }}
           label={label}
           description={description}
-          className="min-w-0 flex-1"
+          hideLabel={hideLabel}
+          className={hideLabel ? "shrink-0" : "min-w-0 flex-1"}
         />
-        <SaveMark status={field.status} />
+        <SaveMark status={field.status} compact={compact} />
       </div>
-      {problem ? <FieldMessage error={problem} /> : null}
+      {problem ? (
+        <div className={compact ? "max-w-48" : undefined}>
+          <FieldMessage error={problem} />
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -202,6 +250,10 @@ export function ChoiceSetting<V extends string>({
   label,
   options,
   describedBy,
+  send,
+  onLive,
+  words,
+  width = "md",
 }: {
   path: string;
   value: V;
@@ -209,6 +261,13 @@ export function ChoiceSetting<V extends string>({
   label: string;
   options: readonly { value: V; label: string }[];
   describedBy?: string;
+  /** In place of the plain PATCH of `path` (useAutosave). */
+  send?: (changes: Record<string, unknown>) => Promise<unknown>;
+  /** Hears every pick, for what the page works out from it. */
+  onLive?: (value: V) => void;
+  words?: ProblemWords;
+  /** `sm` for a table cell. */
+  width?: "sm" | "md";
 }) {
   const id = useId();
   const field = useAutosave<string, V>({
@@ -220,18 +279,24 @@ export function ChoiceSetting<V extends string>({
         : { ok: false, problem: "required" },
     format: (next) => next,
     delayMs: 0,
+    send,
   });
-  const problem = useProblemText()(field.status);
+  const problem = useProblemText({ words })(field.status);
   const messageId = `${id}-message`;
   return (
     <div className="flex min-w-0 flex-col gap-1">
       <div className="flex items-center gap-2">
-        <div className="w-full min-w-0 sm:w-60">
+        <div className={cx("w-full min-w-0", width === "sm" ? "sm:w-44" : "sm:w-60")}>
           <Select
             id={id}
             aria-label={label}
             value={field.draft}
-            onChange={(event) => field.change(event.target.value)}
+            onChange={(event) => {
+              const next = event.target.value;
+              field.change(next);
+              const picked = options.find((option) => option.value === next);
+              if (picked) onLive?.(picked.value);
+            }}
             aria-invalid={problem ? true : undefined}
             aria-describedby={[describedBy, problem ? messageId : null].filter(Boolean).join(" ") || undefined}
             className={inputClass}
@@ -245,7 +310,91 @@ export function ChoiceSetting<V extends string>({
         </div>
         <SaveMark status={field.status} compact />
       </div>
-      {problem ? <FieldMessage id={messageId} error={problem} /> : null}
+      {problem ? (
+        <div className={width === "sm" ? "max-w-56" : undefined}>
+          <FieldMessage id={messageId} error={problem} />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * A name setting (a badge's, a prize's, an award's), in English or, `optional`, in Spanish:
+ * blank then means "use the English one" (plan G8). Spaces are tidied as the API tidies them,
+ * and it saves after a pause or on leaving the box.
+ *
+ * `label` names the box: shown above it with `showLabel` ("Spanish (optional)"), otherwise for
+ * a screen reader only, where the table's column says what it is. `context` (which row) follows
+ * the label for a screen reader only.
+ */
+export function TextSetting({
+  path,
+  value,
+  label,
+  context,
+  showLabel = false,
+  optional = false,
+  words,
+  onLive,
+  autoFocus,
+  className,
+}: {
+  path: string;
+  value: string | null;
+  label: string;
+  context?: string;
+  showLabel?: boolean;
+  optional?: boolean;
+  words?: ProblemWords;
+  /** Hears every good value as it is typed, for what the page draws from it. */
+  onLive?: (value: string | null) => void;
+  /** For the name of a row the owner just added. */
+  autoFocus?: boolean;
+  className?: string;
+}) {
+  const id = useId();
+  const parse = (raw: string) => parseName(raw, { optional });
+  const field = useAutosave<string, string | null>({
+    path,
+    value,
+    parse,
+    format: (next) => next ?? "",
+  });
+  const problem = useProblemText({ words })(field.status);
+  const messageId = `${id}-message`;
+  return (
+    <div className={cx("flex min-w-0 flex-col gap-1", className)}>
+      <label htmlFor={id} className={showLabel ? "text-caption font-bold text-muted" : "sr-only"}>
+        {label}
+        {context ? <span className="sr-only">{`, ${context}`}</span> : null}
+      </label>
+      <div className="flex items-center gap-2">
+        <input
+          id={id}
+          type="text"
+          autoComplete="off"
+          maxLength={NAME_MAX}
+          autoFocus={autoFocus}
+          value={field.draft}
+          onChange={(event) => {
+            const next = event.target.value;
+            field.change(next);
+            const parsed = parse(next);
+            if (parsed.ok) onLive?.(parsed.value);
+          }}
+          onBlur={field.flush}
+          aria-invalid={problem ? true : undefined}
+          aria-describedby={problem ? messageId : undefined}
+          className={cx(inlineInputClass, "w-full min-w-36")}
+        />
+        <SaveMark status={field.status} compact />
+      </div>
+      {problem ? (
+        <div className="max-w-60">
+          <FieldMessage id={messageId} error={problem} />
+        </div>
+      ) : null}
     </div>
   );
 }

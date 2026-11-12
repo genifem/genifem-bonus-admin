@@ -3,7 +3,7 @@
 import type { Schemas } from "@crewstars/api-client";
 import { Gift, Send, Users } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useId, useState } from "react";
+import { useId } from "react";
 
 import { formatCount, formatUsd } from "@/components/recognition/numbers";
 import { Panel } from "@/components/recognition/Panel";
@@ -20,21 +20,10 @@ import {
   type GivingRole,
 } from "./coin-rules";
 import { ChoiceSetting, NumberSetting, SettingRow, SwitchSetting } from "./SettingControls";
+import { useLive } from "./useLive";
 
 type Rules = Schemas["Rules"];
 export type CoinRules = Pick<Rules, "allowance" | "amounts" | "scope" | "upward" | "redeem" | "coin_value">;
-
-/** A number the page works estimates out from: the API's, then whatever good value the owner
- *  types, and the API's again if the page is drawn again with a new one. */
-function useLive(value: number): [number, (next: number) => void] {
-  const [live, setLive] = useState(value);
-  const [seen, setSeen] = useState(value);
-  if (value !== seen) {
-    setSeen(value);
-    setLive(value);
-  }
-  return [live, setLive];
-}
 
 /**
  * Coins & limits (OP-13 to OP-15), the parts an owner changes: each role's monthly kudos

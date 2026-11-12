@@ -41,6 +41,13 @@ export const RANGES = {
 /** Why a typed number was refused: empty, not a whole number, more than cents, out of range. */
 export type NumberProblem = "required" | "whole" | "cents" | "range";
 
+/** The longest name a badge, prize, tier or award can have, in either language
+ *  (settings/models.py: max_length=40). */
+export const NAME_MAX = 40;
+
+/** Why a typed name was refused: empty (when one is needed), or too long. */
+export type NameProblem = "required" | "long";
+
 /** Typing allows thousands separators and spaces ("4,000"). */
 const clean = (raw: string) => raw.trim().replace(/[,\s]/g, "");
 
@@ -63,6 +70,18 @@ export function parseDollars(raw: string, range: Range): Parsed<number> {
   const value = Math.round(Number.parseFloat(text) * 100) / 100;
   if (value < range.min || value > range.max) return { ok: false, problem: "range" };
   return { ok: true, value };
+}
+
+/**
+ * A name as the API keeps it: spaces trimmed and runs of them made one (models.py
+ * _clean_name). A Spanish name is `optional`: left blank, it is null, and the app uses the
+ * English one (plan G8).
+ */
+export function parseName(raw: string, { optional = false, max = NAME_MAX } = {}): Parsed<string | null> {
+  const text = raw.trim().replace(/\s+/g, " ");
+  if (text === "") return optional ? { ok: true, value: null } : { ok: false, problem: "required" };
+  if (text.length > max) return { ok: false, problem: "long" };
+  return { ok: true, value: text };
 }
 
 /** A coin value as the box shows it: always with its cents ("0.10"). */
