@@ -164,7 +164,15 @@
     "store_number_taken": "Another store already has that number.",
     "store_has_people": "People still work at this store ({people}). Move or terminate them before closing it.",
     "area_name_taken": "Another area already has that name.",
-    "csv_rejected": "This file can't be imported."
+    "csv_rejected": "This file can't be imported.",
+    "kudos_insufficient": "You have {left, plural, one {# coin} other {# coins}} left to give this month. Pick a smaller amount.",
+    "not_in_scope": "You can't recognize this person.",
+    "amount_not_allowed": "That amount isn't allowed. Pick one of the amounts, or a whole number from 1 to 5,000.",
+    "message_too_long": "Keep the message to {max} characters or fewer.",
+    "tag_not_allowed": "That tag can't be used for this shout-out. Pick another.",
+    "idempotency_key_required": "The shout-out couldn't be sent. Reload the page and try again.",
+    "recipient_not_found": "That person isn't on the roster any more. Reload the page to see the latest.",
+    "idempotency_key_reused": "That send was already used for a different shout-out. Reload the page and try again."
   },
   "roster": {
     "loadError": "The roster couldn't be loaded.",
@@ -391,6 +399,161 @@
       "csv_empty": "That file is empty.",
       "csv_too_big": "That file is too big. Split it into files of up to 5,000 people.",
       "csv_unreadable": "That file couldn't be read. Save it as CSV and choose it again."
+    }
+  },
+  "recognition": {
+    "loadError": "This page couldn't be loaded.",
+    "retry": "Try again",
+    "store": "Store {number}",
+    "storeNamed": "Store {number}, {name}",
+    "coins": "{count, plural, one {# coin} other {# coins}}",
+    "plusCoins": "+{count, plural, one {# coin} other {# coins}}",
+    "percent": "{value}%",
+    "recognizeAction": "Recognize",
+    "recognize": {
+      "who": "Who are you recognizing?",
+      "filters": {
+        "label": "Filter by role",
+        "leaders": "Leaders",
+        "director": "Directors",
+        "supervisor": "Supervisors",
+        "gm": "GMs",
+        "shift": "Shift managers",
+        "crew": "Crew",
+        "everyone": "Everyone"
+      },
+      "search": "Search by name",
+      "searchPlaceholder": "Name",
+      "count": "{count, plural, =0 {No one to show} one {# person} other {# people}}",
+      "listLabel": "People you can recognize",
+      "noMatch": "No one matches these filters.",
+      "notFound": "That person isn't on the roster any more, so they can't be recognized.",
+      "pick": "Pick someone from the list",
+      "pickLead": "Their role, store and balance show here, with the shout-out form.",
+      "balance": "Balance",
+      "tag": "What stood out?",
+      "needTag": "Pick what stood out to send it.",
+      "amount": "Coins",
+      "custom": "Custom",
+      "customAmount": "Custom amount",
+      "customHint": "A whole number from {min} to {max}.",
+      "usd": "≈ {usd} in rewards",
+      "amountProblems": {
+        "required": "Enter an amount.",
+        "whole": "Use a whole number, like 150.",
+        "range": "Enter an amount from {min} to {max}.",
+        "over": "That's more than the {left, plural, one {# coin} other {# coins}} you have left this month."
+      },
+      "message": "Message (optional)",
+      "messagePlaceholder": "Tell them what they did and why it mattered",
+      "messageCount": "{count} of {max} characters",
+      "budget": "Owner recognition budget: <b>{left}</b> of {total} coins left this month. It comes from the company, not anyone's own coins.",
+      "resets": "It resets on {date}.",
+      "send": "Send {coins, plural, one {# coin} other {# coins}} to {name}",
+      "sendPlain": "Send shout-out",
+      "sent": "{name} got {coins, plural, one {# coin} other {# coins}}.",
+      "recent": "Your recent recognitions",
+      "noRecent": "You haven't recognized anyone this month yet."
+    },
+    "storeFilter": {
+      "label": "Store",
+      "all": "All stores",
+      "option": "{number} · {name}"
+    },
+    "tags": {
+      "guest": "Guest Hero",
+      "rush": "Rush Hour Hustle",
+      "team": "Team Player",
+      "clean": "Clean Machine",
+      "above": "Above and Beyond",
+      "lead": "Great Leadership"
+    },
+    "feed": {
+      "from": "from {name}",
+      "fromProgram": "from Crew Stars",
+      "store": "Store {number}",
+      "award": "Monthly award: {name}",
+      "hide": "Hide",
+      "hideFor": "the shout-out to {name}",
+      "hideTitle": "Hide this shout-out?",
+      "hideBody": "It comes off the wall for everyone. {name} keeps the {coins, plural, one {# coin} other {# coins}}.",
+      "hideAudit": "The audit log records that you hid it. It can't be shown again from the portal.",
+      "hideConfirm": "Hide shout-out",
+      "hidden": "Shout-out hidden."
+    },
+    "overview": {
+      "statsLabel": "{month} in numbers",
+      "shoutouts": "Shout-outs",
+      "shoutoutsHint": "this month",
+      "recognized": "Crew recognized",
+      "recognizedHint": "{recognized} of {total} crew",
+      "earned": "Coins earned",
+      "earnedHint": "≈ {usd} at {rate} a coin",
+      "earnedHintNoRate": "≈ {usd}",
+      "redeemed": "Coins redeemed",
+      "redeemedHint": "≈ {usd} in rewards",
+      "waiting": "Waiting for approval",
+      "waitingHint": "Reward requests",
+      "byStore": "By store",
+      "storeCaption": "Recognition by store this month. Choose a store to see only its numbers.",
+      "columns": {
+        "store": "Store",
+        "gm": "GM",
+        "recognized": "Crew recognized",
+        "earned": "Coins earned",
+        "budget": "Reward budget used",
+        "waiting": "Waiting"
+      },
+      "noGm": "No GM",
+      "recognizedBar": "Crew recognized at store {number}",
+      "ofCrew": "({recognized}/{total})",
+      "budgetBar": "Reward budget used at store {number}",
+      "budgetValue": "{used} / {budget}",
+      "noStores": "No open stores yet. Add them on the Roster page.",
+      "notRecognized": "Not recognized yet in {month} ({count})",
+      "notRecognizedLead": "Crew who haven't received a shout-out this month. A quick note goes a long way.",
+      "everyoneRecognized": "Everyone has been recognized this month.",
+      "daysOnTeam": "{days, plural, one {# day} other {# days}} on the team",
+      "recent": "Recent shout-outs",
+      "noRecent": "No shout-outs yet this month."
+    },
+    "people": {
+      "storesHeading": "Stores",
+      "heading": "{count, plural, one {# person} other {# people}}",
+      "caption": "People in the program, with this month's numbers",
+      "filters": {
+        "role": "Role",
+        "anyRole": "All roles",
+        "search": "Search by name",
+        "searchPlaceholder": "Name"
+      },
+      "columns": {
+        "name": "Name",
+        "role": "Role",
+        "store": "Store",
+        "balance": "Balance",
+        "month": "This month",
+        "tier": "Tier",
+        "kudos": "Kudos left",
+        "badges": "Badges",
+        "actions": "Actions"
+      },
+      "nowhere": "Not placed",
+      "stores": "Stores {list}",
+      "kudosValue": "{left} / {allowance}",
+      "noneYet": "coins this month, not recognized yet",
+      "emptyTitle": "No one is in the program yet",
+      "emptyLead": "Add people on the Roster page, one at a time or from a CSV.",
+      "noMatch": "No one matches these filters.",
+      "clearFilters": "Clear the filters",
+      "card": {
+        "gm": "GM {name}",
+        "supervisor": "Supervisor {name}",
+        "nobody": "none",
+        "recognized": "Crew recognized",
+        "budget": "Reward budget",
+        "over": "(over budget)"
+      }
     }
   }
 }

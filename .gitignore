@@ -13,9 +13,10 @@ node_modules/
 /test-results/
 /playwright-report/
 
-# next.js
+# next.js, and any other build folder (--dist-dir). Tailwind skips ignored paths; a
+# build folder it scans fills the CSS with garbage classes and breaks `next dev`.
 /.next/
-/.next-e2e/
+/.next-*/
 /out/
 
 # production

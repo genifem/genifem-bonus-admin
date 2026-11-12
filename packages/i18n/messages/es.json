@@ -164,7 +164,15 @@
     "store_number_taken": "Otra tienda ya tiene ese número.",
     "store_has_people": "Todavía trabajan personas en esta tienda ({people}). Cámbialas de tienda o dalas de baja antes de cerrarla.",
     "area_name_taken": "Otra área ya tiene ese nombre.",
-    "csv_rejected": "Este archivo no se puede importar."
+    "csv_rejected": "Este archivo no se puede importar.",
+    "kudos_insufficient": "Te {left, plural, one {queda # moneda} other {quedan # monedas}} para dar este mes. Elige una cantidad menor.",
+    "not_in_scope": "No puedes reconocer a esta persona.",
+    "amount_not_allowed": "Esa cantidad no está permitida. Elige una de las cantidades o un número entero del 1 al 5,000.",
+    "message_too_long": "El mensaje puede tener como máximo {max} caracteres.",
+    "tag_not_allowed": "Esa etiqueta no se puede usar en este reconocimiento. Elige otra.",
+    "idempotency_key_required": "No se pudo enviar el reconocimiento. Vuelve a cargar la página e inténtalo de nuevo.",
+    "recipient_not_found": "Esa persona ya no está en el personal. Vuelve a cargar la página para ver lo más reciente.",
+    "idempotency_key_reused": "Ese envío ya se usó para otro reconocimiento. Vuelve a cargar la página e inténtalo de nuevo."
   },
   "roster": {
     "loadError": "No pudimos cargar el personal.",
@@ -391,6 +399,161 @@
       "csv_empty": "Ese archivo está vacío.",
       "csv_too_big": "Ese archivo es demasiado grande. Divídelo en archivos de hasta 5,000 personas.",
       "csv_unreadable": "No pudimos leer ese archivo. Guárdalo como CSV y vuelve a elegirlo."
+    }
+  },
+  "recognition": {
+    "loadError": "No pudimos cargar esta página.",
+    "retry": "Reintentar",
+    "store": "Tienda {number}",
+    "storeNamed": "Tienda {number}, {name}",
+    "coins": "{count, plural, one {# moneda} other {# monedas}}",
+    "plusCoins": "+{count, plural, one {# moneda} other {# monedas}}",
+    "percent": "{value} %",
+    "recognizeAction": "Reconocer",
+    "recognize": {
+      "who": "¿A quién vas a reconocer?",
+      "filters": {
+        "label": "Filtrar por puesto",
+        "leaders": "Líderes",
+        "director": "Directores",
+        "supervisor": "Supervisores",
+        "gm": "Gerentes generales",
+        "shift": "Gerentes de turno",
+        "crew": "Equipo",
+        "everyone": "Todos"
+      },
+      "search": "Buscar por nombre",
+      "searchPlaceholder": "Nombre",
+      "count": "{count, plural, =0 {Nadie que mostrar} one {# persona} other {# personas}}",
+      "listLabel": "Personas que puedes reconocer",
+      "noMatch": "Nadie coincide con estos filtros.",
+      "notFound": "Esa persona ya no está en el personal, así que no se le puede reconocer.",
+      "pick": "Elige a alguien de la lista",
+      "pickLead": "Aquí verás su puesto, su tienda y su saldo, junto con el formulario de reconocimiento.",
+      "balance": "Saldo",
+      "tag": "¿Qué destacó?",
+      "needTag": "Elige qué destacó para enviarlo.",
+      "amount": "Monedas",
+      "custom": "Otra cantidad",
+      "customAmount": "Cantidad personalizada",
+      "customHint": "Un número entero del {min} al {max}.",
+      "usd": "≈ {usd} en recompensas",
+      "amountProblems": {
+        "required": "Escribe una cantidad.",
+        "whole": "Usa un número entero, como 150.",
+        "range": "Escribe una cantidad del {min} al {max}.",
+        "over": "Es más de {left, plural, one {la # moneda que te queda} other {las # monedas que te quedan}} este mes."
+      },
+      "message": "Mensaje (opcional)",
+      "messagePlaceholder": "Cuéntale qué hizo y por qué importó",
+      "messageCount": "{count} de {max} caracteres",
+      "budget": "Presupuesto de reconocimiento del dueño: te quedan <b>{left}</b> de {total} monedas este mes. Lo paga la empresa, no las monedas de nadie.",
+      "resets": "Se renueva el {date}.",
+      "send": "Enviar {coins, plural, one {# moneda} other {# monedas}} a {name}",
+      "sendPlain": "Enviar reconocimiento",
+      "sent": "{name} recibió {coins, plural, one {# moneda} other {# monedas}}.",
+      "recent": "Tus reconocimientos recientes",
+      "noRecent": "Todavía no has reconocido a nadie este mes."
+    },
+    "storeFilter": {
+      "label": "Tienda",
+      "all": "Todas las tiendas",
+      "option": "{number} · {name}"
+    },
+    "tags": {
+      "guest": "Héroe del cliente",
+      "rush": "Héroe de la hora pico",
+      "team": "Buen compañero",
+      "clean": "Máquina de limpieza",
+      "above": "Más allá del deber",
+      "lead": "Gran liderazgo"
+    },
+    "feed": {
+      "from": "de {name}",
+      "fromProgram": "de Crew Stars",
+      "store": "Tienda {number}",
+      "award": "Premio del mes: {name}",
+      "hide": "Ocultar",
+      "hideFor": "el reconocimiento para {name}",
+      "hideTitle": "¿Ocultar este reconocimiento?",
+      "hideBody": "Desaparece del muro para todos. {name} conserva {coins, plural, one {la # moneda} other {las # monedas}}.",
+      "hideAudit": "El registro de auditoría anota que lo ocultaste. No se puede volver a mostrar desde el portal.",
+      "hideConfirm": "Ocultar reconocimiento",
+      "hidden": "Reconocimiento oculto."
+    },
+    "overview": {
+      "statsLabel": "Los números de {month}",
+      "shoutouts": "Reconocimientos",
+      "shoutoutsHint": "este mes",
+      "recognized": "Equipo reconocido",
+      "recognizedHint": "{recognized} de {total} del equipo",
+      "earned": "Monedas ganadas",
+      "earnedHint": "≈ {usd} a {rate} por moneda",
+      "earnedHintNoRate": "≈ {usd}",
+      "redeemed": "Monedas canjeadas",
+      "redeemedHint": "≈ {usd} en recompensas",
+      "waiting": "Esperando aprobación",
+      "waitingHint": "Solicitudes de recompensa",
+      "byStore": "Por tienda",
+      "storeCaption": "Reconocimiento por tienda este mes. Elige una tienda para ver solo sus números.",
+      "columns": {
+        "store": "Tienda",
+        "gm": "Gerente general",
+        "recognized": "Equipo reconocido",
+        "earned": "Monedas ganadas",
+        "budget": "Presupuesto de recompensas usado",
+        "waiting": "En espera"
+      },
+      "noGm": "Sin gerente general",
+      "recognizedBar": "Equipo reconocido en la tienda {number}",
+      "ofCrew": "({recognized}/{total})",
+      "budgetBar": "Presupuesto de recompensas usado en la tienda {number}",
+      "budgetValue": "{used} / {budget}",
+      "noStores": "Todavía no hay tiendas abiertas. Agrégalas en la página de Personal.",
+      "notRecognized": "Sin reconocimiento todavía en {month} ({count})",
+      "notRecognizedLead": "Personas del equipo que no han recibido un reconocimiento este mes. Una nota rápida hace mucho.",
+      "everyoneRecognized": "Todo el equipo ha recibido un reconocimiento este mes.",
+      "daysOnTeam": "{days, plural, one {# día} other {# días}} en el equipo",
+      "recent": "Reconocimientos recientes",
+      "noRecent": "Todavía no hay reconocimientos este mes."
+    },
+    "people": {
+      "storesHeading": "Tiendas",
+      "heading": "{count, plural, one {# persona} other {# personas}}",
+      "caption": "Personas del programa, con los números de este mes",
+      "filters": {
+        "role": "Puesto",
+        "anyRole": "Todos los puestos",
+        "search": "Buscar por nombre",
+        "searchPlaceholder": "Nombre"
+      },
+      "columns": {
+        "name": "Nombre",
+        "role": "Puesto",
+        "store": "Tienda",
+        "balance": "Saldo",
+        "month": "Este mes",
+        "tier": "Nivel",
+        "kudos": "Kudos restantes",
+        "badges": "Insignias",
+        "actions": "Acciones"
+      },
+      "nowhere": "Sin asignar",
+      "stores": "Tiendas {list}",
+      "kudosValue": "{left} / {allowance}",
+      "noneYet": "monedas este mes, todavía sin reconocimiento",
+      "emptyTitle": "Todavía no hay nadie en el programa",
+      "emptyLead": "Agrega personas en la página de Personal, de una en una o con un CSV.",
+      "noMatch": "Nadie coincide con estos filtros.",
+      "clearFilters": "Quitar los filtros",
+      "card": {
+        "gm": "Gerente general: {name}",
+        "supervisor": "Supervisor: {name}",
+        "nobody": "ninguno",
+        "recognized": "Equipo reconocido",
+        "budget": "Presupuesto de recompensas",
+        "over": "(por encima del presupuesto)"
+      }
     }
   }
 }

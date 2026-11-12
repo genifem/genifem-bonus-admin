@@ -5,6 +5,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SignOutButton } from "@/components/SignOutButton";
 import { Avatar, Sidebar, type NavGroup } from "@/components/ui";
 import { loadOwner, type Owner } from "@/lib/me";
+import { isScopedPath } from "@/lib/store-scope";
 
 import { PORTAL_NAV } from "./nav";
 
@@ -31,6 +32,8 @@ export async function ConsoleShell({ children }: { children: React.ReactNode }) 
       href: link.href,
       icon: link.icon,
       exact: link.exact,
+      // The pages the store filter belongs to carry it from one to the next (OP-01).
+      scoped: isScopedPath(link.href),
     })),
   }));
 

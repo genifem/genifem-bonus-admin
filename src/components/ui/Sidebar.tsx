@@ -1,5 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 
+import { ScopedNavLink } from "@/components/console/ScopedNavLink";
+
 import { NavLink } from "./NavLink";
 
 export interface NavItem {
@@ -11,6 +13,8 @@ export interface NavItem {
   exact?: boolean;
   /** Shown on the right of the row — a count worth noticing (requests waiting). */
   badge?: string | number;
+  /** A page the store filter belongs to (OP-01): the link carries the store along. */
+  scoped?: boolean;
 }
 
 export interface NavGroup {
@@ -70,8 +74,9 @@ export function RailNav({
 /** One row: the prototype's 12px-radius button shape, 800 weight, a 19px icon. */
 function RailLink({ item }: { item: NavItem }) {
   const Icon = item.icon;
+  const Link = item.scoped ? ScopedNavLink : NavLink;
   return (
-    <NavLink
+    <Link
       href={item.href}
       exact={item.exact}
       className="flex min-h-11 items-center gap-2.5 whitespace-nowrap rounded-compact px-2.5 text-caption font-extrabold transition-colors duration-fast rail:px-3 rail:text-sm"
@@ -86,7 +91,7 @@ function RailLink({ item }: { item: NavItem }) {
           {item.badge}
         </span>
       ) : null}
-    </NavLink>
+    </Link>
   );
 }
 
