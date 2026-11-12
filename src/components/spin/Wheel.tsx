@@ -1,4 +1,4 @@
-import { labelLines, labelSize, PRIZE_COLORS, segmentMiddle, segmentPath, WHEEL } from "./wheel-geometry";
+import { fitLabel, lineY, PRIZE_COLORS, segmentMiddle, segmentPath, WHEEL } from "./wheel-geometry";
 
 /**
  * The prize wheel as crew see it (OP-16's live preview of CR-28): equal segments in the
@@ -8,7 +8,6 @@ import { labelLines, labelSize, PRIZE_COLORS, segmentMiddle, segmentPath, WHEEL 
  */
 export function Wheel({ labels, name, size = 240 }: { labels: readonly string[]; name: string; size?: number }) {
   const count = labels.length;
-  const fontSize = labelSize(count);
   const c = WHEEL.centre;
   return (
     <div className="relative mx-auto max-w-full" style={{ width: size }}>
@@ -22,7 +21,7 @@ export function Wheel({ labels, name, size = 240 }: { labels: readonly string[];
       <svg role="img" aria-label={name} viewBox={`0 0 ${WHEEL.size} ${WHEEL.size}`} className="block h-auto w-full">
         <circle cx={c} cy={c} r={148} className="fill-paper stroke-line" strokeWidth={1} />
         {labels.map((label, index) => {
-          const lines = labelLines(label);
+          const { lines, fontSize } = fitLabel(label, count);
           return (
             <g key={index}>
               <path
@@ -36,7 +35,7 @@ export function Wheel({ labels, name, size = 240 }: { labels: readonly string[];
                   <text
                     key={row}
                     x={c}
-                    y={48 + row * (fontSize + 3)}
+                    y={lineY(row, fontSize)}
                     textAnchor="middle"
                     fontSize={fontSize}
                     fontWeight={900}

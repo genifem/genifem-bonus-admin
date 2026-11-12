@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { labelLines, labelSize, MAX_LINE, PRIZE_COLORS, segmentMiddle, segmentPath } from "./wheel-geometry";
+import { baseFontSize, fitLabel, lineWidth, PRIZE_COLORS, segmentMiddle, segmentPath } from "./wheel-geometry";
 
 describe("the wheel's segments", () => {
   it("cuts the wheel into equal slices, clockwise from the top", () => {
@@ -17,8 +17,8 @@ describe("the wheel's segments", () => {
   });
 
   it("draws narrower slices' labels smaller", () => {
-    expect(labelSize(8)).toBe(13);
-    expect(labelSize(9)).toBe(11);
+    expect(baseFontSize(8)).toBe(13);
+    expect(baseFontSize(9)).toBe(11);
   });
 
   it("has a colour for every slice of the fullest wheel", () => {
@@ -26,22 +26,28 @@ describe("the wheel's segments", () => {
   });
 });
 
-describe("labelLines", () => {
-  it("keeps a short label on one line", () => {
-    expect(labelLines("+10 coins")).toEqual(["+10 coins"]);
+describe("fitLabel", () => {
+  const GLYPH_EM = 0.58; // the estimate the fitting uses
+  const fitsAtDepth = (label: string, count: number) => {
+    const { lines, fontSize } = fitLabel(label, count);
+    return lines.every((line, row) => line.length * GLYPH_EM * fontSize <= lineWidth(102 - row * (fontSize + 3), count, fontSize * 0.75));
+  };
+
+  it("keeps a short label on one line at the prototype's size", () => {
+    expect(fitLabel("+10 coins", 8)).toEqual({ lines: ["+10 coins"], fontSize: 13 });
   });
 
-  it("splits a longer label into two lines where the longer one is shortest", () => {
-    expect(labelLines("+10 monedas extra")).toEqual(["+10 monedas", "extra"]);
-    expect(labelLines("Free fries today")).toEqual(["Free fries", "today"]);
-    expect(labelLines("A big free meal")).toEqual(["A big", "free meal"]);
-    // "Lucky" / "Star badge" and "Lucky Star" / "badge" tie: the first line takes more.
-    expect(labelLines("Lucky Star badge")).toEqual(["Lucky Star", "badge"]);
+  it("wraps and shrinks a long Spanish label until every line fits its segment", () => {
+    // Drawn as one 14-character line, this ran into the next segment at 360 px (P5 check).
+    const fitted = fitLabel("Insignia Estrella de la suerte", 8);
+    expect(fitted.lines.join(" ")).toBe("Insignia Estrella de la suerte"); // nothing cut
+    expect(fitted.lines.length).toBeLessThanOrEqual(3);
+    expect(fitsAtDepth("Insignia Estrella de la suerte", 8)).toBe(true);
+    expect(fitsAtDepth("+10 monedas", 8)).toBe(true);
+    expect(fitsAtDepth("+100 monedas", 10)).toBe(true);
   });
 
-  it("cuts a line still too long for the slice", () => {
-    const lines = labelLines("Insignia Estrella de la suerte");
-    expect(lines).toEqual(["Insignia Estr…", "de la suerte"]);
-    for (const line of labelLines("Supercalifragilisticexpialidocious")) expect(line.length).toBeLessThanOrEqual(MAX_LINE);
+  it("never draws below the smallest readable size", () => {
+    expect(fitLabel("Supercalifragilisticexpialidocious", 10).fontSize).toBeGreaterThanOrEqual(8);
   });
 });
