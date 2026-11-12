@@ -172,7 +172,14 @@
     "tag_not_allowed": "That tag can't be used for this shout-out. Pick another.",
     "idempotency_key_required": "The shout-out couldn't be sent. Reload the page and try again.",
     "recipient_not_found": "That person isn't on the roster any more. Reload the page to see the latest.",
-    "idempotency_key_reused": "That send was already used for a different shout-out. Reload the page and try again."
+    "idempotency_key_reused": "That send was already used for a different shout-out. Reload the page and try again.",
+    "request_not_pending": "Someone already decided this request. The list now shows where it stands.",
+    "request_not_approved": "Only an approved request can be marked collected. The list now shows where it stands.",
+    "request_not_found": "That request isn't there any more. Reload the page to see the latest.",
+    "cannot_decide": "You can't decide this request.",
+    "reward_not_found": "That reward isn't there any more. Reload the page to see the latest.",
+    "reward_has_pending": "Requests are still waiting for this reward, so it can't be deleted. Hide it from the app instead.",
+    "unlock_invalid": "That badge isn't in the settings any more. Choose another."
   },
   "roster": {
     "loadError": "The roster couldn't be loaded.",
@@ -553,6 +560,284 @@
         "recognized": "Crew recognized",
         "budget": "Reward budget",
         "over": "(over budget)"
+      }
+    }
+  },
+  "redemptions": {
+    "loadError": "The redemptions couldn't be loaded.",
+    "retry": "Try again",
+    "budgets": {
+      "heading": "Store reward budgets this month",
+      "lead": "Each store can redeem up to {budget} coins a month (≈ {usd}). <link>Change it under Coins & limits.</link>",
+      "leadNoRate": "Each store can redeem up to {budget} coins a month. <link>Change it under Coins & limits.</link>",
+      "bar": "Reward budget used at store {number}",
+      "value": "{used} / {budget}",
+      "over": "over budget",
+      "none": "No open stores yet. Add them on the Roster page."
+    },
+    "requests": {
+      "heading": "Reward requests",
+      "tabsLabel": "Requests by status",
+      "tabs": {
+        "pending": "Waiting",
+        "approved": "Approved",
+        "declined": "Declined",
+        "all": "All"
+      },
+      "caption": "Reward requests: who asked, for what, and who decided",
+      "columns": {
+        "person": "Person",
+        "store": "Store",
+        "reward": "Reward",
+        "coins": "Coins",
+        "requested": "Requested",
+        "status": "Status",
+        "decided": "Decided by",
+        "actions": "Actions"
+      },
+      "noStore": "No store",
+      "spin": "Won on the wheel",
+      "status": {
+        "pending": "Waiting",
+        "approved": "Approved",
+        "collected": "Collected",
+        "declined": "Declined",
+        "cancelled": "Cancelled"
+      },
+      "approver": {
+        "gm": "Their GM decides",
+        "owner": "An owner decides"
+      },
+      "decider": {
+        "automatic": "Automatic",
+        "automaticHint": "Manager approval was off",
+        "owner": "Owner",
+        "ownerUnnamed": "An owner",
+        "manager": "GM",
+        "managerUnnamed": "A manager"
+      },
+      "notDecided": "Not decided yet",
+      "empty": {
+        "pending": "Nothing is waiting for approval.",
+        "pendingLead": "Requests show here as crew redeem rewards. With manager approval off, they're approved straight away.",
+        "approved": "No approved requests yet.",
+        "approvedLead": "Approved and collected rewards show here.",
+        "declined": "No declined requests.",
+        "declinedLead": "Declined requests, and those cancelled when someone left, show here. Their coins went back.",
+        "all": "No reward requests yet.",
+        "allLead": "When crew redeem a reward, the request shows here."
+      }
+    },
+    "actions": {
+      "approve": "Approve",
+      "decline": "Decline",
+      "collect": "Mark collected",
+      "for": "{reward} for {name}",
+      "approved": "Approved: {reward} for {name}.",
+      "collected": "{reward} marked collected for {name}.",
+      "declined": "Declined. {coins, plural, one {# coin is} other {# coins are}} back with {name}.",
+      "declineTitle": "Decline this request?",
+      "declineBody": "{name} asked for {reward}. Declining gives back their {coins, plural, one {# coin} other {# coins}} and takes it off their monthly limits and the store's budget.",
+      "declineNotify": "They get a notification, and the decision goes in the audit log.",
+      "declineConfirm": "Decline request"
+    },
+    "payroll": {
+      "heading": "Payroll export",
+      "lead": "Approved cash and gift-card rewards for one month, across every store: person, EID, store, reward, value and approval date. They count as taxable wages.",
+      "month": "Month",
+      "download": "Download payroll export",
+      "downloaded": "Payroll export for {month} downloaded."
+    }
+  },
+  "rewards": {
+    "loadError": "The rewards couldn't be loaded.",
+    "retry": "Try again",
+    "heading": "{count, plural, one {# reward} other {# rewards}}",
+    "add": "Add reward",
+    "caption": "Rewards: what each costs, who can redeem it, and whether it shows in the app",
+    "columns": {
+      "reward": "Reward",
+      "coins": "Coins",
+      "usd": "≈ Cost",
+      "unlock": "Unlocks with",
+      "perMonth": "Per person / month",
+      "visible": "In app",
+      "actions": "Edit"
+    },
+    "payroll": "Payroll",
+    "waiting": "{count, plural, one {# request waiting} other {# requests waiting}}",
+    "unlock": {
+      "anyone": "Anyone",
+      "tier": "{name} tier and up",
+      "badge": "{name} badge",
+      "missing": "{name} (not in the settings any more)"
+    },
+    "show": "Show {name} in the app",
+    "shown": "{name} shows in the app again.",
+    "hidden": "{name} is hidden from the app. Requests already made go on as before.",
+    "edit": "Edit",
+    "empty": "No rewards yet.",
+    "emptyLead": "Add the first thing crew can spend their coins on.",
+    "note": "In the US, gift cards and cash count as taxable wages at any amount, so rewards marked Payroll go to the <link>payroll export on Redemptions</link>. Meals, shift perks and merchandise are usually simpler.",
+    "limits": {
+      "heading": "Limits that apply to every reward",
+      "body": "Each person can redeem up to <b>{coins} coins</b> and <b>{rewards, plural, one {# reward} other {# rewards}}</b> a month. Each store can redeem up to <b>{budget} coins</b> a month.",
+      "approvalOn": "A manager approves each request.",
+      "approvalOff": "Manager approval is off: rewards are ready to collect straight away.",
+      "change": "Change these under Coins & limits"
+    },
+    "form": {
+      "addTitle": "Add a reward",
+      "editTitle": "Edit {name}",
+      "name": "Name",
+      "nameEs": "Spanish name (optional)",
+      "nameEsHint": "Shown when the app is in Spanish. Leave it blank to use the English name.",
+      "description": "Short description",
+      "descriptionEs": "Spanish description (optional)",
+      "descriptionEsHint": "Leave it blank to use the English description.",
+      "icon": "Icon",
+      "icons": {
+        "burger": "Burger",
+        "cup": "Drink",
+        "calendar": "Calendar",
+        "gift": "Gift",
+        "shirt": "Shirt",
+        "sun": "Sun",
+        "fries": "Fries",
+        "star": "Star"
+      },
+      "otherIcon": "Current icon ({icon})",
+      "cost": "Cost in coins",
+      "costHint": "≈ {usd} at {rate} a coin",
+      "costHintNoRate": "Whole coins, 1 or more",
+      "perMonth": "Max per person a month",
+      "perMonthHint": "How many times one person can redeem it a month, from 1 to 100",
+      "unlock": "Who can redeem it",
+      "unlockTypes": {
+        "none": "Anyone with enough coins",
+        "tier": "Only from a tier up",
+        "badge": "Only with a badge"
+      },
+      "tier": "Tier",
+      "tierOption": "{name} and above ({min}+ coins earned all time)",
+      "badge": "Badge",
+      "noBadges": "There are no badges yet.",
+      "active": "Show in the app",
+      "activeHint": "Crew see it on their Rewards screen. Hiding it never touches requests already made.",
+      "cash": "Cash or gift card (send to payroll)",
+      "cashHint": "Taxable wages in the US: approved requests go to the payroll export on Redemptions.",
+      "create": "Add reward",
+      "save": "Save reward",
+      "added": "{name} added.",
+      "saved": "{name} saved.",
+      "delete": "Delete",
+      "problems": {
+        "name": "Enter a name.",
+        "cost": "Use a whole number of coins from 1 to 1,000,000.",
+        "per_person_monthly": "Use a whole number from 1 to 100.",
+        "unlock": "Choose the tier or badge."
+      },
+      "invalid": {
+        "name": "Enter a name of up to 60 characters.",
+        "name_es": "Keep the Spanish name to 60 characters.",
+        "description": "Keep the description to 200 characters.",
+        "description_es": "Keep the Spanish description to 200 characters.",
+        "icon": "Pick an icon.",
+        "cost": "Use a whole number of coins from 1 to 1,000,000.",
+        "per_person_monthly": "Use a whole number from 1 to 100.",
+        "unlock": "Choose a tier or badge from the list."
+      }
+    },
+    "delete": {
+      "title": "Delete {name}?",
+      "body": "It comes off this page and out of the app. Past requests for it keep their record.",
+      "confirm": "Delete reward",
+      "deleted": "{name} deleted.",
+      "blockedTitle": "Hide {name} instead?",
+      "blocked": "{count, plural, one {# request is} other {# requests are}} still waiting for this reward, so it can't be deleted. Hide it from the app instead: crew can't redeem it any more, and the waiting requests go on as before.",
+      "hide": "Hide from app",
+      "alreadyHidden": "{count, plural, one {# request is} other {# requests are}} still waiting for this reward, so it can't be deleted yet. It's already hidden from the app; delete it once they're decided."
+    }
+  },
+  "coins": {
+    "loadError": "The coin settings couldn't be loaded.",
+    "retry": "Try again",
+    "live": "Changes save as you type and apply straight away in the crew and manager app.",
+    "how": {
+      "heading": "How coins work",
+      "allowance": "The company gives everyone a monthly kudos allowance",
+      "give": "They spend kudos to recognize others",
+      "earn": "The person recognized gets earned coins",
+      "redeem": "Earned coins buy rewards, within your limits",
+      "note": "Kudos coins can't be redeemed and reset on the 1st, so nobody pays for recognition out of their own balance."
+    },
+    "roles": {
+      "crew": "Crew",
+      "shift": "Shift managers",
+      "gm": "GMs",
+      "supervisor": "Supervisors",
+      "director": "Directors",
+      "owner": "Owners"
+    },
+    "allowance": {
+      "heading": "Monthly kudos allowance and shout-out sizes",
+      "caption": "Each role's monthly kudos allowance and the three shout-out sizes they can pick",
+      "columns": {
+        "role": "Role",
+        "allowance": "Kudos to give each month",
+        "amounts": "Shout-out sizes they can pick"
+      },
+      "allowanceLabel": "{role}: monthly kudos allowance",
+      "amountLabel": "{role}: shout-out size {n}",
+      "ownerCustom": "Plus any amount from 1 to 5,000.",
+      "worstCase": "Worst case, crew allowances add up to <b>{coins} coins</b> a month across {crew, plural, one {# crew member} other {# crew members}} (≈ {usd}).",
+      "worstCaseUnknown": "The worst case for crew allowances couldn't be worked out: the crew count didn't load."
+    },
+    "scope": {
+      "heading": "Who can recognize whom",
+      "lead": "People can recognize anyone at their own rank or below, inside the scope you pick here.",
+      "canRecognize": "Can recognize people in…",
+      "label": "{role} can recognize",
+      "kinds": {
+        "store": "Their own store",
+        "stores": "Stores they supervise",
+        "area": "Their whole area",
+        "all": "Everyone"
+      },
+      "owners": "Owners",
+      "ownersHint": "Owners can recognize anyone directly, including directors, supervisors and GMs.",
+      "everyone": "Everyone",
+      "upward": "Crew can recognize managers in their store",
+      "upwardHint": "Lets crew and shift managers send kudos up to their own GM and shift managers."
+    },
+    "limits": {
+      "heading": "Redemption limits",
+      "maxCoins": "Most coins one person can redeem a month",
+      "maxCoinsHint": "The monthly cap. Crew see how much of it they have used.",
+      "maxRewards": "Most rewards one person can redeem a month",
+      "maxRewardsHint": "From 1 to 50.",
+      "storeBudget": "Reward budget per store a month",
+      "storeBudgetHint": "≈ {perStore} per store, {total} across {stores, plural, one {# store} other {# stores}}.",
+      "storeBudgetHintOne": "≈ {perStore} per store.",
+      "approval": "A manager approves each reward",
+      "approvalHint": "When it's off, rewards are ready to collect straight away.",
+      "coinValue": "What one coin is worth",
+      "coinValueHint": "In dollars, from $0.01 to $10. Used only for cost estimates in this portal."
+    },
+    "units": {
+      "coins": "coins",
+      "rewards": "rewards",
+      "dollars": "$"
+    },
+    "save": {
+      "saving": "Saving…",
+      "saved": "Saved",
+      "notSaved": "Not saved.",
+      "problems": {
+        "required": "Enter a number.",
+        "whole": "Use a whole number.",
+        "cents": "Use dollars and cents, like 0.10.",
+        "range": "Use a number from {min} to {max}."
       }
     }
   }

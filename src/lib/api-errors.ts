@@ -37,6 +37,8 @@ const FIELD_OF_CODE: Record<string, string> = {
   store_number_taken: "number",
   area_name_taken: "name",
   store_has_people: "active",
+  // A reward's unlock names a badge the settings no longer have (OP-11).
+  unlock_invalid: "unlock",
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>

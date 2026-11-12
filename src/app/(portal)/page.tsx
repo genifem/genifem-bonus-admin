@@ -49,7 +49,8 @@ function monthDate(month: string, fallback: Date): Date {
  *
  * Everything is read here on the server, in one call to GET /portal/overview, after the store
  * in the URL is matched to its id. The numbers are the API's (plan D6); this page only draws
- * them. Redemptions are 0 until they are built (P3), but the tiles are already here.
+ * them, redemptions included: coins redeemed, requests waiting and each store's budget used
+ * come from the reward requests (P3).
  */
 export default async function OverviewPage({ searchParams }: PageProps<"/">) {
   const query = (await searchParams) as Query;

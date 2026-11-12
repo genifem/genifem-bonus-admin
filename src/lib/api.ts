@@ -70,15 +70,34 @@ async function call<T>(method: string, path: string, body?: unknown, options?: C
     throw new ApiCallError(0, "network", "network request failed");
   }
   if (response.status === 204) return undefined as T;
-  const payload: unknown = await response.json().catch(() => null);
-  if (!response.ok) {
-    const error = (payload as { error?: { code?: string; message?: string; details?: unknown } } | null)
-      ?.error;
-    if (response.status === 401 && !path.startsWith("/auth/") && typeof window !== "undefined") {
-      window.location.assign(SIGNED_OUT);
-    }
-    const code = error?.code ?? `http_${response.status}`;
-    throw new ApiCallError(response.status, code, error?.message ?? response.statusText, error?.details);
+  if (!response.ok) throw await refusal(response, path);
+  return (await response.json().catch(() => null)) as T;
+}
+
+/**
+ * A file from the API (the payroll CSV, NF-12): its bytes and the API's Content-Disposition,
+ * which names it. Fetched rather than followed as a link, so a refusal is said in words on
+ * the page instead of replacing it with the API's JSON. The BFF passes the file through as
+ * the API sent it.
+ */
+export async function apiDownload(path: string): Promise<{ blob: Blob; disposition: string | null }> {
+  let response: Response;
+  try {
+    response = await fetch(`/api/v1${path}`);
+  } catch {
+    throw new ApiCallError(0, "network", "network request failed");
   }
-  return payload as T;
+  if (!response.ok) throw await refusal(response, path);
+  return { blob: await response.blob(), disposition: response.headers.get("content-disposition") };
+}
+
+/** A failed response as an ApiCallError, sending the owner to sign in when the session is over. */
+async function refusal(response: Response, path: string): Promise<ApiCallError> {
+  const payload: unknown = await response.json().catch(() => null);
+  const error = (payload as { error?: { code?: string; message?: string; details?: unknown } } | null)?.error;
+  if (response.status === 401 && !path.startsWith("/auth/") && typeof window !== "undefined") {
+    window.location.assign(SIGNED_OUT);
+  }
+  const code = error?.code ?? `http_${response.status}`;
+  return new ApiCallError(response.status, code, error?.message ?? response.statusText, error?.details);
 }

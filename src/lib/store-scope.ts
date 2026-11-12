@@ -17,8 +17,8 @@ import { readString, withQuery, type Query } from "@/components/ui/query";
 
 export const STORE_PARAM = "store";
 
-/** The pages the shared filter belongs to. Redemptions (P3) and Monthly awards (P4) read it
- *  once they are built; the rail already carries it to them. */
+/** The pages the shared filter belongs to. Monthly awards (P4) reads it once it is built;
+ *  the rail already carries it there. */
 export const SCOPED_PATHS: readonly string[] = ["/", "/people", "/redemptions", "/awards"];
 
 /** A store number is short; anything longer is not one. */

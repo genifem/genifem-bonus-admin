@@ -172,7 +172,14 @@
     "tag_not_allowed": "Esa etiqueta no se puede usar en este reconocimiento. Elige otra.",
     "idempotency_key_required": "No se pudo enviar el reconocimiento. Vuelve a cargar la página e inténtalo de nuevo.",
     "recipient_not_found": "Esa persona ya no está en el personal. Vuelve a cargar la página para ver lo más reciente.",
-    "idempotency_key_reused": "Ese envío ya se usó para otro reconocimiento. Vuelve a cargar la página e inténtalo de nuevo."
+    "idempotency_key_reused": "Ese envío ya se usó para otro reconocimiento. Vuelve a cargar la página e inténtalo de nuevo.",
+    "request_not_pending": "Alguien ya decidió esta solicitud. La lista ya muestra cómo quedó.",
+    "request_not_approved": "Solo una solicitud aprobada se puede marcar como entregada. La lista ya muestra cómo quedó.",
+    "request_not_found": "Esa solicitud ya no está. Vuelve a cargar la página para ver lo más reciente.",
+    "cannot_decide": "No puedes decidir esta solicitud.",
+    "reward_not_found": "Esa recompensa ya no está. Vuelve a cargar la página para ver lo más reciente.",
+    "reward_has_pending": "Todavía hay solicitudes pendientes de esta recompensa, así que no se puede eliminar. Ocúltala de la app en su lugar.",
+    "unlock_invalid": "Esa insignia ya no está en la configuración. Elige otra."
   },
   "roster": {
     "loadError": "No pudimos cargar el personal.",
@@ -553,6 +560,284 @@
         "recognized": "Equipo reconocido",
         "budget": "Presupuesto de recompensas",
         "over": "(por encima del presupuesto)"
+      }
+    }
+  },
+  "redemptions": {
+    "loadError": "No se pudieron cargar los canjes.",
+    "retry": "Intentar de nuevo",
+    "budgets": {
+      "heading": "Presupuesto de recompensas de cada tienda este mes",
+      "lead": "Cada tienda puede canjear hasta {budget} monedas al mes (≈ {usd}). <link>Cámbialo en Monedas y límites.</link>",
+      "leadNoRate": "Cada tienda puede canjear hasta {budget} monedas al mes. <link>Cámbialo en Monedas y límites.</link>",
+      "bar": "Presupuesto de recompensas usado en la tienda {number}",
+      "value": "{used} / {budget}",
+      "over": "por encima del presupuesto",
+      "none": "Todavía no hay tiendas abiertas. Agrégalas en la página Personal."
+    },
+    "requests": {
+      "heading": "Solicitudes de recompensa",
+      "tabsLabel": "Solicitudes por estado",
+      "tabs": {
+        "pending": "Pendientes",
+        "approved": "Aprobadas",
+        "declined": "Rechazadas",
+        "all": "Todas"
+      },
+      "caption": "Solicitudes de recompensa: quién la pidió, qué pidió y quién decidió",
+      "columns": {
+        "person": "Persona",
+        "store": "Tienda",
+        "reward": "Recompensa",
+        "coins": "Monedas",
+        "requested": "Pedida",
+        "status": "Estado",
+        "decided": "Decidió",
+        "actions": "Acciones"
+      },
+      "noStore": "Sin tienda",
+      "spin": "Ganada en la ruleta",
+      "status": {
+        "pending": "Pendiente",
+        "approved": "Aprobada",
+        "collected": "Entregada",
+        "declined": "Rechazada",
+        "cancelled": "Cancelada"
+      },
+      "approver": {
+        "gm": "Decide su gerente general",
+        "owner": "Decide un dueño"
+      },
+      "decider": {
+        "automatic": "Automática",
+        "automaticHint": "La aprobación del gerente estaba desactivada",
+        "owner": "Dueño",
+        "ownerUnnamed": "Un dueño",
+        "manager": "Gerente general",
+        "managerUnnamed": "Un gerente"
+      },
+      "notDecided": "Sin decidir",
+      "empty": {
+        "pending": "No hay nada pendiente de aprobación.",
+        "pendingLead": "Las solicitudes aparecen aquí cuando el equipo canjea recompensas. Si la aprobación del gerente está desactivada, se aprueban al instante.",
+        "approved": "Todavía no hay solicitudes aprobadas.",
+        "approvedLead": "Aquí aparecen las recompensas aprobadas y las ya entregadas.",
+        "declined": "No hay solicitudes rechazadas.",
+        "declinedLead": "Aquí aparecen las solicitudes rechazadas y las canceladas cuando alguien dejó la empresa. Sus monedas se devolvieron.",
+        "all": "Todavía no hay solicitudes de recompensa.",
+        "allLead": "Cuando el equipo canjee una recompensa, la solicitud aparecerá aquí."
+      }
+    },
+    "actions": {
+      "approve": "Aprobar",
+      "decline": "Rechazar",
+      "collect": "Marcar como entregada",
+      "for": "{reward} para {name}",
+      "approved": "Aprobada: {reward} para {name}.",
+      "collected": "{reward} marcada como entregada a {name}.",
+      "declined": "Rechazada. {name} recuperó {coins, plural, one {# moneda} other {# monedas}}.",
+      "declineTitle": "¿Rechazar esta solicitud?",
+      "declineBody": "{name} pidió {reward}. Al rechazarla recupera {coins, plural, one {su # moneda} other {sus # monedas}} y deja de contar para sus límites del mes y para el presupuesto de la tienda.",
+      "declineNotify": "Recibe una notificación, y la decisión queda en el registro de auditoría.",
+      "declineConfirm": "Rechazar solicitud"
+    },
+    "payroll": {
+      "heading": "Exportación para nómina",
+      "lead": "Las recompensas en efectivo y tarjetas de regalo aprobadas en un mes, de todas las tiendas: persona, EID, tienda, recompensa, valor y fecha de aprobación. Cuentan como salario sujeto a impuestos.",
+      "month": "Mes",
+      "download": "Descargar exportación para nómina",
+      "downloaded": "Se descargó la exportación para nómina de {month}."
+    }
+  },
+  "rewards": {
+    "loadError": "No se pudieron cargar las recompensas.",
+    "retry": "Intentar de nuevo",
+    "heading": "{count, plural, one {# recompensa} other {# recompensas}}",
+    "add": "Agregar recompensa",
+    "caption": "Recompensas: cuánto cuesta cada una, quién puede canjearla y si aparece en la app",
+    "columns": {
+      "reward": "Recompensa",
+      "coins": "Monedas",
+      "usd": "≈ Costo",
+      "unlock": "Se desbloquea con",
+      "perMonth": "Por persona / mes",
+      "visible": "En la app",
+      "actions": "Editar"
+    },
+    "payroll": "Nómina",
+    "waiting": "{count, plural, one {# solicitud pendiente} other {# solicitudes pendientes}}",
+    "unlock": {
+      "anyone": "Cualquiera",
+      "tier": "Nivel {name} o superior",
+      "badge": "Insignia {name}",
+      "missing": "{name} (ya no está en la configuración)"
+    },
+    "show": "Mostrar {name} en la app",
+    "shown": "{name} vuelve a aparecer en la app.",
+    "hidden": "{name} ya no aparece en la app. Las solicitudes ya hechas siguen como estaban.",
+    "edit": "Editar",
+    "empty": "Todavía no hay recompensas.",
+    "emptyLead": "Agrega lo primero en lo que el equipo puede gastar sus monedas.",
+    "note": "En EE. UU., las tarjetas de regalo y el efectivo cuentan como salario sujeto a impuestos sin importar el monto, así que las recompensas marcadas como Nómina van a la <link>exportación para nómina en Canjes</link>. Las comidas, los beneficios de turno y la mercancía suelen ser más sencillos.",
+    "limits": {
+      "heading": "Límites que se aplican a todas las recompensas",
+      "body": "Cada persona puede canjear hasta <b>{coins} monedas</b> y <b>{rewards, plural, one {# recompensa} other {# recompensas}}</b> al mes. Cada tienda puede canjear hasta <b>{budget} monedas</b> al mes.",
+      "approvalOn": "Un gerente aprueba cada solicitud.",
+      "approvalOff": "La aprobación del gerente está desactivada: las recompensas quedan listas para entregar al instante.",
+      "change": "Cámbialos en Monedas y límites"
+    },
+    "form": {
+      "addTitle": "Agregar una recompensa",
+      "editTitle": "Editar {name}",
+      "name": "Nombre",
+      "nameEs": "Nombre en español (opcional)",
+      "nameEsHint": "Se muestra cuando la app está en español. Déjalo en blanco para usar el nombre en inglés.",
+      "description": "Descripción corta",
+      "descriptionEs": "Descripción en español (opcional)",
+      "descriptionEsHint": "Déjala en blanco para usar la descripción en inglés.",
+      "icon": "Ícono",
+      "icons": {
+        "burger": "Hamburguesa",
+        "cup": "Bebida",
+        "calendar": "Calendario",
+        "gift": "Regalo",
+        "shirt": "Camiseta",
+        "sun": "Sol",
+        "fries": "Papas fritas",
+        "star": "Estrella"
+      },
+      "otherIcon": "Ícono actual ({icon})",
+      "cost": "Costo en monedas",
+      "costHint": "≈ {usd} a {rate} por moneda",
+      "costHintNoRate": "Monedas enteras, 1 o más",
+      "perMonth": "Máximo por persona al mes",
+      "perMonthHint": "Cuántas veces puede canjearla una persona al mes, del 1 al 100",
+      "unlock": "Quién puede canjearla",
+      "unlockTypes": {
+        "none": "Cualquiera con monedas suficientes",
+        "tier": "Solo a partir de un nivel",
+        "badge": "Solo con una insignia"
+      },
+      "tier": "Nivel",
+      "tierOption": "{name} o superior ({min}+ monedas ganadas desde siempre)",
+      "badge": "Insignia",
+      "noBadges": "Todavía no hay insignias.",
+      "active": "Mostrar en la app",
+      "activeHint": "El equipo la ve en su pantalla de Recompensas. Ocultarla nunca afecta las solicitudes ya hechas.",
+      "cash": "Efectivo o tarjeta de regalo (enviar a nómina)",
+      "cashHint": "Salario sujeto a impuestos en EE. UU.: las solicitudes aprobadas van a la exportación para nómina en Canjes.",
+      "create": "Agregar recompensa",
+      "save": "Guardar recompensa",
+      "added": "Se agregó {name}.",
+      "saved": "Se guardaron los cambios de {name}.",
+      "delete": "Eliminar",
+      "problems": {
+        "name": "Escribe un nombre.",
+        "cost": "Usa un número entero de monedas del 1 al 1,000,000.",
+        "per_person_monthly": "Usa un número entero del 1 al 100.",
+        "unlock": "Elige el nivel o la insignia."
+      },
+      "invalid": {
+        "name": "Escribe un nombre de hasta 60 caracteres.",
+        "name_es": "El nombre en español puede tener hasta 60 caracteres.",
+        "description": "La descripción puede tener hasta 200 caracteres.",
+        "description_es": "La descripción en español puede tener hasta 200 caracteres.",
+        "icon": "Elige un ícono.",
+        "cost": "Usa un número entero de monedas del 1 al 1,000,000.",
+        "per_person_monthly": "Usa un número entero del 1 al 100.",
+        "unlock": "Elige un nivel o una insignia de la lista."
+      }
+    },
+    "delete": {
+      "title": "¿Eliminar {name}?",
+      "body": "Desaparece de esta página y de la app. Las solicitudes anteriores conservan su registro.",
+      "confirm": "Eliminar recompensa",
+      "deleted": "Se eliminó {name}.",
+      "blockedTitle": "¿Ocultar {name} en su lugar?",
+      "blocked": "{count, plural, one {Todavía hay # solicitud pendiente} other {Todavía hay # solicitudes pendientes}} de esta recompensa, así que no se puede eliminar. Ocúltala de la app en su lugar: nadie más podrá canjearla y las solicitudes pendientes siguen como estaban.",
+      "hide": "Ocultar de la app",
+      "alreadyHidden": "{count, plural, one {Todavía hay # solicitud pendiente} other {Todavía hay # solicitudes pendientes}} de esta recompensa, así que todavía no se puede eliminar. Ya está oculta en la app; elimínala cuando se hayan decidido."
+    }
+  },
+  "coins": {
+    "loadError": "No se pudo cargar la configuración de monedas.",
+    "retry": "Intentar de nuevo",
+    "live": "Los cambios se guardan mientras escribes y se aplican al instante en la app del equipo y de los gerentes.",
+    "how": {
+      "heading": "Cómo funcionan las monedas",
+      "allowance": "La empresa le da a cada persona monedas para reconocer cada mes",
+      "give": "Las usan para reconocer a otras personas",
+      "earn": "Quien recibe el reconocimiento gana monedas",
+      "redeem": "Las monedas ganadas se canjean por recompensas, dentro de tus límites",
+      "note": "Las monedas para reconocer no se pueden canjear y se reinician el día 1, así que nadie paga el reconocimiento con su propio saldo."
+    },
+    "roles": {
+      "crew": "Equipo",
+      "shift": "Gerentes de turno",
+      "gm": "Gerentes generales",
+      "supervisor": "Supervisores",
+      "director": "Directores",
+      "owner": "Dueños"
+    },
+    "allowance": {
+      "heading": "Monedas para reconocer cada mes y cantidades por reconocimiento",
+      "caption": "Las monedas para reconocer que recibe cada puesto al mes y las tres cantidades que puede elegir",
+      "columns": {
+        "role": "Puesto",
+        "allowance": "Monedas para reconocer cada mes",
+        "amounts": "Cantidades que puede elegir"
+      },
+      "allowanceLabel": "{role}: monedas para reconocer al mes",
+      "amountLabel": "{role}: cantidad {n}",
+      "ownerCustom": "Además, cualquier cantidad del 1 al 5,000.",
+      "worstCase": "En el peor de los casos, las monedas para reconocer del equipo suman <b>{coins} monedas</b> al mes entre {crew, plural, one {# persona del equipo} other {# personas del equipo}} (≈ {usd}).",
+      "worstCaseUnknown": "No se pudo calcular el peor de los casos para el equipo: no se cargó cuántas personas hay."
+    },
+    "scope": {
+      "heading": "Quién puede reconocer a quién",
+      "lead": "Cada persona puede reconocer a quien tenga su mismo puesto o uno inferior, dentro del alcance que elijas aquí.",
+      "canRecognize": "Puede reconocer a personas de…",
+      "label": "Alcance de reconocimiento: {role}",
+      "kinds": {
+        "store": "Su propia tienda",
+        "stores": "Las tiendas que supervisa",
+        "area": "Toda su área",
+        "all": "Todos"
+      },
+      "owners": "Dueños",
+      "ownersHint": "Los dueños pueden reconocer directamente a cualquiera, incluidos directores, supervisores y gerentes generales.",
+      "everyone": "Todos",
+      "upward": "El equipo puede reconocer a los gerentes de su tienda",
+      "upwardHint": "Permite que el equipo y los gerentes de turno den monedas a su gerente general y a los gerentes de turno de su tienda."
+    },
+    "limits": {
+      "heading": "Límites de canje",
+      "maxCoins": "Máximo de monedas que una persona puede canjear al mes",
+      "maxCoinsHint": "El tope mensual. El equipo ve cuánto ha usado.",
+      "maxRewards": "Máximo de recompensas que una persona puede canjear al mes",
+      "maxRewardsHint": "Del 1 al 50.",
+      "storeBudget": "Presupuesto de recompensas por tienda al mes",
+      "storeBudgetHint": "≈ {perStore} por tienda, {total} entre {stores, plural, one {# tienda} other {# tiendas}}.",
+      "storeBudgetHintOne": "≈ {perStore} por tienda.",
+      "approval": "Un gerente aprueba cada recompensa",
+      "approvalHint": "Si está desactivado, las recompensas quedan listas para entregar al instante.",
+      "coinValue": "Cuánto vale una moneda",
+      "coinValueHint": "En dólares, de $0.01 a $10. Solo se usa para calcular costos en este portal."
+    },
+    "units": {
+      "coins": "monedas",
+      "rewards": "recompensas",
+      "dollars": "$"
+    },
+    "save": {
+      "saving": "Guardando…",
+      "saved": "Guardado",
+      "notSaved": "No se guardó.",
+      "problems": {
+        "required": "Escribe un número.",
+        "whole": "Usa un número entero.",
+        "cents": "Usa dólares y centavos, como 0.10.",
+        "range": "Usa un número del {min} al {max}."
       }
     }
   }
