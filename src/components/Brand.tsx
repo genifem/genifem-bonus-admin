@@ -17,13 +17,14 @@ export function StarMark({ className }: { className?: string }) {
 
 /**
  * The lockup: the star, "Crew Stars" in Nunito 900 with the prototype's red dot, and a small
- * muted line under it naming the surface ("Owner portal").
+ * muted line under it naming the surface ("Owner portal"). In a rail folded to its icons the
+ * star stands alone and the words are kept for a screen reader.
  */
 export function Lockup({ name, subtitle }: { name: string; subtitle?: string }) {
   return (
     <span className="flex min-w-0 items-center gap-2">
       <StarMark />
-      <span className="flex min-w-0 flex-col">
+      <span className="flex min-w-0 flex-col folded:sr-only">
         <span className="flex items-center gap-1.25 truncate text-lg font-black leading-tight tracking-tight">
           {name}
           <i aria-hidden="true" className="mt-2 inline-block size-1.5 rounded-full bg-red" />

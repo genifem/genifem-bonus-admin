@@ -1,5 +1,5 @@
 import type { Schemas } from "@crewstars/api-client";
-import { ChevronRight, Coins, Gift, Hourglass, Info, MessageCircle, Store, Users } from "lucide-react";
+import { ChevronDown, ChevronRight, Coins, Gift, Hourglass, Info, MessageCircle, Store, Users } from "lucide-react";
 import Link from "next/link";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 
@@ -15,6 +15,8 @@ import {
   Avatar,
   Badge,
   buttonClass,
+  Columns,
+  cx,
   DataTable,
   EmptyState,
   PageHeader,
@@ -35,6 +37,11 @@ export function generateMetadata() {
 }
 
 type StoreRow = Schemas["StoreRow"];
+type Unrecognized = Schemas["UnrecognizedOut"];
+
+/** How many of the crew not yet recognized are listed before "Show N more": enough to act on
+ *  at a glance, without a list inside the page that scrolls on its own. */
+const FIRST_UNRECOGNIZED = 6;
 
 /** The month the API reports ("2026-11") as a date to name it by, read in UTC. */
 function monthDate(month: string, fallback: Date): Date {
@@ -131,6 +138,9 @@ export default async function OverviewPage({ searchParams }: PageProps<"/">) {
       key: "gm",
       header: tr("overview.columns.gm"),
       overflow: "wrap",
+      // The first to give way on a narrow full table: the store cards on Stores & people
+      // name every GM too.
+      hideBelow: "md",
       cell: (row) => row.gm?.name ?? <span className="text-muted">{tr("overview.noGm")}</span>,
     },
     {
@@ -191,7 +201,7 @@ export default async function OverviewPage({ searchParams }: PageProps<"/">) {
         <h2 id="kpi-heading" className="sr-only">
           {tr("overview.statsLabel", { month })}
         </h2>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
+        <div className="grid grid-cols-2 gap-tile @2xl/page:grid-cols-3 @4xl/page:grid-cols-5">
           <StatTile
             label={tr("overview.shoutouts")}
             value={count(stats.shoutouts)}
@@ -243,7 +253,7 @@ export default async function OverviewPage({ searchParams }: PageProps<"/">) {
             icon={<Hourglass className="size-4.5" strokeWidth={2.2} />}
             tone="danger"
             href={hrefWithStore("/redemptions", scope)}
-            className="col-span-2 md:col-span-1"
+            className="col-span-2 @2xl/page:col-span-1"
           />
         </div>
       </section>
@@ -267,7 +277,7 @@ export default async function OverviewPage({ searchParams }: PageProps<"/">) {
         )}
       </Panel>
 
-      <div className="grid items-start gap-4.5 lg:grid-cols-2">
+      <Columns layout="halves" align="stretch">
         <Panel
           id="not-recognized-heading"
           title={tr("overview.notRecognized", { month, count: overview.not_recognized.length })}
@@ -277,36 +287,14 @@ export default async function OverviewPage({ searchParams }: PageProps<"/">) {
           {overview.not_recognized.length === 0 ? (
             <p className="text-sm text-muted">{tr("overview.everyoneRecognized")}</p>
           ) : (
-            <ul className="-mx-1 flex max-h-112 flex-col overflow-y-auto px-1">
-              {overview.not_recognized.map((person) => (
-                <li
-                  key={person.id}
-                  className="flex items-center gap-3 border-b border-border py-2.5 first:pt-0 last:border-b-0"
-                >
-                  <Avatar name={person.name} colored seed={person.id} className="size-8.5 text-caption" />
-                  <div className="min-w-0 flex-1">
-                    <p className="break-words font-extrabold">{person.name}</p>
-                    <p className="text-caption text-muted">
-                      {[
-                        person.store ? tr("store", { number: person.store.number }) : null,
-                        person.days_on_team !== null
-                          ? tr("overview.daysOnTeam", { days: person.days_on_team })
-                          : null,
-                      ]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </p>
-                  </div>
-                  <Link
-                    href={`/recognize${withQuery({}, { to: person.id })}`}
-                    className={buttonClass({ variant: "secondary", size: "console" })}
-                  >
-                    {tr("recognizeAction")}
-                    <VisuallyHidden>{` ${person.name}`}</VisuallyHidden>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <UnrecognizedList
+              people={overview.not_recognized}
+              storeName={(number) => tr("store", { number })}
+              days={(days) => tr("overview.daysOnTeam", { days })}
+              recognize={tr("recognizeAction")}
+              more={(count) => tr("overview.showMore", { count })}
+              fewer={tr("overview.showFewer")}
+            />
           )}
         </Panel>
 
@@ -317,7 +305,79 @@ export default async function OverviewPage({ searchParams }: PageProps<"/">) {
             <PostFeed posts={overview.recent} now={now} hide label={tr("overview.recent")} />
           )}
         </Panel>
-      </div>
+      </Columns>
     </>
+  );
+}
+
+/**
+ * The crew not recognized yet this month (OP-04), each with a Recognize button: the first few,
+ * then the rest behind "Show N more", a native disclosure that opens from the keyboard and
+ * needs no script. The whole list used to scroll inside its card, a scroller inside the page's
+ * own that trapped the wheel and, on a phone, the thumb.
+ */
+function UnrecognizedList({
+  people,
+  storeName,
+  days,
+  recognize,
+  more,
+  fewer,
+}: {
+  people: readonly Unrecognized[];
+  storeName: (number: string) => string;
+  days: (days: number) => string;
+  recognize: string;
+  more: (count: number) => string;
+  fewer: string;
+}) {
+  const first = people.slice(0, FIRST_UNRECOGNIZED);
+  const rest = people.slice(FIRST_UNRECOGNIZED);
+  const row = (person: Unrecognized, last: boolean) => (
+    <li
+      key={person.id}
+      className={cx("flex items-center gap-3 border-b border-border py-2.5", last && "last:border-b-0 last:pb-0")}
+    >
+      <Avatar name={person.name} colored seed={person.id} className="size-8.5 text-caption" />
+      <div className="min-w-0 flex-1">
+        <p className="break-words font-extrabold">{person.name}</p>
+        <p className="text-caption text-muted">
+          {[person.store ? storeName(person.store.number) : null, person.days_on_team !== null ? days(person.days_on_team) : null]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
+      </div>
+      <Link
+        href={`/recognize${withQuery({}, { to: person.id })}`}
+        className={buttonClass({ variant: "secondary", size: "console" })}
+      >
+        {recognize}
+        <VisuallyHidden>{` ${person.name}`}</VisuallyHidden>
+      </Link>
+    </li>
+  );
+  return (
+    <div className="-mt-2.5 flex flex-col">
+      <ul className="flex flex-col">{first.map((person) => row(person, rest.length === 0))}</ul>
+      {rest.length > 0 ? (
+        <details className="group">
+          <summary
+            className={cx(
+              "inline-flex min-h-11 cursor-pointer list-none select-none items-center gap-1.5 rounded-compact pr-1 text-sm font-extrabold text-brand-ink",
+              "[&::-webkit-details-marker]:hidden",
+            )}
+          >
+            <ChevronDown
+              aria-hidden="true"
+              className="size-4 shrink-0 transition-transform duration-fast group-open:rotate-180"
+              strokeWidth={2.4}
+            />
+            <span className="group-open:hidden">{more(rest.length)}</span>
+            <span className="hidden group-open:inline">{fewer}</span>
+          </summary>
+          <ul className="flex flex-col border-t border-border">{rest.map((person) => row(person, true))}</ul>
+        </details>
+      ) : null}
+    </div>
   );
 }

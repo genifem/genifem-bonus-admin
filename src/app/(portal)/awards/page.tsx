@@ -173,7 +173,7 @@ export default async function AwardsPage({ searchParams }: PageProps<"/awards">)
           const shown = entry ? standing(entry) : null;
           if (!entry || !shown) return <span className="text-caption text-muted">{t("leaders.none")}</span>;
           return (
-            <span className="flex min-w-40 items-center gap-2">
+            <span className="flex items-center gap-2">
               <Avatar name={shown.person.name} colored seed={shown.person.id} className="size-8 text-caption" />
               <span className="flex min-w-0 flex-col items-start gap-0.5">
                 <span className="font-bold">{shown.person.name}</span>

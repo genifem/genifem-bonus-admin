@@ -131,6 +131,7 @@ export function TiersPanel({ tiers, counts }: { tiers: readonly Tier[]; counts: 
     {
       key: "min",
       header: t("columns.min"),
+      stack: "full",
       cell: (tier) => {
         const at = index(tier);
         if (at === 0) return <span className="text-muted">{t("everyone")}</span>;
@@ -212,9 +213,9 @@ export function BadgesPanel({
       header: t("columns.badge"),
       width: "md",
       cell: (badge) => (
-        <div className="flex min-w-48 items-start gap-2.5">
+        <div className="flex items-start gap-2.5 spread:min-w-48">
           <BadgeIcon icon={badge.icon} />
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="flex min-w-0 flex-1 flex-col gap-2 stacked:@xl:grid stacked:@xl:grid-cols-2 stacked:@xl:items-end stacked:@xl:gap-x-4">
             <TextSetting
               path={`badges.${badge.id}.name`}
               value={badge.name}
@@ -238,9 +239,10 @@ export function BadgesPanel({
     {
       key: "rule",
       header: t("columns.rule"),
+      stack: "full",
       cell: (badge) =>
         ruleHasCount(badge.rule) ? (
-          <div className="flex min-w-52 flex-col gap-2">
+          <div className="flex flex-col gap-2 spread:min-w-52">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <span className="text-sm font-bold">{t(`rules.${badge.rule}.verb`)}</span>
               <NumberSetting
@@ -261,6 +263,7 @@ export function BadgesPanel({
                   value={badge.tag ?? "guest"}
                   label={t("rules.tag.tagLabel", { badge: name(badge) })}
                   options={tagOptions}
+                  width="sm"
                 />
               </div>
             ) : null}
@@ -272,6 +275,7 @@ export function BadgesPanel({
     {
       key: "bonus",
       header: t("columns.bonus"),
+      stack: "full",
       cell: (badge) => (
         <NumberSetting
           path={`badges.${badge.id}.bonus`}
@@ -336,6 +340,7 @@ export function BadgesPanel({
         rows={badges}
         rowKey={(badge) => badge.id}
         bare
+        stackBelow={960}
         className="border-t border-border"
       />
     </Panel>

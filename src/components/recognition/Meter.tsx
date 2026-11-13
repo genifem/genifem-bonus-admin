@@ -28,9 +28,11 @@ export function Meter({
 }) {
   const bar = <Progress label={label} value={Math.max(0, Math.min(value, max))} max={max} tone={tone} />;
   if (layout === "stacked") return <div className={cx("flex flex-col gap-1.5", className)}>{bar}</div>;
+  // In a table row drawn as a card (DataTable's `stacked`), the bar takes the field's width
+  // and the figure goes under it, the same in every card.
   return (
-    <div className={cx("flex items-center gap-2", className)}>
-      <div className="w-22 shrink-0">{bar}</div>
+    <div className={cx("flex flex-wrap items-center gap-x-2 gap-y-1 stacked:flex-col stacked:items-stretch", className)}>
+      <div className="w-22 shrink-0 stacked:w-full">{bar}</div>
       <span className="whitespace-nowrap text-caption tabular-nums">{text}</span>
     </div>
   );

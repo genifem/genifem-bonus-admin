@@ -21,6 +21,7 @@ import { formatUsd, numberLocale } from "@/components/recognition/numbers";
 import { Panel } from "@/components/recognition/Panel";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
+import { Columns } from "@/components/ui/Columns";
 import { DataTable, type Column } from "@/components/ui/DataTable";
 import { FieldMessage } from "@/components/ui/Field";
 import { IconButton } from "@/components/ui/IconButton";
@@ -171,7 +172,8 @@ export function SpinSettings({ spin, coinValue, badges }: { spin: Spin; coinValu
       header: t("prizes.columns.prize"),
       width: "md",
       cell: (prize) => (
-        <div className="flex min-w-44 flex-col gap-2">
+        // The two names one above the other; side by side across a wide card.
+        <div className="flex flex-col gap-2 spread:min-w-44 stacked:@xl:grid stacked:@xl:grid-cols-2 stacked:@xl:items-end stacked:@xl:gap-x-4">
           <TextSetting
             path={`spin.prizes.${prize.id}.label`}
             value={prize.label}
@@ -197,12 +199,14 @@ export function SpinSettings({ spin, coinValue, badges }: { spin: Spin; coinValu
     {
       key: "type",
       header: t("prizes.columns.type"),
+      stack: "full",
       cell: (prize) => (
         <ChoiceSetting<PrizeKind>
           path={`spin.prizes.${prize.id}.kind`}
           value={prize.kind}
           label={t("prizes.type", { n: row(prize) })}
           options={kindOptions(prize)}
+          width="sm"
           send={async (changes) => {
             const kind = changes[`spin.prizes.${prize.id}.kind`] as PrizeKind;
             const out = await patchSettings(kindChanges(prize, kind, badgeId));
@@ -219,6 +223,7 @@ export function SpinSettings({ spin, coinValue, badges }: { spin: Spin; coinValu
     {
       key: "amount",
       header: t("prizes.columns.amount"),
+      stack: "full",
       cell: (prize) =>
         hasAmount(prize.kind) ? (
           <NumberSetting
@@ -289,59 +294,63 @@ export function SpinSettings({ spin, coinValue, badges }: { spin: Spin; coinValu
 
   return (
     <>
-      <Panel id="switch-heading" title={t("switch.heading")} icon={Power}>
-        <SwitchSetting
-          path="spin.enabled"
-          value={spin.enabled}
-          label={t("switch.label")}
-          description={t("switch.hint")}
-          onLive={setEnabled}
-        />
-        {!enabled ? <Alert kind="warning">{t("switch.off")}</Alert> : null}
-      </Panel>
+      {/* The switch and when crew earn a spin on the left, the wheel as crew see it beside
+          them on a wide page; one after the other on a narrow one, in that order. */}
+      <Columns layout="aside">
+        <div className="flex min-w-0 flex-col gap-section">
+          <Panel id="switch-heading" title={t("switch.heading")} icon={Power}>
+            <SwitchSetting
+              path="spin.enabled"
+              value={spin.enabled}
+              label={t("switch.label")}
+              description={t("switch.hint")}
+              onLive={setEnabled}
+            />
+            {!enabled ? <Alert kind="warning">{t("switch.off")}</Alert> : null}
+          </Panel>
 
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
-        <Panel id="earn-heading" title={t("earn.heading")} icon={FerrisWheel}>
-          <div className="flex flex-col">
-            <SettingRow title={t("earn.everyCoins")} hint={t("earn.everyCoinsHint")} hintId={`${ids}-every`}>
-              <NumberSetting
-                path="spin.every_coins"
-                value={spin.every_coins}
-                range={SPIN_RANGES.everyCoins}
-                label={t("earn.everyCoins")}
-                unit={t("units.coins")}
-                describedBy={`${ids}-every`}
-              />
-            </SettingRow>
-            <div className="border-b border-border py-2">
-              <SwitchSetting
-                path="spin.on_badge"
-                value={spin.on_badge}
-                label={t("earn.onBadge")}
-                description={t("earn.onBadgeHint")}
-              />
+          <Panel id="earn-heading" title={t("earn.heading")} icon={FerrisWheel}>
+            <div className="flex flex-col">
+              <SettingRow title={t("earn.everyCoins")} hint={t("earn.everyCoinsHint")} hintId={`${ids}-every`}>
+                <NumberSetting
+                  path="spin.every_coins"
+                  value={spin.every_coins}
+                  range={SPIN_RANGES.everyCoins}
+                  label={t("earn.everyCoins")}
+                  unit={t("units.coins")}
+                  describedBy={`${ids}-every`}
+                />
+              </SettingRow>
+              <div className="border-b border-border py-2">
+                <SwitchSetting
+                  path="spin.on_badge"
+                  value={spin.on_badge}
+                  label={t("earn.onBadge")}
+                  description={t("earn.onBadgeHint")}
+                />
+              </div>
+              <div className="border-b border-border py-2">
+                <SwitchSetting
+                  path="spin.on_milestone"
+                  value={spin.on_milestone}
+                  label={t("earn.onMilestone")}
+                  description={t("earn.onMilestoneHint")}
+                />
+              </div>
+              <SettingRow title={t("earn.maxPerMonth")} hint={t("earn.maxPerMonthHint")} hintId={`${ids}-max`}>
+                <NumberSetting
+                  path="spin.max_per_month"
+                  value={spin.max_per_month}
+                  range={SPIN_RANGES.maxPerMonth}
+                  label={t("earn.maxPerMonth")}
+                  unit={t("units.spins")}
+                  width="sm"
+                  describedBy={`${ids}-max`}
+                />
+              </SettingRow>
             </div>
-            <div className="border-b border-border py-2">
-              <SwitchSetting
-                path="spin.on_milestone"
-                value={spin.on_milestone}
-                label={t("earn.onMilestone")}
-                description={t("earn.onMilestoneHint")}
-              />
-            </div>
-            <SettingRow title={t("earn.maxPerMonth")} hint={t("earn.maxPerMonthHint")} hintId={`${ids}-max`}>
-              <NumberSetting
-                path="spin.max_per_month"
-                value={spin.max_per_month}
-                range={SPIN_RANGES.maxPerMonth}
-                label={t("earn.maxPerMonth")}
-                unit={t("units.spins")}
-                width="sm"
-                describedBy={`${ids}-max`}
-              />
-            </SettingRow>
-          </div>
-        </Panel>
+          </Panel>
+        </div>
 
         <Panel id="preview-heading" title={t("preview.heading")} icon={Eye} lead={t("preview.lead")}>
           <div className="pt-3">
@@ -351,7 +360,7 @@ export function SpinSettings({ spin, coinValue, badges }: { spin: Spin; coinValu
             />
           </div>
         </Panel>
-      </div>
+      </Columns>
 
       <Panel
         id="prizes-heading"
@@ -387,6 +396,7 @@ export function SpinSettings({ spin, coinValue, badges }: { spin: Spin; coinValu
           rows={saved}
           rowKey={(prize) => prize.id}
           bare
+          stackBelow={960}
           className="border-t border-border"
         />
         <p className="px-4.5 pb-4.5 text-sm text-muted tabular-nums">

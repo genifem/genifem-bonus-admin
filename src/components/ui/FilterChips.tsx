@@ -18,7 +18,9 @@ export interface FilterChip {
  * on the same view. The chip that is on carries aria-current, which a screen reader announces.
  *
  * Drawn 36px tall on a phone and 40px from 1024px; an invisible edge takes the touch
- * target to 44px. On a phone the row scrolls sideways rather than wrapping.
+ * target to 44px. The row wraps onto a second line rather than scrolling sideways: a row
+ * that scrolls with its bar hidden cannot be seen to hold more, and on a desk only a
+ * trackpad or shift-and-wheel reaches the rest.
  */
 export function FilterChips({
   label,
@@ -35,7 +37,7 @@ export function FilterChips({
   if (chips.length === 0) return null;
   return (
     <nav aria-label={label} className={cx("min-w-0", className)}>
-      <ul className="scrollbar-hidden -my-1 m-0 flex list-none gap-2 overflow-x-auto p-0 py-1">
+      <ul className="m-0 flex list-none flex-wrap gap-x-2 gap-y-2.5 p-0">
         {chips.map((chip) => {
           const on = chip.key === active;
           return (

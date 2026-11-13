@@ -78,7 +78,13 @@
       "audit": "Registro de auditoría"
     },
     "signedInAs": "Sesión iniciada como",
-    "owner": "Dueño"
+    "owner": "Dueño",
+    "account": "Tu cuenta",
+    "accountOf": "Cuenta de {name}",
+    "rail": {
+      "collapse": "Contraer la barra lateral",
+      "expand": "Expandir la barra lateral"
+    }
   },
   "pages": {
     "overview": {
@@ -546,6 +552,8 @@
       "notRecognized": "Sin reconocimiento todavía en {month} ({count})",
       "notRecognizedLead": "Personas del equipo que no han recibido un reconocimiento este mes. Una nota rápida hace mucho.",
       "everyoneRecognized": "Todo el equipo ha recibido un reconocimiento este mes.",
+      "showMore": "Mostrar {count} más",
+      "showFewer": "Mostrar menos",
       "daysOnTeam": "{days, plural, one {# día} other {# días}} en el equipo",
       "recent": "Reconocimientos recientes",
       "noRecent": "Todavía no hay reconocimientos este mes."

@@ -8,6 +8,7 @@ import { useId } from "react";
 import { formatCount, formatUsd } from "@/components/recognition/numbers";
 import { Panel } from "@/components/recognition/Panel";
 import { Badge } from "@/components/ui/Badge";
+import { Columns } from "@/components/ui/Columns";
 import { DataTable, type Column } from "@/components/ui/DataTable";
 
 import {
@@ -66,6 +67,7 @@ export function CoinsSettings({
     {
       key: "allowance",
       header: t("allowance.columns.allowance"),
+      stack: "full",
       cell: (role) => (
         <NumberSetting
           path={`allowance.${role}`}
@@ -81,6 +83,7 @@ export function CoinsSettings({
     {
       key: "amounts",
       header: t("allowance.columns.amounts"),
+      stack: "full",
       cell: (role) => (
         <div className="flex flex-col gap-1.5">
           <div className="flex flex-wrap items-start gap-2">
@@ -125,105 +128,109 @@ export function CoinsSettings({
         </p>
       </Panel>
 
-      <Panel id="scope-heading" title={t("scope.heading")} icon={Users} lead={t("scope.lead")}>
-        <div className="flex flex-col">
-          {SCOPE_ROLES.map((role) => (
-            <SettingRow key={role} title={roleName(role)} hint={t("scope.canRecognize")} hintId={`${ids}-scope-${role}`}>
-              <ChoiceSetting
-                path={`scope.${role}`}
-                value={rules.scope[role]}
-                label={t("scope.label", { role: roleName(role) })}
-                describedBy={`${ids}-scope-${role}`}
-                options={SCOPE_KINDS.map((kind) => ({ value: kind, label: t(`scope.kinds.${kind}`) }))}
+      {/* Side by side on a wide page, where each card still has a setting's words and its
+          control on one line. */}
+      <Columns layout="settings">
+        <Panel id="scope-heading" title={t("scope.heading")} icon={Users} lead={t("scope.lead")}>
+          <div className="flex flex-col">
+            {SCOPE_ROLES.map((role) => (
+              <SettingRow key={role} title={roleName(role)} hint={t("scope.canRecognize")} hintId={`${ids}-scope-${role}`}>
+                <ChoiceSetting
+                  path={`scope.${role}`}
+                  value={rules.scope[role]}
+                  label={t("scope.label", { role: roleName(role) })}
+                  describedBy={`${ids}-scope-${role}`}
+                  options={SCOPE_KINDS.map((kind) => ({ value: kind, label: t(`scope.kinds.${kind}`) }))}
+                />
+              </SettingRow>
+            ))}
+            <SettingRow title={t("scope.owners")} hint={t("scope.ownersHint")}>
+              <Badge tone="success" className="min-h-8 px-3 text-sm">
+                {t("scope.everyone")}
+              </Badge>
+            </SettingRow>
+            <div className="border-t border-border pt-2">
+              <SwitchSetting
+                path="upward"
+                value={rules.upward}
+                label={t("scope.upward")}
+                description={t("scope.upwardHint")}
+              />
+            </div>
+          </div>
+        </Panel>
+
+        <Panel id="limits-heading" title={t("limits.heading")} icon={Gift}>
+          <div className="flex flex-col">
+            <SettingRow title={t("limits.maxCoins")} hint={t("limits.maxCoinsHint")} hintId={`${ids}-max-coins`}>
+              <NumberSetting
+                path="redeem.max_coins"
+                value={rules.redeem.max_coins}
+                range={RANGES.maxCoins}
+                label={t("limits.maxCoins")}
+                unit={t("units.coins")}
+                describedBy={`${ids}-max-coins`}
               />
             </SettingRow>
-          ))}
-          <SettingRow title={t("scope.owners")} hint={t("scope.ownersHint")}>
-            <Badge tone="success" className="min-h-8 px-3 text-sm">
-              {t("scope.everyone")}
-            </Badge>
-          </SettingRow>
-          <div className="border-t border-border pt-2">
-            <SwitchSetting
-              path="upward"
-              value={rules.upward}
-              label={t("scope.upward")}
-              description={t("scope.upwardHint")}
-            />
+            <SettingRow title={t("limits.maxRewards")} hint={t("limits.maxRewardsHint")} hintId={`${ids}-max-rewards`}>
+              <NumberSetting
+                path="redeem.max_rewards"
+                value={rules.redeem.max_rewards}
+                range={RANGES.maxRewards}
+                label={t("limits.maxRewards")}
+                unit={t("units.rewards")}
+                width="sm"
+                describedBy={`${ids}-max-rewards`}
+              />
+            </SettingRow>
+            <SettingRow
+              title={t("limits.storeBudget")}
+              hint={
+                <span className="tabular-nums">
+                  {storeCount !== null
+                    ? t("limits.storeBudgetHint", {
+                        perStore: usd(budget.perStore),
+                        total: usd(budget.total),
+                        stores: storeCount,
+                      })
+                    : t("limits.storeBudgetHintOne", { perStore: usd(budget.perStore) })}
+                </span>
+              }
+              hintId={`${ids}-store-budget`}
+            >
+              <NumberSetting
+                path="redeem.store_budget"
+                value={rules.redeem.store_budget}
+                range={RANGES.storeBudget}
+                label={t("limits.storeBudget")}
+                unit={t("units.coins")}
+                describedBy={`${ids}-store-budget`}
+                onLive={setStoreBudget}
+              />
+            </SettingRow>
+            <div className="border-b border-border py-2">
+              <SwitchSetting
+                path="redeem.approval"
+                value={rules.redeem.approval}
+                label={t("limits.approval")}
+                description={t("limits.approvalHint")}
+              />
+            </div>
+            <SettingRow title={t("limits.coinValue")} hint={t("limits.coinValueHint")} hintId={`${ids}-coin-value`}>
+              <NumberSetting
+                path="coin_value"
+                value={rules.coin_value}
+                range={RANGES.coinValue}
+                label={t("limits.coinValue")}
+                dollars
+                width="sm"
+                describedBy={`${ids}-coin-value`}
+                onLive={setCoinValue}
+              />
+            </SettingRow>
           </div>
-        </div>
-      </Panel>
-
-      <Panel id="limits-heading" title={t("limits.heading")} icon={Gift}>
-        <div className="flex flex-col">
-          <SettingRow title={t("limits.maxCoins")} hint={t("limits.maxCoinsHint")} hintId={`${ids}-max-coins`}>
-            <NumberSetting
-              path="redeem.max_coins"
-              value={rules.redeem.max_coins}
-              range={RANGES.maxCoins}
-              label={t("limits.maxCoins")}
-              unit={t("units.coins")}
-              describedBy={`${ids}-max-coins`}
-            />
-          </SettingRow>
-          <SettingRow title={t("limits.maxRewards")} hint={t("limits.maxRewardsHint")} hintId={`${ids}-max-rewards`}>
-            <NumberSetting
-              path="redeem.max_rewards"
-              value={rules.redeem.max_rewards}
-              range={RANGES.maxRewards}
-              label={t("limits.maxRewards")}
-              unit={t("units.rewards")}
-              width="sm"
-              describedBy={`${ids}-max-rewards`}
-            />
-          </SettingRow>
-          <SettingRow
-            title={t("limits.storeBudget")}
-            hint={
-              <span className="tabular-nums">
-                {storeCount !== null
-                  ? t("limits.storeBudgetHint", {
-                      perStore: usd(budget.perStore),
-                      total: usd(budget.total),
-                      stores: storeCount,
-                    })
-                  : t("limits.storeBudgetHintOne", { perStore: usd(budget.perStore) })}
-              </span>
-            }
-            hintId={`${ids}-store-budget`}
-          >
-            <NumberSetting
-              path="redeem.store_budget"
-              value={rules.redeem.store_budget}
-              range={RANGES.storeBudget}
-              label={t("limits.storeBudget")}
-              unit={t("units.coins")}
-              describedBy={`${ids}-store-budget`}
-              onLive={setStoreBudget}
-            />
-          </SettingRow>
-          <div className="border-b border-border py-2">
-            <SwitchSetting
-              path="redeem.approval"
-              value={rules.redeem.approval}
-              label={t("limits.approval")}
-              description={t("limits.approvalHint")}
-            />
-          </div>
-          <SettingRow title={t("limits.coinValue")} hint={t("limits.coinValueHint")} hintId={`${ids}-coin-value`}>
-            <NumberSetting
-              path="coin_value"
-              value={rules.coin_value}
-              range={RANGES.coinValue}
-              label={t("limits.coinValue")}
-              dollars
-              width="sm"
-              describedBy={`${ids}-coin-value`}
-              onLive={setCoinValue}
-            />
-          </SettingRow>
-        </div>
-      </Panel>
+        </Panel>
+      </Columns>
     </>
   );
 }

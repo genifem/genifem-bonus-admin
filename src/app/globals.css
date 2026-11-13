@@ -10,19 +10,158 @@
 }
 
 /* The prototype's one layout switch: at 860px the owner portal's rail stands up as a column;
-   below it, it folds into a horizontal strip (`rail:` in class names). */
+   below it, it folds into a horizontal strip (`rail:` in class names).
+
+   The page column (`max-w-content`) grows with the screen up to 1680px and sits in the middle
+   of the room the rail leaves, so a wide monitor is used rather than left half empty. What is
+   inside it lays itself out against the column's own width, not the window's (container
+   queries on `@container/page`): a page is as wide as the screen minus the rail, and the rail
+   is 240 or 72px wide, so the window's width alone cannot say how much room a page has. */
 @theme {
   --breakpoint-rail: 53.75rem;
+  --container-content: 105rem;
+}
+
+/* The spacing every page shares, set once (the values change with the screen, below):
+     gutter   the page's side padding: 16px on a phone, up to 40px on a wide monitor
+     section  between the cards of a page, and between two cards side by side
+     tile     between the small boxes of a grid (stat tiles, store cards) */
+@theme inline {
+  --spacing-gutter: var(--layout-gutter);
+  --spacing-section: var(--layout-section);
+  --spacing-tile: var(--layout-tile);
+}
+
+/* The rail folded to its icons: true inside a rail narrower than 160px. Container query, not a
+   class, so the rail's own width is the one source of truth - folded by the owner's choice or,
+   with no choice made, on a tablet held sideways - and nothing outside a rail ever matches. */
+@custom-variant folded {
+  @container rail (width < 10rem) {
+    @slot;
+  }
+}
+
+/* A DataTable's two layouts, by the table's own width: `spread` the full table, `stacked` each
+   row as a card of labelled fields. A table stacks under 768px (container `table`), or under
+   960px when it is mostly form fields or many columns (`table-wide`), so its full layout is
+   only drawn once it fits rather than scrolling sideways. */
+@custom-variant stacked {
+  @container table (width < 48rem) {
+    @slot;
+  }
+  @container table-wide (width < 60rem) {
+    @slot;
+  }
+}
+
+@custom-variant spread {
+  @container table (width >= 48rem) {
+    @slot;
+  }
+  @container table-wide (width >= 60rem) {
+    @slot;
+  }
 }
 
 /* Everything below the utilities is layered. An unlayered rule beats every Tailwind utility
    whatever its specificity, which is how `outline-none` on a field would lose to the global
    focus ring and draw two rings. */
 @layer base {
+  :root {
+    --layout-gutter: 1rem;
+    --layout-section: 1.125rem;
+    --layout-tile: 0.75rem;
+    /* One thin bar wherever something scrolls: the control edge's colour, which holds 3:1 on
+       cream, white and the tinted panels (WCAG 1.4.11), on a clear track. */
+    --scrollbar-thumb: var(--border-strong);
+    --scrollbar-thumb-hover: var(--muted);
+  }
+
+  @media (width >= 40rem) {
+    :root {
+      --layout-gutter: 1.25rem;
+    }
+  }
+
+  @media (width >= 53.75rem) {
+    :root {
+      --layout-gutter: 1.75rem;
+    }
+  }
+
+  @media (width >= 80rem) {
+    :root {
+      --layout-gutter: 2rem;
+      --layout-section: 1.25rem;
+      --layout-tile: 1rem;
+    }
+  }
+
+  @media (width >= 96rem) {
+    :root {
+      --layout-gutter: 2.5rem;
+    }
+  }
+
+  /* The rail's width: 240px open, 72px folded to its icons. With no choice made ("auto") it
+     folds below 1280px - a tablet held sideways, a small laptop - where the page needs the room
+     more than the rail needs its words, and opens above. The owner's choice (the cookie,
+     lib/rail.ts) holds at every width. */
+  [data-rail] {
+    --rail-w: 15rem;
+  }
+
+  [data-rail="collapsed"] {
+    --rail-w: 4.5rem;
+  }
+
+  @media (width < 80rem) {
+    [data-rail="auto"] {
+      --rail-w: 4.5rem;
+    }
+  }
+
   html {
     /* Room for the scrollbar is always kept, so a page does not jump sideways when moving
        between a short route and a long one. */
     scrollbar-gutter: stable;
+  }
+
+  /* Below the rail breakpoint the links stick to the top of the page: whatever is brought into
+     view (a picked person's form, a link to a heading) stops under them, not behind them. */
+  @media (width < 53.75rem) {
+    html {
+      scroll-padding-top: 4.5rem;
+    }
+  }
+
+  /* The standard properties are what Chrome (121+) and Firefox read; Safari reads the WebKit
+     pseudo-elements below, which also darken the thumb under the pointer. `scrollbar-width`
+     does not inherit, hence every element. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: 9999px;
+    background-color: var(--scrollbar-thumb);
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover);
   }
 
   /* A modal <dialog> (side panels, confirmations) does not stop the page behind it scrolling

@@ -164,6 +164,7 @@ export function ImportPanel() {
       key: "errors",
       header: t("columns.problems"),
       overflow: "wrap",
+      stack: "full",
       cell: (row) => {
         const problems = rowProblems(row);
         return problems.length > 0 ? (
@@ -275,7 +276,9 @@ export function ImportPanel() {
                   columns={columns}
                   rows={rows.slice(0, SHOWN)}
                   rowKey={(row) => String(row.line)}
-                  stickyHeader={{ maxHeight: "32rem" }}
+                  // Up to 500 lines: one box that scrolls under its own header, never taller
+                  // than most of the screen, so its end and the page's stay in reach.
+                  stickyHeader={{ maxHeight: "min(32rem, 70dvh)" }}
                 />
               ) : null}
               {rows.length > SHOWN ? <p className="text-caption text-muted">{t("truncated", { shown: SHOWN, total: rows.length })}</p> : null}

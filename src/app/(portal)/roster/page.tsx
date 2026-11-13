@@ -96,7 +96,7 @@ export default async function RosterPage({ searchParams }: PageProps<"/roster">)
             query={query}
             label={t("filters.label")}
             submitLabel={t("filters.apply")}
-            className="rounded-2xl border border-border bg-surface-raised p-4"
+            className="rounded-2xl border border-border bg-surface-raised p-4.5"
           >
             <div className="w-full sm:w-60">
               <Field

@@ -128,7 +128,7 @@ export function PeoplePanel({
     {
       key: "setup",
       header: t("columns.setup"),
-      hideBelow: "md",
+      hideBelow: "lg",
       cell: (person) =>
         person.setup_done ? <Badge tone="success">{t("setupDone")}</Badge> : <Badge>{t("setupNotYet")}</Badge>,
     },
@@ -136,7 +136,7 @@ export function PeoplePanel({
       key: "phone",
       header: t("columns.phone"),
       overflow: "nowrap",
-      hideBelow: "lg",
+      hideBelow: "xl",
       cell: (person) =>
         person.phone_masked ? (
           <span className="tabular-nums">{person.phone_masked}</span>
@@ -164,7 +164,8 @@ export function PeoplePanel({
       width: "min",
       pin: "end",
       cell: (person) => (
-        <span className="flex gap-2">
+        // One line in the full table; in a stacked card they wrap if a phone is too narrow.
+        <span className="flex flex-wrap gap-2">
           <Button variant="secondary" size="console" onClick={() => edit(person)}>
             {t("edit")}
             <VisuallyHidden>{` ${person.name}`}</VisuallyHidden>

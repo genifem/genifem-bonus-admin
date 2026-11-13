@@ -85,17 +85,26 @@ export default async function CoinsPage() {
       <LiveNote>{t("live")}</LiveNote>
 
       <Panel id="how-heading" title={t("how.heading")} icon={Coins}>
-        <ol className="flex flex-col gap-1 lg:flex-row lg:items-stretch lg:gap-2">
+        {/* A row of four once the page has room for them, a column on a narrow one. */}
+        <ol className="flex flex-col gap-1 @3xl/page:flex-row @3xl/page:items-stretch @3xl/page:gap-2">
           {STEPS.map((step, index) => (
-            <li key={step.key} className="flex flex-col items-center gap-1 lg:flex-1 lg:flex-row lg:gap-2">
-              <div className={cx("flex w-full flex-1 items-center gap-2.5 rounded-xl p-3 lg:flex-col lg:items-start", step.tone)}>
+            <li
+              key={step.key}
+              className="flex flex-col items-center gap-1 @3xl/page:flex-1 @3xl/page:flex-row @3xl/page:items-stretch @3xl/page:gap-2"
+            >
+              <div
+                className={cx(
+                  "flex w-full flex-1 items-center gap-2.5 rounded-xl p-3 @3xl/page:flex-col @3xl/page:items-start",
+                  step.tone,
+                )}
+              >
                 <step.icon aria-hidden="true" className="size-5.5 shrink-0" strokeWidth={2.2} />
                 <span className="text-sm font-extrabold">{t(`how.${step.key}`)}</span>
               </div>
               {index < STEPS.length - 1 ? (
                 <ChevronRight
                   aria-hidden="true"
-                  className="size-4.5 shrink-0 rotate-90 text-muted lg:rotate-0"
+                  className="size-4.5 shrink-0 rotate-90 self-center text-muted @3xl/page:rotate-0"
                   strokeWidth={2.4}
                 />
               ) : null}

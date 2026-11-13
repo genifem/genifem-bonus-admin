@@ -78,7 +78,13 @@
       "audit": "Audit log"
     },
     "signedInAs": "Signed in as",
-    "owner": "Owner"
+    "owner": "Owner",
+    "account": "Your account",
+    "accountOf": "{name}'s account",
+    "rail": {
+      "collapse": "Collapse sidebar",
+      "expand": "Expand sidebar"
+    }
   },
   "pages": {
     "overview": {
@@ -546,6 +552,8 @@
       "notRecognized": "Not recognized yet in {month} ({count})",
       "notRecognizedLead": "Crew who haven't received a shout-out this month. A quick note goes a long way.",
       "everyoneRecognized": "Everyone has been recognized this month.",
+      "showMore": "Show {count} more",
+      "showFewer": "Show fewer",
       "daysOnTeam": "{days, plural, one {# day} other {# days}} on the team",
       "recent": "Recent shout-outs",
       "noRecent": "No shout-outs yet this month."

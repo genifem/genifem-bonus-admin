@@ -18,6 +18,7 @@ export { ProgressRing, type RingTone } from "./ProgressRing";
 export { StatusPill, type PillStatus } from "./StatusPill";
 export { Toggle } from "./Toggle";
 export { Card } from "./Card";
+export { Columns, type ColumnsLayout } from "./Columns";
 export { ConfirmDialog } from "./ConfirmDialog";
 export { DataTable, type Column, type SortDirection } from "./DataTable";
 export { EmptyState } from "./EmptyState";

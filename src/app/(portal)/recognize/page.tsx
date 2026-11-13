@@ -21,7 +21,7 @@ import {
 import { TAGS } from "@/components/recognition/send-intent";
 import { StoreFilter } from "@/components/recognition/StoreFilter";
 import { RoleChip } from "@/components/roster/RosterBits";
-import { Alert, Avatar, cx, FilterChips, PageHeader, withQuery, type Query } from "@/components/ui";
+import { Alert, Avatar, Columns, cx, FilterChips, PageHeader, withQuery, type Query } from "@/components/ui";
 import { ringInside } from "@/components/ui/focus";
 import { serverApi } from "@/lib/server-api";
 import { body, settle } from "@/lib/server-load";
@@ -126,7 +126,7 @@ export default async function RecognizePage({ searchParams }: PageProps<"/recogn
     <>
       <PageHeader title={tPage("title")} lead={tPage("lead")} />
 
-      <div className="grid items-start gap-4.5 lg:grid-cols-2">
+      <Columns layout="halves">
         <Panel id="who-heading" title={t("who")} icon={Users}>
           <FilterChips
             label={t("filters.label")}
@@ -152,7 +152,13 @@ export default async function RecognizePage({ searchParams }: PageProps<"/recogn
           {candidates.length === 0 ? (
             <p className="rounded-lg bg-surface p-4 text-sm text-muted">{t("noMatch")}</p>
           ) : (
-            <ul aria-label={t("listLabel")} className="-mx-1 flex max-h-130 flex-col gap-1.5 overflow-y-auto px-1 py-0.5">
+            // Beside the form, a picker sized to the screen, so the list and the form are in
+            // view together; stacked on a narrow page, it runs with the page instead of
+            // scrolling inside it.
+            <ul
+              aria-label={t("listLabel")}
+              className="-mx-1 flex flex-col gap-1.5 px-1 py-0.5 @4xl/page:max-h-[max(24rem,calc(100dvh-22rem))] @4xl/page:overflow-y-auto"
+            >
               {candidates.map((person) => {
                 const current = person.id === selected?.id;
                 // A supervisor has no one store but the stores they cover: their numbers here,
@@ -199,7 +205,7 @@ export default async function RecognizePage({ searchParams }: PageProps<"/recogn
           )}
         </Panel>
 
-        <div className="flex min-w-0 flex-col gap-4.5">
+        <div className="flex min-w-0 flex-col gap-section">
           <div className="rounded-2xl border border-border bg-surface-raised p-4.5">
             {state.to && !selected ? (
               <Alert kind="warning" className="mb-4">
@@ -228,7 +234,7 @@ export default async function RecognizePage({ searchParams }: PageProps<"/recogn
             )}
           </Panel>
         </div>
-      </div>
+      </Columns>
     </>
   );
 }

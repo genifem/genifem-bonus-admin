@@ -154,16 +154,19 @@ export default async function PeoplePage({ searchParams }: PageProps<"/people">)
           </Badge>
         ),
     },
-    { key: "tier", header: t("columns.tier"), cell: (person) => <TierChip tier={person.tier} /> },
+    // On a narrower table the tier, kudos and badges give way first: the month's coins and the
+    // balance are what an owner acts on here.
+    { key: "tier", header: t("columns.tier"), hideBelow: "md", cell: (person) => <TierChip tier={person.tier} /> },
     {
       key: "kudos",
       header: t("columns.kudos"),
       align: "end",
       overflow: "nowrap",
+      hideBelow: "lg",
       cell: (person) =>
         t("kudosValue", { left: count(person.kudos_left), allowance: count(person.kudos_allowance) }),
     },
-    { key: "badges", header: t("columns.badges"), align: "end", cell: (person) => count(person.badges) },
+    { key: "badges", header: t("columns.badges"), align: "end", hideBelow: "lg", cell: (person) => count(person.badges) },
     {
       key: "actions",
       header: t("columns.actions"),
@@ -196,7 +199,8 @@ export default async function PeoplePage({ searchParams }: PageProps<"/people">)
         {team.stores.length === 0 ? (
           <EmptyState title={tr("overview.noStores")} />
         ) : (
-          <ul className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,15rem),1fr))] gap-3.5">
+          // As many cards to a row as fit at 208px or more, sharing the row between them.
+          <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-tile">
             {team.stores.map((row) => (
               <StoreCard key={row.store.id} row={row} href={store ? null : storeHref("/people", query, row.store.number)} />
             ))}

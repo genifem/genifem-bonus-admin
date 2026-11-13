@@ -48,7 +48,7 @@ export function AwardCategories({
       header: t("columns.award"),
       width: "md",
       cell: (award) => (
-        <div className="flex min-w-48 flex-col gap-2">
+        <div className="flex flex-col gap-2 spread:min-w-48">
           <TextSetting
             path={`awards.${award.id}.name`}
             value={award.name}
@@ -77,6 +77,7 @@ export function AwardCategories({
     {
       key: "coins",
       header: t("columns.coins"),
+      stack: "full",
       cell: (award) => (
         <NumberSetting
           path={`awards.${award.id}.coins`}

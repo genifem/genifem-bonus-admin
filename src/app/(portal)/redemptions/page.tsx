@@ -159,6 +159,9 @@ export default async function RedemptionsPage({ searchParams }: PageProps<"/rede
       key: "store",
       header: t("requests.columns.store"),
       overflow: "nowrap",
+      // On a narrow full table the store goes first (the page's store filter says which one
+      // is shown), then when it was asked; the cards still show both.
+      hideBelow: "md",
       cell: (row) =>
         row.store ? (
           <>
@@ -193,6 +196,7 @@ export default async function RedemptionsPage({ searchParams }: PageProps<"/rede
       key: "requested",
       header: t("requests.columns.requested"),
       overflow: "nowrap",
+      hideBelow: "lg",
       cell: (row) => <span className="text-caption text-muted">{when(row.created_at)}</span>,
     },
     {
@@ -300,7 +304,8 @@ export default async function RedemptionsPage({ searchParams }: PageProps<"/rede
         {data.budgets.length === 0 ? (
           <p className="text-sm text-muted">{t("budgets.none")}</p>
         ) : (
-          <ul className="flex flex-col gap-3">
+          // Two stores to a line on a wide page, so a bar is not stretched across the screen.
+          <ul className="grid gap-x-10 gap-y-3 @6xl/page:grid-cols-2">
             {data.budgets.map((row) => (
               <BudgetRow
                 key={row.store.id}

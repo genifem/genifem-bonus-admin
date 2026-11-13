@@ -72,7 +72,7 @@ export function RewardsTable({
       key: "reward",
       header: t("columns.reward"),
       cell: (reward) => (
-        <span className="flex min-w-56 max-w-96 items-start gap-3">
+        <span className="flex items-start gap-3 spread:min-w-56 spread:max-w-96">
           <RewardIcon icon={reward.icon} />
           <span className="flex min-w-0 flex-col items-start gap-1">
             <span className="flex flex-wrap items-center gap-1.5">
@@ -97,6 +97,8 @@ export function RewardsTable({
       key: "usd",
       header: t("columns.usd"),
       align: "end",
+      // The dollars give way first on a narrower full table; the cards still show them.
+      hideBelow: "lg",
       cell: (reward) => <span className="text-caption">{formatUsd(reward.cost_usd, locale)}</span>,
     },
     {
@@ -162,6 +164,7 @@ export function RewardsTable({
           rows={rewards}
           rowKey={(reward) => reward.id}
           bare
+          stackBelow={960}
           className="border-t border-border"
         />
       )}

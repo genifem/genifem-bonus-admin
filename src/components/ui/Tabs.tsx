@@ -22,6 +22,9 @@ export interface TabItem {
  * server with only the data it needs. Following one swaps the page in place rather than
  * loading a new document; the page renders again, so `current` (which it works out, defaults
  * included) is always the one on screen.
+ *
+ * Too many for one line (a phone, Spanish), they wrap rather than scroll sideways out of view;
+ * the lines sit far enough apart that the enlarged hit areas do not overlap.
  */
 export function Tabs({
   items,
@@ -36,8 +39,7 @@ export function Tabs({
 }) {
   return (
     <nav aria-label={label} className={cx("min-w-0 max-w-full", className)}>
-      {/* Padded so the scroll box does not clip the enlarged hit areas. */}
-      <ul className="relative -m-1.25 flex gap-1.5 overflow-x-auto p-1.25 scrollbar-hidden">
+      <ul className="relative flex flex-wrap gap-x-1.5 gap-y-2.5">
         {items.map((item) => (
           <li key={item.key} className="shrink-0">
             <NavLink
