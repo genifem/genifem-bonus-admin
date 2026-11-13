@@ -73,3 +73,11 @@ CI fails if the committed client differs.
   `API_PROXY_SECRET` and `CREWSTARS_TENANT` for Production and Preview. Never as
   `NEXT_PUBLIC_*`.
 - Domain: the portal's own host (plan: `stars.genifem.com`). No wildcard domains.
+- Node.js 22.x in the project settings (`engines` asks for 22 or later).
+- The repository is in the `genifem` GitHub organisation: Vercel's GitHub app needs access to
+  it ("Add GitHub Scope" when importing), and a private organisation repository may need a
+  Pro team rather than a Hobby one.
+- The live API is `https://api.stars.genifem.com` (Lightsail, since 2026-11-12). The first
+  operator on it is the test operator `demo` (`CREWSTARS_TENANT=demo`).
+- DNS for genifem.com is at Hostinger: `api.stars` is an A record to the API server; add the
+  record Vercel shows for `stars` there too.
