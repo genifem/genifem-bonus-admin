@@ -1,11 +1,12 @@
 "use client";
 
-import { SIGNED_OUT } from "@/lib/session-paths";
+import { IDLE_SIGN_IN, SIGNED_OUT } from "@/lib/session-paths";
 
 /**
  * Browser-side API calls. Everything goes to this app's own /api/* path, which proxies to the
- * Crew Stars API, names the operator, and keeps the tokens in httpOnly cookies (see
- * app/api/[...path]/route.ts).
+ * Crew Stars API, names the operator from the host, and keeps the tokens in httpOnly cookies
+ * (see app/api/[...path]/route.ts). The owner portal and the back office both use it: the host
+ * they are on decides which session and which endpoints the proxy allows.
  *
  * Errors carry the API's stable `code`, which the UI translates (`errors.<code>`); the
  * server's English message is a developer fallback only. `details` is the API's structured
@@ -15,7 +16,8 @@ import { SIGNED_OUT } from "@/lib/session-paths";
  *
  * A 401 on anything but an /auth/ call means the session is over - the proxy has already
  * tried a refresh and dropped the cookies - so the owner is sent to sign in again, whatever
- * screen made the call. An /auth/ 401 (a wrong password) is the caller's to show.
+ * screen made the call; a back office session that went idle (401 session_idle) is told so on
+ * the sign-in page. An /auth/ 401 (a wrong password) is the caller's to show.
  */
 
 export class ApiCallError extends Error {
@@ -95,9 +97,9 @@ export async function apiDownload(path: string): Promise<{ blob: Blob; dispositi
 async function refusal(response: Response, path: string): Promise<ApiCallError> {
   const payload: unknown = await response.json().catch(() => null);
   const error = (payload as { error?: { code?: string; message?: string; details?: unknown } } | null)?.error;
-  if (response.status === 401 && !path.startsWith("/auth/") && typeof window !== "undefined") {
-    window.location.assign(SIGNED_OUT);
-  }
   const code = error?.code ?? `http_${response.status}`;
+  if (response.status === 401 && !path.startsWith("/auth/") && typeof window !== "undefined") {
+    window.location.assign(code === "session_idle" ? IDLE_SIGN_IN : SIGNED_OUT);
+  }
   return new ApiCallError(response.status, code, error?.message ?? response.statusText, error?.details);
 }

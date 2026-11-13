@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 /** The disposable database the browser tests use, never the dev one. */
 export const E2E_DB = "crew-stars-e2e";
 
-/** The operator the tests sign in to (plan D3: named upstream as X-Tenant). */
+/** The operator the tests sign in to: its portal is {slug}.localhost (P7, playwright.config.ts). */
 export const E2E_TENANT = process.env.CREWSTARS_TENANT ?? "e2e";
 
 /** An owner the seed script creates (bonus-backend app/scripts/seed.py), and the password it

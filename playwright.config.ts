@@ -5,9 +5,10 @@ import { assertLocalDatabase, backendPath, E2E_DB, E2E_TENANT } from "./e2e/glob
 /**
  * Browser tests run against a disposable database (crew-stars-e2e), never the dev one, and
  * start both servers themselves - the API from the bonus-backend checkout beside this
- * repository. One domain, no tenant subdomains (plan D3): the portal is served on plain
- * localhost and names its operator upstream from CREWSTARS_TENANT. Phone and desktop
- * projects cover both layouts of the rail (NF-01).
+ * repository. Each operator has its own host (P7, src/lib/host.ts): with the base domain
+ * `localhost`, the seeded operator's portal is e2e.localhost, which Chromium sends to this
+ * machine like localhost itself. Phone and desktop projects cover both layouts of the rail
+ * (NF-01).
  */
 // Before anything starts: the API below would otherwise create the e2e database wherever its
 // .env points, a shared cluster included.
@@ -27,7 +28,7 @@ export default defineConfig({
   reporter: process.env.CI ? [["github"], ["list"]] : [["list"]],
   globalSetup: "./e2e/global-setup.ts",
   use: {
-    baseURL: `http://localhost:${WEB_PORT}`,
+    baseURL: `http://${TENANT}.localhost:${WEB_PORT}`,
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
@@ -68,12 +69,13 @@ export default defineConfig({
       command: process.env.E2E_PROD
         ? `pnpm build && pnpm start --port ${WEB_PORT}`
         : `pnpm dev --port ${WEB_PORT}`,
-      url: `http://localhost:${WEB_PORT}/login`,
+      // The bare domain ("Find your company"): Node may not resolve e2e.localhost on every OS.
+      url: `http://localhost:${WEB_PORT}/`,
       reuseExistingServer: !process.env.CI,
       timeout: 300_000,
       env: {
         API_INTERNAL_URL: `http://127.0.0.1:${API_PORT}`,
-        CREWSTARS_TENANT: TENANT,
+        CREWSTARS_BASE_DOMAIN: "localhost",
         NEXT_DIST_DIR: ".next-e2e",
       },
     },

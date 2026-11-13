@@ -1,7 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { clearSessionCookies, REFRESH_COOKIE, refreshSession, setSessionCookies } from "@/lib/session";
-import { safeNext, SIGN_IN, SIGNED_OUT } from "@/lib/session-paths";
+import { parseHost } from "@/lib/host";
+import { clearSessionCookies, jarFor, refreshSession, setSessionCookies } from "@/lib/session";
+import { IDLE_SIGN_IN, safeNext, SIGN_IN, SIGNED_OUT } from "@/lib/session-paths";
 import { apiBase } from "@/lib/server-api";
 
 /**
@@ -9,6 +10,10 @@ import { apiBase } from "@/lib/server-api";
  * token (src/proxy.ts sends it here), the browser comes here first: renew, then carry on to
  * where they were going. Without this an owner would be bounced to sign-in every time the
  * short-lived access token lapsed, rather than once their 12-hour session is over.
+ *
+ * The host says whose session it is (lib/host.ts): an owner's on an operator's host, an
+ * admin's on admin.<base>. A back office session the API signed out for inactivity (401
+ * session_idle) is not renewed; the sign-in page says why.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const destination = safeNext(request.nextUrl.searchParams.get("next"));
@@ -17,14 +22,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const proto = request.headers.get("x-forwarded-proto") ?? request.nextUrl.protocol.replace(":", "");
   const base = host ? `${proto}://${host}` : request.url;
 
-  const hadSession = request.cookies.has(REFRESH_COOKIE);
-  const { tokens } = await refreshSession(request, apiBase());
+  const jar = jarFor(parseHost(request.headers.get("host")));
+  if (!jar) return NextResponse.redirect(new URL("/", base));
+
+  const hadSession = request.cookies.has(jar.refresh);
+  const { tokens, code } = await refreshSession(request, apiBase(), jar);
   if (!tokens) {
-    const out = NextResponse.redirect(new URL(hadSession ? SIGNED_OUT : SIGN_IN, base));
-    clearSessionCookies(out);
+    const where = code === "session_idle" ? IDLE_SIGN_IN : hadSession ? SIGNED_OUT : SIGN_IN;
+    const out = NextResponse.redirect(new URL(where, base));
+    clearSessionCookies(out, jar);
     return out;
   }
   const response = NextResponse.redirect(new URL(destination, base));
-  setSessionCookies(response, tokens);
+  setSessionCookies(response, tokens, jar);
   return response;
 }

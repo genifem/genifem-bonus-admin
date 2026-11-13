@@ -13,16 +13,21 @@ import { SIGN_IN } from "@/lib/session-paths";
  * Ends the session (OP-21). The refresh token is revoked through the BFF's /auth/logout (the
  * proxy adds it; the browser never holds it), and then /api/session/end drops the cookies
  * whatever the API said, so a sign-out works even when the API cannot be reached.
+ *
+ * In the back office (`backOffice`) it is /auth/platform/logout, which also ends the
+ * session's idle timer on the API at once (P7).
  */
 export function SignOutButton({
   size = "console",
   compact = false,
+  backOffice = false,
   className,
 }: {
   size?: ButtonSize;
   /** On a phone, the icon alone, named for a screen reader and on hover: beside the lockup
    *  there is no room for "Cerrar sesión" (NF-02). The words come back from `sm`. */
   compact?: boolean;
+  backOffice?: boolean;
   className?: string;
 }) {
   const t = useTranslations("common");
@@ -30,7 +35,7 @@ export function SignOutButton({
   const [pending, startTransition] = useTransition();
 
   async function signOut() {
-    await apiPost("/auth/logout").catch(() => undefined);
+    await apiPost(backOffice ? "/auth/platform/logout" : "/auth/logout").catch(() => undefined);
     await fetch("/api/session/end", { method: "POST" }).catch(() => undefined);
     startTransition(() => {
       router.replace(SIGN_IN);

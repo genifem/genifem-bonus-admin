@@ -206,6 +206,8 @@ const PERSON_SENTENCES: Record<string, string> = {
 const SIGN_IN_SENTENCES: Record<string, string> = {
   "auth.setup_complete": "setupComplete",
   "auth.password_reset": "passwordReset",
+  // An owner who opened their emailed invite and chose a password (P7).
+  "auth.invite_accept": "inviteAccept",
   "mfa.enable": "mfaEnable",
   "mfa.recovery_used": "mfaRecovery",
 };

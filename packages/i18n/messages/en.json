@@ -41,20 +41,51 @@
     "setup": {
       "lead": "Your account now needs a second step at sign-in: a code from an authenticator app, such as Google Authenticator, Microsoft Authenticator or 1Password.",
       "title": "Set up your authenticator app",
-      "onPhone": "On the phone that has your authenticator app, open this link:",
+      "onPhone": "On the phone that has the app? Open this link instead:",
       "openApp": "Add Crew Stars to my authenticator app",
       "typeKey": "Or add an account in the app by hand and type this key:",
       "copyKey": "Copy key",
       "enterCode": "Then enter the 6-digit code the app shows below.",
       "code": "Code from the app",
       "hint": "The code changes every 30 seconds. Any current one works.",
-      "submit": "Turn on and sign in"
+      "submit": "Turn on and sign in",
+      "scan": "Scan this code with your authenticator app:",
+      "qrLabel": "QR code that adds Crew Stars to your authenticator app"
     },
     "recovery": {
       "lead": "Two-step sign-in is on. Keep these codes somewhere safe, away from your phone: each one signs you in once if you lose it. They won't be shown again.",
       "title": "Save your recovery codes",
       "copy": "Copy codes",
-      "continue": "I've saved these, continue"
+      "continue": "I've saved these, continue",
+      "download": "Download codes",
+      "fileName": "crew-stars-recovery-codes.txt",
+      "fileHeading": "Crew Stars recovery codes. Each one signs you in once if you lose your phone. Keep them somewhere safe, away from it."
+    },
+    "forgot": "Forgot password?",
+    "link": {
+      "password": "New password",
+      "repeat": "Type it again",
+      "rules": "At least {min} characters, with at least one number.",
+      "mismatch": "The two passwords don't match.",
+      "noToken": "This link is missing its code. Open it again from the email, or copy the whole address.",
+      "invalid": "This link isn't valid. Open it again from the email, or ask for a new one.",
+      "wrongTenant": "This link is for another company's portal. Open it again from the email.",
+      "signIn": "Go to sign in",
+      "askAgain": "Ask for a new link",
+      "invite": {
+        "title": "Welcome to Crew Stars",
+        "lead": "Choose a password for your owner account. You'll sign in with it and your email.",
+        "submit": "Set password and sign in",
+        "expired": "This invite has expired: invites work for 7 days. Ask Crew Stars support to send a new one.",
+        "used": "This invite was already used, or a newer one was sent. Sign in with your email and password."
+      },
+      "reset": {
+        "title": "Choose a new password",
+        "lead": "You'll be signed in with it, and any other sessions you have will end.",
+        "submit": "Save and sign in",
+        "expired": "This link has expired: reset links work for 1 hour. Ask for a new one.",
+        "used": "This link was already used. Ask for a new one if you still need it."
+      }
     }
   },
   "portal": {
@@ -182,7 +213,37 @@
     "reward_not_found": "That reward isn't there any more. Reload the page to see the latest.",
     "reward_has_pending": "Requests are still waiting for this reward, so it can't be deleted. Hide it from the app instead.",
     "unlock_invalid": "That badge isn't in the settings any more. Choose another.",
-    "awards_already_announced": "This month's winners were already announced. The page now shows who won."
+    "awards_already_announced": "This month's winners were already announced. The page now shows who won.",
+    "tenant_suspended": "This company's Crew Stars is paused. Contact Crew Stars support.",
+    "tenant_not_found": "There's no Crew Stars company at this address.",
+    "token_used": "That link was already used.",
+    "token_wrong_tenant": "That link is for another company's portal.",
+    "token_wrong_kind": "That session belongs somewhere else. Sign in again.",
+    "session_idle": "You were signed out after a while without activity. Sign in again.",
+    "password_weak": "That password is too weak. Use more characters, with at least one number.",
+    "platform_permission_missing": "Your role can't do this. Ask a super admin.",
+    "platform_host_required": "This only works in the back office.",
+    "slug_taken": "Another company already has that address.",
+    "slug_reserved": "That address is reserved. Choose another.",
+    "owner_exists": "This company already has an owner with that email.",
+    "owner_already_joined": "This owner has already set a password, so there's no invite to send.",
+    "owner_suspended": "This owner is suspended. Reactivate them first.",
+    "owner_not_found": "That owner isn't there any more. Reload the page to see the latest.",
+    "owner_already_suspended": "This owner is already suspended. The page now shows where they stand.",
+    "owner_not_suspended": "This owner isn't suspended. The page now shows where they stand.",
+    "operator_not_found": "That company isn't there any more.",
+    "operator_already_suspended": "This company is already suspended. The page now shows where it stands.",
+    "operator_not_suspended": "This company isn't suspended. The page now shows where it stands.",
+    "staff_exists": "Someone on the staff already has that email.",
+    "staff_self": "Ask another super admin to do this to your own account.",
+    "staff_already_joined": "This person has already joined, so there's no invite to send.",
+    "staff_suspended": "This person is suspended. Reactivate them first.",
+    "staff_not_found": "That person isn't on the staff any more. Reload the page to see the latest.",
+    "staff_already_suspended": "This person is already suspended. The page now shows where they stand.",
+    "staff_not_suspended": "This person isn't suspended. The page now shows where they stand.",
+    "nothing_to_change": "Nothing has changed, so there's nothing to save.",
+    "mfa_already_enabled": "The authenticator is already set up on this account. Sign in again.",
+    "email_invalid": "That email address doesn't look right."
   },
   "roster": {
     "loadError": "The roster couldn't be loaded.",
@@ -1177,6 +1238,7 @@
       "announcePlain": "<b>{actor}</b> announced the winners at {store}",
       "setupComplete": "<b>{actor}</b> set up their account",
       "passwordReset": "<b>{actor}</b> reset their password",
+      "inviteAccept": "<b>{actor}</b> accepted their invite and set a password",
       "mfaEnable": "<b>{actor}</b> turned on two-step sign-in",
       "mfaRecovery": "<b>{actor}</b> signed in with a recovery code",
       "lockout": "<b>{person}</b> was locked out after too many wrong passwords",
@@ -1218,6 +1280,590 @@
       "winner": "{coins, plural, one {{shown} coin} other {{shown} coins}}",
       "winnerNamed": "{name}, {coins, plural, one {{shown} coin} other {{shown} coins}}",
       "noWinners": "Nobody qualified this month"
+    }
+  },
+  "forgot": {
+    "title": "Reset your password",
+    "lead": "Enter the email you sign in with. We'll email you a link to choose a new password.",
+    "email": "Email",
+    "submit": "Email me a link",
+    "sentTitle": "Check your email",
+    "sent": "If that email belongs to an owner of {company}, a link to choose a new password is on its way. It works for 1 hour. Check your spam folder if it hasn't arrived in a few minutes.",
+    "sentNoName": "If that email belongs to an owner here, a link to choose a new password is on its way. It works for 1 hour. Check your spam folder if it hasn't arrived in a few minutes.",
+    "again": "Use another email",
+    "back": "Back to sign in"
+  },
+  "findCompany": {
+    "title": "Find your company",
+    "lead": "Each company has its own Crew Stars portal. Enter the email you use as an owner and we'll send you the link to yours.",
+    "email": "Email",
+    "submit": "Email me the links",
+    "sentTitle": "Check your email",
+    "sent": "If that email belongs to an owner, we've sent the sign-in links to their company's portal. Check your spam folder if it hasn't arrived in a few minutes.",
+    "again": "Use another email",
+    "crew": "Crew, shift leads and managers: you don't need this. Sign in with the Crew Stars app and your company code."
+  },
+  "operatorGate": {
+    "findCompany": "Find your company",
+    "missing": {
+      "title": "We can't find this company",
+      "lead": "There's no Crew Stars portal at this address.",
+      "help": "Check the address in your email. If you're an owner, you can have the right link emailed to you."
+    },
+    "suspended": {
+      "title": "This portal is paused",
+      "lead": "Crew Stars is switched off for this company for now. Nothing has been deleted: it all comes back when it's switched on again.",
+      "help": "For help, contact Crew Stars support."
+    }
+  },
+  "platform": {
+    "shell": {
+      "subtitle": "Back office",
+      "titleSuffix": "Crew Stars back office",
+      "signedInAs": "Signed in as",
+      "accountOf": "{name}'s account",
+      "roles": {
+        "super_admin": "Super admin",
+        "support": "Support"
+      },
+      "nav": {
+        "label": "Back office",
+        "groups": {
+          "operations": "Operations",
+          "team": "Team"
+        },
+        "overview": "Overview",
+        "operators": "Operators",
+        "health": "Health",
+        "audit": "Audit log",
+        "staff": "Staff"
+      },
+      "rail": {
+        "collapse": "Collapse sidebar",
+        "expand": "Expand sidebar"
+      }
+    },
+    "error": {
+      "title": "This page didn't load",
+      "lead": "Crew Stars may be out of reach for a moment. Try again; if it keeps happening, check Health.",
+      "retry": "Try again"
+    },
+    "signIn": {
+      "title": "Back office sign-in",
+      "lead": "For Crew Stars staff. Sign in with your email and password, then a code from your authenticator app.",
+      "submit": "Continue",
+      "idle": "You were signed out after a while without activity. Sign in again to carry on.",
+      "signedOut": "Your session ended. Sign in again to carry on.",
+      "inactive": "This account is switched off. Ask a super admin to turn it back on.",
+      "mfa": {
+        "title": "Enter your code",
+        "lead": "Open your authenticator app and enter the 6-digit code for the Crew Stars back office.",
+        "code": "Code",
+        "hint": "Lost your phone? Enter one of your recovery codes instead.",
+        "submit": "Sign in"
+      },
+      "setup": {
+        "title": "Set up your authenticator app",
+        "lead": "Every back office account signs in with a code from an authenticator app, such as Google Authenticator, Microsoft Authenticator or 1Password.",
+        "scan": "Scan this code with the app:",
+        "qrLabel": "QR code that adds the Crew Stars back office to your authenticator app",
+        "onPhone": "On the phone that has the app? Open this link instead:",
+        "openApp": "Add to my authenticator app",
+        "typeKey": "Can't scan it? Add an account by hand with this key:",
+        "copyKey": "Copy key",
+        "enterCode": "Then enter the 6-digit code the app shows.",
+        "code": "Code from the app",
+        "hint": "The code changes every 30 seconds. Any current one works.",
+        "submit": "Turn on and continue"
+      },
+      "recovery": {
+        "title": "Save your recovery codes",
+        "lead": "Each code signs you in once if you lose your phone. Keep them somewhere safe, away from it. They won't be shown again.",
+        "fileName": "crew-stars-back-office-recovery-codes.txt",
+        "fileHeading": "Crew Stars back office recovery codes. Each one signs you in once if you lose your phone. Keep them somewhere safe, away from it."
+      },
+      "invite": {
+        "title": "Join the back office",
+        "lead": "Choose a password for your account ({min} characters or more). Next you'll set up an authenticator app.",
+        "password": "New password",
+        "repeat": "Type it again",
+        "rules": "At least {min} characters, with at least one number.",
+        "mismatch": "The two passwords don't match.",
+        "submit": "Set password and continue",
+        "noToken": "This link is missing its code. Open it again from the email.",
+        "expired": "This invite has expired: invites work for 7 days. Ask a super admin to send a new one.",
+        "used": "This invite was already used, or a newer one was sent. Sign in instead.",
+        "invalid": "This invite isn't valid any more. Ask a super admin to send a new one.",
+        "signIn": "Go to sign in"
+      }
+    },
+    "reason": {
+      "label": "Reason",
+      "placeholder": "Why are you doing this? It's kept in the audit log.",
+      "hint": "At least {min} characters. Kept in the audit log with this change.",
+      "tooShort": "Say why, in at least {min} characters."
+    },
+    "states": {
+      "suspended": "Suspended",
+      "locked": "Locked",
+      "inviteExpired": "Invite expired",
+      "invited": "Invited",
+      "active": "Active"
+    },
+    "overview": {
+      "title": "Overview",
+      "lead": "Every company on Crew Stars, for {month}.",
+      "newOperator": "New operator",
+      "noAccess": "Your role doesn't include the overview.",
+      "loadError": "The overview didn't load.",
+      "retry": "Try again",
+      "status": {
+        "active": "Active",
+        "suspended": "Suspended"
+      },
+      "kpi": {
+        "label": "Crew Stars in {month}",
+        "operators": "Operators",
+        "operatorsHint": "{active} active · {suspended} suspended",
+        "people": "People on rosters",
+        "peopleHint": "Active people at active operators",
+        "shoutouts": "Shout-outs",
+        "redemptions": "Redemptions",
+        "monthHint": "This month, at active operators"
+      },
+      "health": {
+        "title": "Health",
+        "open": "Open health"
+      },
+      "operators": {
+        "title": "Busiest operators",
+        "all": "All operators",
+        "caption": "Operators, most recently busy first",
+        "empty": "No operators yet",
+        "emptyLead": "Create the first company to give its owners their portal.",
+        "never": "Not yet",
+        "columns": {
+          "operator": "Operator",
+          "status": "Status",
+          "shoutouts": "Shout-outs",
+          "activity": "Last activity"
+        }
+      },
+      "activity": {
+        "title": "Back office activity",
+        "all": "Audit log",
+        "empty": "Nothing done in the back office yet."
+      }
+    },
+    "health": {
+      "title": "Health",
+      "lead": "The API, its providers, backups and scheduled jobs.",
+      "noAccess": "Your role doesn't include Health.",
+      "loadError": "Health didn't load.",
+      "checkedAt": "Checked {when} · {env} · version {version}",
+      "noVersion": "unknown",
+      "status": {
+        "ok": "All good",
+        "watch": "Worth a look",
+        "problem": "Needs attention"
+      },
+      "database": "Database",
+      "database_ok": "Up",
+      "database_down": "Down",
+      "latency": "Answered in {ms} ms",
+      "email": "Email",
+      "configured": "Configured",
+      "notConfigured": "Not configured",
+      "providers": {
+        "console": "Console (development)",
+        "brevo": "Brevo"
+      },
+      "sms": "Texting",
+      "push": "Push notifications",
+      "on": "On",
+      "off": "Off",
+      "operators": "Operators",
+      "lastBackup": "Last backup",
+      "failingJobs": "Failing jobs",
+      "staleJobs": "Late jobs",
+      "none": "None",
+      "run": {
+        "running": "Running",
+        "ok": "OK",
+        "failed": "Failed",
+        "never": "Never run"
+      },
+      "jobs": {
+        "month_close": "Month close",
+        "milestone_badges": "Milestone badges",
+        "push_outbox": "Push notifications",
+        "backup": "Backup",
+        "restore_drill": "Restore drill"
+      },
+      "jobsTitle": "Scheduled jobs",
+      "jobsLead": "A job is late when it hasn't run for a few of its slots.",
+      "backupsTitle": "Backups",
+      "backupsLead": "The nightly backup, and the drill that proves it can be restored.",
+      "columns": {
+        "job": "Job",
+        "status": "Status",
+        "every": "Runs",
+        "last": "Last run",
+        "error": "Last error"
+      },
+      "late": "Late",
+      "never": "Never",
+      "everyNone": "On demand",
+      "everyHours": "Every {count, plural, one {# hour} other {# hours}}",
+      "everyMinutes": "Every {count, plural, one {# minute} other {# minutes}}"
+    },
+    "audit": {
+      "title": "Audit log",
+      "lead": "Everything done in the back office, newest first, with the reason given for each change.",
+      "heading": "What happened",
+      "noAccess": "Your role doesn't include the audit log.",
+      "loadError": "The audit log didn't load.",
+      "listLabel": "Back office audit log",
+      "system": "Crew Stars",
+      "anOperator": "an operator",
+      "reason": "Reason",
+      "ip": "from {ip}",
+      "showChange": "Show the change",
+      "before": "Before",
+      "after": "After",
+      "more": "Details",
+      "at": "When",
+      "requestId": "Request",
+      "actions": {
+        "operator_create": "created the operator",
+        "operator_update": "edited the operator",
+        "operator_suspend": "suspended the operator",
+        "operator_reactivate": "reactivated the operator",
+        "owner_invite": "invited an owner",
+        "owner_invite_resend": "sent an owner's invite again",
+        "owner_mfa_reset": "turned off an owner's authenticator",
+        "owner_suspend": "suspended an owner",
+        "owner_reactivate": "reactivated an owner",
+        "staff_invite": "invited a colleague",
+        "staff_invite_accept": "joined the back office",
+        "staff_invite_resend": "sent a colleague's invite again",
+        "staff_mfa_reset": "turned off a colleague's authenticator",
+        "staff_suspend": "suspended a colleague",
+        "staff_reactivate": "reactivated a colleague",
+        "auth_login": "signed in",
+        "auth_lockout": "was locked out after wrong tries",
+        "auth_refresh_reuse": "had a session ended: an old token came back",
+        "mfa_enable": "set up their authenticator",
+        "mfa_recovery_used": "signed in with a recovery code",
+        "platform_denied": "was refused something their role doesn't allow",
+        "staff_create": "added someone to the back office"
+      },
+      "kinds": {
+        "operator": "Operators",
+        "owner": "Owners",
+        "staff": "Staff",
+        "auth": "Sign-ins",
+        "mfa": "Authenticators",
+        "platform_denied": "Refused"
+      },
+      "filters": {
+        "label": "Filter the audit log",
+        "apply": "Apply",
+        "operator": "Operator",
+        "anyOperator": "Any operator",
+        "actor": "Done by",
+        "anyActor": "Anyone",
+        "kinds": "Kind of action",
+        "all": "Everything"
+      },
+      "empty": {
+        "all": "Nothing in the log yet.",
+        "filtered": "Nothing matches these filters.",
+        "filteredLead": "Try another kind of action, or another operator.",
+        "older": "Nothing older than this.",
+        "showAll": "Show everything"
+      },
+      "paging": "Pages of the audit log",
+      "newest": "Newest",
+      "older": "Older"
+    },
+    "operators": {
+      "title": "Operators",
+      "lead": "Every company on Crew Stars, with this month's numbers.",
+      "noAccess": "Your role doesn't include operators.",
+      "loadError": "The operators didn't load.",
+      "caption": "Operators ({count})",
+      "columns": {
+        "operator": "Operator",
+        "status": "Status",
+        "stores": "Stores",
+        "people": "People",
+        "owners": "Owners",
+        "shoutouts": "Shout-outs this month",
+        "activity": "Last activity",
+        "created": "Created"
+      },
+      "filters": {
+        "label": "Search operators",
+        "apply": "Search",
+        "search": "Name or address",
+        "searchPlaceholder": "e.g. acme",
+        "status": "Status",
+        "anyStatus": "Any status"
+      },
+      "empty": {
+        "filtered": "No operator matches",
+        "filteredLead": "Try another name, or any status.",
+        "clear": "Show every operator"
+      }
+    },
+    "newOperator": {
+      "title": "New operator",
+      "lead": "A company gets its own portal address and settings, and its first owner gets an email invite.",
+      "noAccess": "Only super admins create operators.",
+      "slugPlaceholder": "address",
+      "company": {
+        "title": "Company",
+        "lead": "How it's named, where its portal lives, and the time zone its months run in.",
+        "name": "Company name",
+        "slug": "Address",
+        "slugHint": "The portal will be at {host}. It's also the company code people type in the app.",
+        "slugRules": "Lowercase letters, numbers and dashes, up to {max} characters, starting and ending with a letter or number.",
+        "reserved": "Reserved:",
+        "tz": "Time zone",
+        "tzHint": "Months, the monthly reset and quiet hours run on this time."
+      },
+      "owner": {
+        "title": "First owner",
+        "lead": "They get an email to choose a password and sign in. More owners can be added later.",
+        "name": "Name",
+        "email": "Email",
+        "emailHint": "The invite goes here, and it's what they'll sign in with.",
+        "language": "Email language",
+        "languageHint": "The invite is written in this language, and the portal opens in it."
+      },
+      "defaults": "Settings and rewards start with the Crew Stars defaults; the owners can change them.",
+      "cancel": "Cancel",
+      "submit": "Create operator",
+      "confirm": {
+        "title": "Create this operator?",
+        "subtitle": "{name} at {host}",
+        "notice": "The invite goes to {email} as soon as it's created."
+      },
+      "problems": {
+        "name": {
+          "required": "Give the company a name.",
+          "tooLong": "Keep the name to 100 characters or fewer.",
+          "invalid": "That name can't be used."
+        },
+        "slug": {
+          "empty": "Choose an address.",
+          "tooLong": "Keep the address to 32 characters or fewer.",
+          "characters": "Use only lowercase letters, numbers and dashes.",
+          "edges": "Start and end the address with a letter or number.",
+          "reserved": "That address is reserved. Choose another.",
+          "taken": "Another company already has that address.",
+          "invalid": "That address can't be used."
+        },
+        "tz": {
+          "invalid": "Choose a time zone."
+        },
+        "ownerName": {
+          "required": "Give the owner's name.",
+          "tooLong": "Keep the name to 100 characters or fewer.",
+          "invalid": "That name can't be used."
+        },
+        "ownerEmail": {
+          "required": "Give the owner's email.",
+          "invalid": "That email address doesn't look right."
+        },
+        "ownerLanguage": {
+          "invalid": "Choose English or Spanish."
+        }
+      }
+    },
+    "operator": {
+      "title": "Operator",
+      "back": "Operators",
+      "lead": "Company code {slug}",
+      "noAccess": "Your role doesn't include operators.",
+      "loadError": "This operator didn't load.",
+      "suspendedNote": "This operator is suspended: nobody there can use the app or the portal until it's reactivated.",
+      "setup": {
+        "title": "Finish setting it up",
+        "lead": "Two things before the owners of {name} can sign in.",
+        "created": "{name} is created, with its settings and rewards.",
+        "address": "1. Put the portal's address online",
+        "invite": "2. The owner's invite",
+        "inviteSent": "Sent to {email}. The link works for 7 days, once the address is online.",
+        "inviteFailed": "The invite email to {email} couldn't be sent. Send it again once email is working (see Health)."
+      },
+      "address": {
+        "newTab": "(opens in a new tab)",
+        "copy": "Copy",
+        "copied": "Address copied.",
+        "dns": "At Hostinger, in the DNS zone for <b>{zone}</b>: add a CNAME record named <code>{record}</code>, pointing at the target Vercel shows for the domain (usually <code>cname.vercel-dns.com</code>).",
+        "vercel": "In Vercel, in the portal's project, Settings → Domains: add <code>{host}</code>.",
+        "wait": "Wait until Vercel shows the domain as valid. The portal and the invite link work from then on.",
+        "local": "Locally there's nothing to set up: every *.localhost address reaches this computer."
+      },
+      "usage": {
+        "title": "This month ({month})",
+        "active": "People with coins",
+        "activeHint": "{people} on the roster",
+        "shoutouts": "Shout-outs",
+        "coins": "Coins earned",
+        "redemptions": "Redemptions",
+        "waiting": "Requests waiting",
+        "waitingHint": "For a GM or an owner to decide"
+      },
+      "owners": {
+        "title": "Owners ({count})",
+        "lead": "The people who sign in to this company's portal.",
+        "caption": "Owners of {name}",
+        "empty": "No owners yet",
+        "emptyLead": "Add one so somebody can sign in to the portal.",
+        "never": "Not yet",
+        "mfaOn": "On",
+        "mfaOff": "Off",
+        "noActions": "Nothing to do",
+        "columns": {
+          "owner": "Owner",
+          "state": "Status",
+          "mfa": "Two-step",
+          "signedIn": "Last sign-in",
+          "actions": "Actions"
+        },
+        "add": "Add owner",
+        "addTitle": "Add an owner",
+        "addConfirm": "Add and send invite",
+        "addNotice": "They get an email with a link to choose a password. It works for 7 days.",
+        "name": "Name",
+        "email": "Email",
+        "language": "Email language",
+        "languageHint": "The invite is written in this language.",
+        "inviteSent": "Invite sent to {email}.",
+        "addedNotSent": "Owner added, but the invite email to {email} couldn't be sent. Use Resend invite on their row.",
+        "inviteFailed": "The invite email to {email} couldn't be sent. Try again in a moment.",
+        "resend": "Resend invite",
+        "resendFor": "Resend invite to {name}",
+        "resendTitle": "Send the invite again?",
+        "resendNotice": "A new link goes out; the old one stops working.",
+        "resetMfa": "Reset two-step",
+        "resetMfaFor": "Reset two-step for {name}",
+        "resetMfaTitle": "Turn off their authenticator?",
+        "resetMfaNotice": "For a lost phone. They set it up again at their next sign-in, and their sessions end now.",
+        "resetMfaDone": "{name}'s authenticator is off.",
+        "suspend": "Suspend",
+        "suspendFor": "Suspend {name}",
+        "suspendTitle": "Suspend this owner?",
+        "suspendNotice": "They can't sign in, and their sessions end now. Nothing is deleted, and they can be reactivated.",
+        "suspendDone": "{name} is suspended.",
+        "reactivate": "Reactivate",
+        "reactivateFor": "Reactivate {name}",
+        "reactivateTitle": "Reactivate this owner?",
+        "reactivateDone": "{name} can sign in again."
+      },
+      "activity": {
+        "title": "Back office activity",
+        "lead": "The latest changes the back office made to this operator.",
+        "empty": "Nothing yet."
+      },
+      "details": {
+        "title": "Details",
+        "slug": "Company code and address",
+        "slugHint": "Fixed once created.",
+        "tz": "Time zone",
+        "numbers": "Size",
+        "numbersValue": "{stores, plural, one {# store} other {# stores}} · {people, plural, one {# person} other {# people}} · {owners, plural, one {# owner} other {# owners}}",
+        "created": "Created",
+        "activity": "Last activity",
+        "logo": "Logo",
+        "noLogo": "None",
+        "addressSteps": "How its address is set up"
+      },
+      "danger": {
+        "title": "Danger zone",
+        "activeLead": "Suspending stops everyone at this operator - the app and the portal - until it's reactivated. Nothing is deleted.",
+        "suspendedLead": "This operator is suspended. Reactivating lets everyone back in, with everything as it was.",
+        "noPermission": "Only a super admin can suspend or reactivate an operator.",
+        "suspend": {
+          "button": "Suspend operator",
+          "title": "Suspend this operator?",
+          "confirm": "Suspend",
+          "explain": "Every request from its app and portal is refused until it's reactivated. Its data stays as it is.",
+          "done": "{name} is suspended."
+        },
+        "reactivate": {
+          "button": "Reactivate operator",
+          "title": "Reactivate this operator?",
+          "confirm": "Reactivate",
+          "explain": "Its people and owners can use Crew Stars again straight away.",
+          "done": "{name} is active again."
+        }
+      },
+      "edit": {
+        "button": "Edit",
+        "title": "Edit operator",
+        "save": "Save",
+        "done": "Saved.",
+        "name": "Company name",
+        "tz": "Time zone",
+        "tzHint": "Months, the monthly reset and quiet hours run on this time.",
+        "logo": "Logo address (optional)",
+        "logoHint": "An https:// link to the logo the app shows. Leave it empty for none."
+      }
+    },
+    "staff": {
+      "title": "Staff",
+      "lead": "Who can sign in to the back office, and what their role lets them do.",
+      "noAccess": "Only super admins manage the staff.",
+      "loadError": "The staff didn't load.",
+      "heading": "Team ({count})",
+      "roles": "Super admins do everything. Support can read everything and help owners in: send invites again and reset authenticators.",
+      "caption": "Back office staff",
+      "you": "You",
+      "ownRow": "Another super admin can change your account",
+      "never": "Not yet",
+      "mfaOn": "On",
+      "mfaOff": "Off",
+      "columns": {
+        "person": "Person",
+        "role": "Role",
+        "state": "Status",
+        "mfa": "Two-step",
+        "signedIn": "Last sign-in",
+        "actions": "Actions"
+      },
+      "invite": "Invite someone",
+      "inviteTitle": "Invite to the back office",
+      "inviteConfirm": "Send invite",
+      "inviteNotice": "They get an email with a link to choose a password and set up an authenticator. It works for 7 days.",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "roleHint": "Support reads everything and helps owners in. A super admin can do everything, staff included.",
+      "language": "Email language",
+      "inviteSent": "Invite sent to {email}.",
+      "inviteFailed": "The invite email to {email} couldn't be sent. Try Resend invite in a moment.",
+      "resend": "Resend invite",
+      "resendFor": "Resend invite to {name}",
+      "resendTitle": "Send the invite again?",
+      "resendNotice": "A new link goes out; the old one stops working.",
+      "resetMfa": "Reset two-step",
+      "resetMfaFor": "Reset two-step for {name}",
+      "resetMfaTitle": "Turn off their authenticator?",
+      "resetMfaNotice": "For a lost phone. They set it up again at their next sign-in, and their sessions end now.",
+      "resetMfaDone": "{name}'s authenticator is off.",
+      "suspend": "Suspend",
+      "suspendFor": "Suspend {name}",
+      "suspendTitle": "Suspend this person?",
+      "suspendNotice": "They can't sign in to the back office, and their sessions end now.",
+      "suspendDone": "{name} is suspended.",
+      "reactivate": "Reactivate",
+      "reactivateFor": "Reactivate {name}",
+      "reactivateTitle": "Reactivate this person?",
+      "reactivateDone": "{name} can sign in again."
     }
   }
 }

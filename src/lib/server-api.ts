@@ -1,19 +1,23 @@
 import { createApiClient } from "@crewstars/api-client";
 import { cookies, headers } from "next/headers";
 
-import { ACCESS_COOKIE } from "@/lib/session";
+import { requestTarget } from "@/lib/host";
+import { jarFor } from "@/lib/session";
 import { clientIp, upstreamHeaders } from "@/lib/upstream";
 
 /**
  * Server Components and Route Handlers talk to the API directly (API_INTERNAL_URL), never
  * through the browser-facing /api proxy. Each call carries what the proxy would have added:
- * the operator (X-Tenant), the owner's access cookie as a bearer token, and the host and IP the
- * browser came from (lib/upstream.ts).
+ * the operator (X-Tenant, on an operator's host), this host's session cookie as a bearer token
+ * (the owner's, or the back office's on admin.<base>), and the host and IP the browser came
+ * from (lib/upstream.ts). The host is the request's own Host header, the one src/proxy.ts
+ * routed on, so the page and the operator it asks about always agree.
  */
 async function callContext() {
   const [cookieStore, headerStore] = await Promise.all([cookies(), headers()]);
-  const token = cookieStore.get(ACCESS_COOKIE)?.value;
-  const host = headerStore.get("x-forwarded-host") ?? headerStore.get("host");
+  const jar = jarFor(requestTarget(headerStore));
+  const token = jar ? cookieStore.get(jar.access)?.value : undefined;
+  const host = headerStore.get("host");
   return { token, forwarded: upstreamHeaders(host, clientIp(headerStore)) };
 }
 

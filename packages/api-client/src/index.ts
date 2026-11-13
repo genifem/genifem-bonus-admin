@@ -25,7 +25,8 @@ export class ApiError extends Error {
 export interface ApiClientOptions {
   /** Web server: the API address. Mobile: "https://api.stars.example.com". */
   baseUrl: string;
-  /** The operator slug, sent as X-Tenant (plan D3: the portal reads it from CREWSTARS_TENANT). */
+  /** The operator slug, sent as X-Tenant (plan D3). The app sends the company code; the portal's
+   *  server adds it itself, from the host the browser asked for (P7). */
   tenant?: () => string | null | undefined;
   /** Bearer token: the mobile app's, or the portal server's copy of its httpOnly cookie. */
   accessToken?: () => string | null | undefined | Promise<string | null | undefined>;

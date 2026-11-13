@@ -1,18 +1,24 @@
 "use client";
 
 import type { Schemas } from "@crewstars/api-client";
-import { Copy, Eye, EyeOff, KeyRound } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 
-import { Alert, Button, Field, inputClass, Label, cx, useToast } from "@/components/ui";
+import { OpenInApp, QrCode, RecoveryCodes, SecretKey } from "@/components/auth/MfaParts";
+import { PasswordInput } from "@/components/auth/PasswordInput";
+import { Alert, Button, buttonClass, Field, inputClass, Label, cx } from "@/components/ui";
 import { apiPost, ApiCallError } from "@/lib/api";
+import { forgetFragmentParam, useFragmentParam } from "@/lib/fragment";
 import { lockMinutes } from "@/lib/lockout";
 
 type OwnerAuthOut = Schemas["OwnerAuthOut"];
 type MfaSetupOut = Schemas["MfaSetupOut"];
 type MfaEnabledOut = Schemas["MfaEnabledOut"];
+
+/** The API's rule for an owner's password (CR-05): at least this long, with a number. */
+export const OWNER_PASSWORD_MIN = 8;
 
 /** Every way a sign-in can be refused for the credentials themselves reads the same, so the
  *  form never tells anyone which half was wrong. */
@@ -31,8 +37,14 @@ const START_AGAIN = new Set([
   "mfa_not_set_up",
 ]);
 
+/** How an emailed link (P7) opens the form: an invite to choose a first password, or a reset
+ *  to choose a new one. */
+export type OwnerLink = "invite" | "reset";
+
 type Step =
   | { kind: "credentials" }
+  /** A password chosen from an emailed link, the token read from its fragment. */
+  | { kind: "password" }
   /** An authenticator code (or a recovery code) for an owner with the second factor on. */
   | { kind: "mfa"; token: string }
   /** The second factor is on for the portal but this owner has not set it up yet. */
@@ -40,33 +52,59 @@ type Step =
   /** Shown once, straight after setting it up. The session is already open. */
   | { kind: "recovery"; codes: string[] };
 
-/** "JBSW Y3DP EHPK 3PXP": a key read off a screen and typed into a phone. */
-const grouped = (secret: string) => secret.match(/.{1,4}/g)?.join(" ") ?? secret;
+/** What a refused link means, in the link's own words: the API's token codes are about a
+ *  sign-in step in errors.*, so a link says them here. */
+function linkProblem(code: string, link: OwnerLink): "expired" | "used" | "invalid" | "wrongTenant" | null {
+  if (code === "token_expired") return "expired";
+  if (code === "token_used") return "used";
+  if (code === "token_invalid") return "invalid";
+  if (code === "token_wrong_tenant") return "wrongTenant";
+  // An invite for an owner who has since been switched off.
+  if (code === "account_inactive" && link === "invite") return "invalid";
+  return null;
+}
 
 /**
  * Owner sign-in (plan D8): email and password, posted through the BFF to
- * /api/v1/auth/owner/login, which keeps the tokens in httpOnly cookies.
+ * /api/v1/auth/owner/login, which keeps the tokens in httpOnly cookies. "Forgot password?"
+ * leads to /forgot (P7).
+ *
+ * With `link`, the same form is what an emailed link opens (P7): `/invite#token=…` to choose a
+ * first password, `/reset#token=…` to choose a new one. The token is read from the fragment and
+ * wiped from the address bar (lib/fragment.ts); the password is checked here against the API's
+ * rule before it is sent, and the answer is a sign-in step like any other, so the steps below
+ * follow on from it.
  *
  * With the second factor switched on (CS_OWNER_MFA_ENABLED), the API answers with a step
  * instead of a session: `mfa` asks for a code from the authenticator app (or a recovery code),
- * `mfa_setup` for one to be set up first - a key to add to the app, a code from it to prove
- * it works, then the recovery codes, shown once. The steps that finish a sign-in
+ * `mfa_setup` for one to be set up first - a QR code (or a key) to add to the app, a code from
+ * it to prove it works, then the recovery codes, shown once. The steps that finish a sign-in
  * (mfa/verify, mfa/confirm) are token calls in the BFF too, so no token reaches this page.
  *
  * A refusal shows the API's code translated (`errors.<code>`), or the generic message for a
  * code the catalog does not know. A lockout, or too many tries from one place, says how long
  * it has left (CR-07).
  */
-export function LoginForm({ next, signedOut = false }: { next: string; signedOut?: boolean }) {
+export function LoginForm({
+  next,
+  signedOut = false,
+  link,
+}: {
+  next: string;
+  signedOut?: boolean;
+  link?: OwnerLink;
+}) {
   const t = useTranslations("login");
   const te = useTranslations("errors");
   const router = useRouter();
-  const toast = useToast();
-  const passwordId = useId();
   const codeId = useId();
-  const [step, setStep] = useState<Step>({ kind: "credentials" });
-  const [showPassword, setShowPassword] = useState(false);
+  const [step, setStep] = useState<Step>(link ? { kind: "password" } : { kind: "credentials" });
+  const linkToken = useFragmentParam(link ? "token" : null);
   const [error, setError] = useState<string | null>(null);
+  /** A refused link: what happened, and the way on it offers. */
+  const [linkFailure, setLinkFailure] = useState<ReturnType<typeof linkProblem>>(null);
+  const [passwordError, setPasswordError] = useState<string | undefined>();
+  const [repeatError, setRepeatError] = useState<string | undefined>();
   const [pending, setPending] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const codeInput = useRef<HTMLInputElement>(null);
@@ -76,7 +114,7 @@ export function LoginForm({ next, signedOut = false }: { next: string; signedOut
   // the step's heading when there is something to read first.
   useEffect(() => {
     if (step.kind === "mfa") codeInput.current?.focus();
-    else if (step.kind !== "credentials") stepHeading.current?.focus();
+    else if (step.kind === "setup" || step.kind === "recovery") stepHeading.current?.focus();
   }, [step.kind]);
 
   function messageFor(err: unknown, stage: "credentials" | "code"): string {
@@ -130,6 +168,43 @@ export function LoginForm({ next, signedOut = false }: { next: string; signedOut
     }
   }
 
+  async function choosePassword(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!link || !linkToken) return;
+    const form = new FormData(event.currentTarget);
+    const password = String(form.get("password") ?? "");
+    const repeat = String(form.get("repeat") ?? "");
+    const weak = password.length < OWNER_PASSWORD_MIN || !/\d/.test(password);
+    setError(null);
+    setPasswordError(weak ? t("link.rules", { min: OWNER_PASSWORD_MIN }) : undefined);
+    setRepeatError(!weak && password !== repeat ? t("link.mismatch") : undefined);
+    if (weak || password !== repeat) {
+      const box = event.currentTarget;
+      requestAnimationFrame(() => box.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus());
+      return;
+    }
+    setPending(true);
+    try {
+      const outcome = await apiPost<OwnerAuthOut>(
+        link === "invite" ? "/auth/owner/invite/accept" : "/auth/owner/reset",
+        { token: linkToken, password },
+      );
+      // The link has done its work: the password is set.
+      forgetFragmentParam("token");
+      await follow(outcome);
+    } catch (err) {
+      const code = err instanceof ApiCallError ? err.code : "generic";
+      const problem = linkProblem(code, link);
+      if (problem) {
+        forgetFragmentParam("token");
+        setLinkFailure(problem);
+      }
+      else if (code === "password_weak") setPasswordError(t("link.rules", { min: OWNER_PASSWORD_MIN }));
+      else setError(messageFor(err, "credentials"));
+      setPending(false);
+    }
+  }
+
   async function sendCode(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (step.kind !== "mfa" && step.kind !== "setup") return;
@@ -152,26 +227,21 @@ export function LoginForm({ next, signedOut = false }: { next: string; signedOut
     } catch (err) {
       const code = err instanceof ApiCallError ? err.code : "generic";
       setError(messageFor(err, "code"));
-      if (START_AGAIN.has(code)) setStep({ kind: "credentials" });
+      if (START_AGAIN.has(code)) startOver(false);
       setPending(false);
       codeInput.current?.select();
     }
   }
 
-  function startOver() {
-    setError(null);
-    setStep({ kind: "credentials" });
+  /** Back to the email and password. From an emailed link the password is already chosen, so
+   *  that is the sign-in page. */
+  function startOver(clear = true) {
+    if (clear) setError(null);
+    if (link) router.push("/login");
+    else setStep({ kind: "credentials" });
   }
 
-  async function copy(text: string) {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast.show(t("copied"));
-    } catch {
-      // Nothing to do: the text is on screen to copy by hand.
-    }
-  }
-
+  const title = step.kind === "password" && link ? t(`link.${link}.title`) : t("title");
   const lead =
     step.kind === "mfa"
       ? t("mfa.lead")
@@ -179,11 +249,13 @@ export function LoginForm({ next, signedOut = false }: { next: string; signedOut
         ? t("setup.lead")
         : step.kind === "recovery"
           ? t("recovery.lead")
-          : t("lead");
+          : step.kind === "password" && link
+            ? t(`link.${link}.lead`)
+            : t("lead");
 
   return (
     <>
-      <h1 className="text-3xl font-black">{t("title")}</h1>
+      <h1 className="text-3xl font-black">{title}</h1>
       <p className="mt-1 text-sm text-muted">{lead}</p>
       {signedOut && step.kind === "credentials" ? (
         <Alert kind="info" className="mt-4">
@@ -203,42 +275,72 @@ export function LoginForm({ next, signedOut = false }: { next: string; signedOut
             disabled={pending}
           />
 
-          <div className="flex min-w-0 flex-col gap-1.5">
-            <Label htmlFor={passwordId}>{t("password")}</Label>
-            <div className="relative">
-              <input
-                id={passwordId}
-                name="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="current-password"
-                required
-                disabled={pending}
-                className={cx(inputClass, "pr-13")}
-              />
-              {/* A toggle with a fixed name: aria-pressed says whether the password is showing. */}
-              <button
-                type="button"
-                aria-label={t("showPassword")}
-                aria-pressed={showPassword}
-                aria-controls={passwordId}
-                onClick={() => setShowPassword((shown) => !shown)}
-                className="absolute right-1 top-1/2 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-md text-muted transition-colors duration-fast hover:bg-surface hover:text-foreground"
-              >
-                {showPassword ? (
-                  <EyeOff aria-hidden="true" className="size-5" strokeWidth={2} />
-                ) : (
-                  <Eye aria-hidden="true" className="size-5" strokeWidth={2} />
-                )}
-              </button>
-            </div>
+          <div className="flex flex-col gap-1">
+            <PasswordInput
+              label={t("password")}
+              showLabel={t("showPassword")}
+              name="password"
+              autoComplete="current-password"
+              required
+              disabled={pending}
+            />
+            <Link
+              href="/forgot"
+              className="inline-flex min-h-11 items-center self-end text-sm font-extrabold text-brand-ink underline-offset-2 hover:underline"
+            >
+              {t("forgot")}
+            </Link>
           </div>
 
           {error ? <Alert kind="error">{error}</Alert> : null}
 
-          <Button type="submit" size="form" fullWidth loading={pending} className="mt-1">
+          <Button type="submit" size="form" fullWidth loading={pending}>
             {t("submit")}
           </Button>
         </form>
+      ) : null}
+
+      {step.kind === "password" && link ? (
+        linkFailure ? (
+          <LinkRefused link={link} problem={linkFailure} />
+        ) : linkToken === null ? (
+          <div className="mt-6 flex flex-col gap-4">
+            <Alert kind="error">{t("link.noToken")}</Alert>
+            <LinkWayOn link={link} />
+          </div>
+        ) : (
+          <form onSubmit={(event) => void choosePassword(event)} className="mt-6 flex flex-col gap-4" noValidate>
+            <PasswordInput
+              label={t("link.password")}
+              showLabel={t("showPassword")}
+              name="password"
+              autoComplete="new-password"
+              onChange={() => setPasswordError(undefined)}
+              hint={passwordError ? undefined : t("link.rules", { min: OWNER_PASSWORD_MIN })}
+              error={passwordError}
+              maxLength={128}
+              required
+              disabled={pending || linkToken === undefined}
+            />
+            <PasswordInput
+              label={t("link.repeat")}
+              showLabel={t("showPassword")}
+              name="repeat"
+              autoComplete="new-password"
+              onChange={() => setRepeatError(undefined)}
+              error={repeatError}
+              maxLength={128}
+              required
+              disabled={pending || linkToken === undefined}
+            />
+
+            {error ? <Alert kind="error">{error}</Alert> : null}
+
+            <Button type="submit" size="form" fullWidth loading={pending} disabled={linkToken === undefined}>
+              {t(`link.${link}.submit`)}
+            </Button>
+          </form>
+        )
       ) : null}
 
       {step.kind === "setup" ? (
@@ -253,33 +355,17 @@ export function LoginForm({ next, signedOut = false }: { next: string; signedOut
           </h2>
           <ol className="flex list-decimal flex-col gap-3 pl-5 text-sm">
             <li>
-              <p>{t("setup.onPhone")}</p>
-              <a
-                href={step.setup.otpauth_uri}
-                className="mt-1.5 inline-flex min-h-11 items-center gap-2 font-extrabold text-brand-ink underline underline-offset-2"
-              >
-                <KeyRound aria-hidden="true" className="size-4" strokeWidth={2} />
-                {t("setup.openApp")}
-              </a>
+              <p>{t("setup.scan")}</p>
+              <div className="mt-2">
+                <QrCode uri={step.setup.otpauth_uri} label={t("setup.qrLabel")} size={180} />
+              </div>
+              <p className="mt-2">{t("setup.onPhone")}</p>
+              <OpenInApp uri={step.setup.otpauth_uri}>{t("setup.openApp")}</OpenInApp>
             </li>
             <li>
               <p>{t("setup.typeKey")}</p>
-              <div className="mt-1.5 flex flex-wrap items-center gap-2">
-                <code
-                  translate="no"
-                  className="rounded-compact bg-surface px-3 py-2 font-mono text-sm font-bold tracking-wider break-all"
-                >
-                  {grouped(step.setup.secret)}
-                </code>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="console"
-                  icon={<Copy aria-hidden="true" className="size-4" strokeWidth={2} />}
-                  onClick={() => void copy(step.setup.secret)}
-                >
-                  {t("setup.copyKey")}
-                </Button>
+              <div className="mt-1.5">
+                <SecretKey secret={step.setup.secret} copyLabel={t("setup.copyKey")} copied={t("copied")} />
               </div>
             </li>
             <li>{t("setup.enterCode")}</li>
@@ -318,7 +404,7 @@ export function LoginForm({ next, signedOut = false }: { next: string; signedOut
           <Button type="submit" size="form" fullWidth loading={pending}>
             {step.kind === "mfa" ? t("mfa.submit") : t("setup.submit")}
           </Button>
-          <Button type="button" variant="ghost" size="console" onClick={startOver} disabled={pending}>
+          <Button type="button" variant="ghost" size="console" onClick={() => startOver()} disabled={pending}>
             {t("startOver")}
           </Button>
         </form>
@@ -334,30 +420,64 @@ export function LoginForm({ next, signedOut = false }: { next: string; signedOut
           >
             {t("recovery.title")}
           </h2>
-          <ul
-            translate="no"
-            className="grid grid-cols-2 gap-2 rounded-xl bg-surface p-3 font-mono text-sm font-bold tracking-wider"
-          >
-            {step.codes.map((code) => (
-              <li key={code} className="text-center">
-                {code}
-              </li>
-            ))}
-          </ul>
-          <Button
-            type="button"
-            variant="secondary"
-            size="console"
-            icon={<Copy aria-hidden="true" className="size-4" strokeWidth={2} />}
-            onClick={() => void copy(step.codes.join("\n"))}
-          >
-            {t("recovery.copy")}
-          </Button>
+          <RecoveryCodes
+            codes={step.codes}
+            labels={{
+              copy: t("recovery.copy"),
+              download: t("recovery.download"),
+              copied: t("copied"),
+              fileName: t("recovery.fileName"),
+              fileHeading: t("recovery.fileHeading"),
+            }}
+          />
           <Button type="button" size="form" fullWidth loading={leaving} onClick={finish}>
             {t("recovery.continue")}
           </Button>
         </section>
       ) : null}
     </>
+  );
+}
+
+/** What a refused link means and the way on: sign in when it was used, ask again when a
+ *  reset link has run out. */
+function LinkRefused({
+  link,
+  problem,
+}: {
+  link: OwnerLink;
+  problem: NonNullable<ReturnType<typeof linkProblem>>;
+}) {
+  const t = useTranslations("login.link");
+  const message =
+    problem === "expired"
+      ? t(`${link}.expired`)
+      : problem === "used"
+        ? t(`${link}.used`)
+        : problem === "wrongTenant"
+          ? t("wrongTenant")
+          : t("invalid");
+  return (
+    <div className="mt-6 flex flex-col gap-4">
+      <Alert kind="error">{message}</Alert>
+      <LinkWayOn link={link} />
+    </div>
+  );
+}
+
+function LinkWayOn({ link }: { link: OwnerLink }) {
+  const t = useTranslations("login.link");
+  const linkClass = buttonClass({ variant: "secondary", size: "console" });
+  return (
+    <div className="flex flex-wrap gap-2.5">
+      <Link href="/login" className={linkClass}>
+        {t("signIn")}
+      </Link>
+      {link === "reset" ? (
+        <Link href="/forgot" className={linkClass}>
+          {t("askAgain")}
+        </Link>
+      ) : null}
+    </div>
   );
 }

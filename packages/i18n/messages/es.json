@@ -41,20 +41,51 @@
     "setup": {
       "lead": "Tu cuenta ahora pide un segundo paso al iniciar sesión: un código de una app de autenticación, como Google Authenticator, Microsoft Authenticator o 1Password.",
       "title": "Configura tu app de autenticación",
-      "onPhone": "En el teléfono que tiene tu app de autenticación, abre este enlace:",
+      "onPhone": "¿Estás en el teléfono que tiene la app? Abre este enlace:",
       "openApp": "Agregar Crew Stars a mi app de autenticación",
       "typeKey": "O agrega una cuenta a mano en la app y escribe esta clave:",
       "copyKey": "Copiar clave",
       "enterCode": "Luego escribe abajo el código de 6 dígitos que muestra la app.",
       "code": "Código de la app",
       "hint": "El código cambia cada 30 segundos. Sirve cualquiera que esté vigente.",
-      "submit": "Activar e iniciar sesión"
+      "submit": "Activar e iniciar sesión",
+      "scan": "Escanea este código con tu app de autenticación:",
+      "qrLabel": "Código QR que agrega Crew Stars a tu app de autenticación"
     },
     "recovery": {
       "lead": "La verificación en dos pasos está activada. Guarda estos códigos en un lugar seguro, lejos de tu teléfono: cada uno te deja iniciar sesión una vez si lo pierdes. No se volverán a mostrar.",
       "title": "Guarda tus códigos de recuperación",
       "copy": "Copiar códigos",
-      "continue": "Ya los guardé, continuar"
+      "continue": "Ya los guardé, continuar",
+      "download": "Descargar códigos",
+      "fileName": "codigos-de-recuperacion-crew-stars.txt",
+      "fileHeading": "Códigos de recuperación de Crew Stars. Cada uno te deja iniciar sesión una vez si pierdes tu teléfono. Guárdalos en un lugar seguro, lejos de él."
+    },
+    "forgot": "¿Olvidaste tu contraseña?",
+    "link": {
+      "password": "Contraseña nueva",
+      "repeat": "Escríbela otra vez",
+      "rules": "Al menos {min} caracteres, con al menos un número.",
+      "mismatch": "Las dos contraseñas no coinciden.",
+      "noToken": "A este enlace le falta su código. Ábrelo otra vez desde el correo o copia la dirección completa.",
+      "invalid": "Este enlace no es válido. Ábrelo otra vez desde el correo o pide uno nuevo.",
+      "wrongTenant": "Este enlace es del portal de otra empresa. Ábrelo otra vez desde el correo.",
+      "signIn": "Ir a iniciar sesión",
+      "askAgain": "Pedir un enlace nuevo",
+      "invite": {
+        "title": "Te damos la bienvenida a Crew Stars",
+        "lead": "Elige una contraseña para tu cuenta de dueño. Iniciarás sesión con ella y tu correo.",
+        "submit": "Guardar contraseña e iniciar sesión",
+        "expired": "Esta invitación venció: las invitaciones duran 7 días. Pide al soporte de Crew Stars que te envíe otra.",
+        "used": "Esta invitación ya se usó o se envió una más nueva. Inicia sesión con tu correo y contraseña."
+      },
+      "reset": {
+        "title": "Elige una contraseña nueva",
+        "lead": "Iniciarás sesión con ella y se cerrarán tus demás sesiones.",
+        "submit": "Guardar e iniciar sesión",
+        "expired": "Este enlace venció: los enlaces para restablecer duran 1 hora. Pide uno nuevo.",
+        "used": "Este enlace ya se usó. Pide uno nuevo si todavía lo necesitas."
+      }
     }
   },
   "portal": {
@@ -182,7 +213,37 @@
     "reward_not_found": "Esa recompensa ya no está. Vuelve a cargar la página para ver lo más reciente.",
     "reward_has_pending": "Todavía hay solicitudes pendientes de esta recompensa, así que no se puede eliminar. Ocúltala de la app en su lugar.",
     "unlock_invalid": "Esa insignia ya no está en la configuración. Elige otra.",
-    "awards_already_announced": "Los ganadores de este mes ya se anunciaron. La página ahora muestra quién ganó."
+    "awards_already_announced": "Los ganadores de este mes ya se anunciaron. La página ahora muestra quién ganó.",
+    "tenant_suspended": "Crew Stars está en pausa para esta empresa. Comunícate con el soporte de Crew Stars.",
+    "tenant_not_found": "No hay ninguna empresa de Crew Stars en esta dirección.",
+    "token_used": "Ese enlace ya se usó.",
+    "token_wrong_tenant": "Ese enlace es del portal de otra empresa.",
+    "token_wrong_kind": "Esa sesión es de otro lugar. Vuelve a iniciar sesión.",
+    "session_idle": "Se cerró tu sesión tras un rato sin actividad. Vuelve a iniciar sesión.",
+    "password_weak": "Esa contraseña es muy débil. Usa más caracteres, con al menos un número.",
+    "platform_permission_missing": "Tu rol no permite hacer esto. Pídeselo a un superadministrador.",
+    "platform_host_required": "Esto solo funciona en el back office.",
+    "slug_taken": "Otra empresa ya tiene esa dirección.",
+    "slug_reserved": "Esa dirección está reservada. Elige otra.",
+    "owner_exists": "Esta empresa ya tiene un dueño con ese correo.",
+    "owner_already_joined": "Este dueño ya eligió su contraseña, así que no hay invitación que enviar.",
+    "owner_suspended": "Este dueño está suspendido. Reactívalo primero.",
+    "owner_not_found": "Ese dueño ya no está. Recarga la página para ver lo más reciente.",
+    "owner_already_suspended": "Este dueño ya está suspendido. La página ya muestra su estado.",
+    "owner_not_suspended": "Este dueño no está suspendido. La página ya muestra su estado.",
+    "operator_not_found": "Esa empresa ya no existe.",
+    "operator_already_suspended": "Esta empresa ya está suspendida. La página ya muestra su estado.",
+    "operator_not_suspended": "Esta empresa no está suspendida. La página ya muestra su estado.",
+    "staff_exists": "Alguien del equipo ya tiene ese correo.",
+    "staff_self": "Pídele a otro superadministrador que lo haga en tu propia cuenta.",
+    "staff_already_joined": "Esta persona ya se unió, así que no hay invitación que enviar.",
+    "staff_suspended": "Esta persona está suspendida. Reactívala primero.",
+    "staff_not_found": "Esa persona ya no está en el equipo. Recarga la página para ver lo más reciente.",
+    "staff_already_suspended": "Esta persona ya está suspendida. La página ya muestra su estado.",
+    "staff_not_suspended": "Esta persona no está suspendida. La página ya muestra su estado.",
+    "nothing_to_change": "No cambió nada, así que no hay nada que guardar.",
+    "mfa_already_enabled": "La app de autenticación ya está configurada en esta cuenta. Vuelve a iniciar sesión.",
+    "email_invalid": "Ese correo no parece correcto."
   },
   "roster": {
     "loadError": "No pudimos cargar el personal.",
@@ -1177,6 +1238,7 @@
       "announcePlain": "<b>{actor}</b> anunció los ganadores en {store}",
       "setupComplete": "<b>{actor}</b> configuró su cuenta",
       "passwordReset": "<b>{actor}</b> restableció su contraseña",
+      "inviteAccept": "<b>{actor}</b> aceptó su invitación y eligió una contraseña",
       "mfaEnable": "<b>{actor}</b> activó la verificación en dos pasos",
       "mfaRecovery": "<b>{actor}</b> inició sesión con un código de recuperación",
       "lockout": "Se bloqueó el acceso de <b>{person}</b> por demasiadas contraseñas incorrectas",
@@ -1218,6 +1280,590 @@
       "winner": "{coins, plural, one {{shown} moneda} other {{shown} monedas}}",
       "winnerNamed": "{name}, {coins, plural, one {{shown} moneda} other {{shown} monedas}}",
       "noWinners": "Nadie calificó este mes"
+    }
+  },
+  "forgot": {
+    "title": "Restablece tu contraseña",
+    "lead": "Escribe el correo con el que inicias sesión. Te enviaremos un enlace para elegir una contraseña nueva.",
+    "email": "Correo electrónico",
+    "submit": "Enviarme un enlace",
+    "sentTitle": "Revisa tu correo",
+    "sent": "Si ese correo es de un dueño de {company}, va en camino un enlace para elegir una contraseña nueva. Dura 1 hora. Revisa la carpeta de spam si no llega en unos minutos.",
+    "sentNoName": "Si ese correo es de un dueño de aquí, va en camino un enlace para elegir una contraseña nueva. Dura 1 hora. Revisa la carpeta de spam si no llega en unos minutos.",
+    "again": "Usar otro correo",
+    "back": "Volver a iniciar sesión"
+  },
+  "findCompany": {
+    "title": "Encuentra tu empresa",
+    "lead": "Cada empresa tiene su propio portal de Crew Stars. Escribe el correo que usas como dueño y te enviaremos el enlace al tuyo.",
+    "email": "Correo electrónico",
+    "submit": "Enviarme los enlaces",
+    "sentTitle": "Revisa tu correo",
+    "sent": "Si ese correo es de un dueño, le enviamos los enlaces para iniciar sesión en el portal de su empresa. Revisa la carpeta de spam si no llega en unos minutos.",
+    "again": "Usar otro correo",
+    "crew": "Equipo, líderes de turno y gerentes: no necesitan esto. Inicien sesión con la app de Crew Stars y el código de su empresa."
+  },
+  "operatorGate": {
+    "findCompany": "Encuentra tu empresa",
+    "missing": {
+      "title": "No encontramos esta empresa",
+      "lead": "No hay ningún portal de Crew Stars en esta dirección.",
+      "help": "Revisa la dirección en tu correo. Si eres dueño, puedes pedir que te enviemos el enlace correcto."
+    },
+    "suspended": {
+      "title": "Este portal está en pausa",
+      "lead": "Crew Stars está desactivado por ahora para esta empresa. No se borró nada: todo vuelve cuando se active de nuevo.",
+      "help": "Si necesitas ayuda, comunícate con el soporte de Crew Stars."
+    }
+  },
+  "platform": {
+    "shell": {
+      "subtitle": "Back office",
+      "titleSuffix": "Back office de Crew Stars",
+      "signedInAs": "Sesión iniciada como",
+      "accountOf": "Cuenta de {name}",
+      "roles": {
+        "super_admin": "Superadministrador",
+        "support": "Soporte"
+      },
+      "nav": {
+        "label": "Back office",
+        "groups": {
+          "operations": "Operación",
+          "team": "Equipo"
+        },
+        "overview": "Resumen",
+        "operators": "Operadores",
+        "health": "Estado",
+        "audit": "Registro de auditoría",
+        "staff": "Equipo"
+      },
+      "rail": {
+        "collapse": "Contraer la barra lateral",
+        "expand": "Expandir la barra lateral"
+      }
+    },
+    "error": {
+      "title": "Esta página no cargó",
+      "lead": "Puede que Crew Stars no esté disponible por un momento. Vuelve a intentarlo; si sigue pasando, revisa Estado.",
+      "retry": "Volver a intentar"
+    },
+    "signIn": {
+      "title": "Acceso al back office",
+      "lead": "Para el equipo de Crew Stars. Inicia sesión con tu correo y contraseña, y luego con un código de tu app de autenticación.",
+      "submit": "Continuar",
+      "idle": "Se cerró tu sesión tras un rato sin actividad. Vuelve a iniciar sesión para continuar.",
+      "signedOut": "Tu sesión terminó. Vuelve a iniciar sesión para continuar.",
+      "inactive": "Esta cuenta está desactivada. Pide a un superadministrador que la vuelva a activar.",
+      "mfa": {
+        "title": "Escribe tu código",
+        "lead": "Abre tu app de autenticación y escribe el código de 6 dígitos del back office de Crew Stars.",
+        "code": "Código",
+        "hint": "¿Perdiste tu teléfono? Escribe uno de tus códigos de recuperación.",
+        "submit": "Iniciar sesión"
+      },
+      "setup": {
+        "title": "Configura tu app de autenticación",
+        "lead": "Toda cuenta del back office inicia sesión con un código de una app de autenticación, como Google Authenticator, Microsoft Authenticator o 1Password.",
+        "scan": "Escanea este código con la app:",
+        "qrLabel": "Código QR que agrega el back office de Crew Stars a tu app de autenticación",
+        "onPhone": "¿Estás en el teléfono que tiene la app? Abre este enlace:",
+        "openApp": "Agregar a mi app de autenticación",
+        "typeKey": "¿No puedes escanearlo? Agrega una cuenta a mano con esta clave:",
+        "copyKey": "Copiar clave",
+        "enterCode": "Luego escribe el código de 6 dígitos que muestra la app.",
+        "code": "Código de la app",
+        "hint": "El código cambia cada 30 segundos. Sirve cualquiera que esté vigente.",
+        "submit": "Activar y continuar"
+      },
+      "recovery": {
+        "title": "Guarda tus códigos de recuperación",
+        "lead": "Cada código te deja iniciar sesión una vez si pierdes tu teléfono. Guárdalos en un lugar seguro, lejos de él. No se volverán a mostrar.",
+        "fileName": "codigos-de-recuperacion-back-office-crew-stars.txt",
+        "fileHeading": "Códigos de recuperación del back office de Crew Stars. Cada uno te deja iniciar sesión una vez si pierdes tu teléfono. Guárdalos en un lugar seguro, lejos de él."
+      },
+      "invite": {
+        "title": "Únete al back office",
+        "lead": "Elige una contraseña para tu cuenta ({min} caracteres o más). Después configurarás una app de autenticación.",
+        "password": "Contraseña nueva",
+        "repeat": "Escríbela otra vez",
+        "rules": "Al menos {min} caracteres, con al menos un número.",
+        "mismatch": "Las dos contraseñas no coinciden.",
+        "submit": "Guardar contraseña y continuar",
+        "noToken": "A este enlace le falta su código. Ábrelo otra vez desde el correo.",
+        "expired": "Esta invitación venció: las invitaciones duran 7 días. Pide a un superadministrador que te envíe otra.",
+        "used": "Esta invitación ya se usó o se envió una más nueva. Mejor inicia sesión.",
+        "invalid": "Esta invitación ya no es válida. Pide a un superadministrador que te envíe otra.",
+        "signIn": "Ir a iniciar sesión"
+      }
+    },
+    "reason": {
+      "label": "Motivo",
+      "placeholder": "¿Por qué haces esto? Se guarda en el registro de auditoría.",
+      "hint": "Al menos {min} caracteres. Se guarda en el registro de auditoría con este cambio.",
+      "tooShort": "Explica el motivo en al menos {min} caracteres."
+    },
+    "states": {
+      "suspended": "Suspendido",
+      "locked": "Bloqueado",
+      "inviteExpired": "Invitación vencida",
+      "invited": "Invitado",
+      "active": "Activo"
+    },
+    "overview": {
+      "title": "Resumen",
+      "lead": "Todas las empresas de Crew Stars, en {month}.",
+      "newOperator": "Nuevo operador",
+      "noAccess": "Tu rol no incluye el resumen.",
+      "loadError": "El resumen no cargó.",
+      "retry": "Volver a intentar",
+      "status": {
+        "active": "Activo",
+        "suspended": "Suspendido"
+      },
+      "kpi": {
+        "label": "Crew Stars en {month}",
+        "operators": "Operadores",
+        "operatorsHint": "{active} activos · {suspended} suspendidos",
+        "people": "Personas en las nóminas",
+        "peopleHint": "Personas activas en operadores activos",
+        "shoutouts": "Reconocimientos",
+        "redemptions": "Canjes",
+        "monthHint": "Este mes, en operadores activos"
+      },
+      "health": {
+        "title": "Estado",
+        "open": "Ver estado"
+      },
+      "operators": {
+        "title": "Operadores con más actividad",
+        "all": "Todos los operadores",
+        "caption": "Operadores, primero los de actividad más reciente",
+        "empty": "Todavía no hay operadores",
+        "emptyLead": "Crea la primera empresa para darles su portal a sus dueños.",
+        "never": "Todavía no",
+        "columns": {
+          "operator": "Operador",
+          "status": "Estado",
+          "shoutouts": "Reconocimientos",
+          "activity": "Última actividad"
+        }
+      },
+      "activity": {
+        "title": "Actividad del back office",
+        "all": "Registro de auditoría",
+        "empty": "Todavía no se ha hecho nada en el back office."
+      }
+    },
+    "health": {
+      "title": "Estado",
+      "lead": "La API, sus proveedores, los respaldos y las tareas programadas.",
+      "noAccess": "Tu rol no incluye Estado.",
+      "loadError": "Estado no cargó.",
+      "checkedAt": "Revisado {when} · {env} · versión {version}",
+      "noVersion": "desconocida",
+      "status": {
+        "ok": "Todo bien",
+        "watch": "Vale la pena revisar",
+        "problem": "Requiere atención"
+      },
+      "database": "Base de datos",
+      "database_ok": "Funcionando",
+      "database_down": "Caída",
+      "latency": "Respondió en {ms} ms",
+      "email": "Correo",
+      "configured": "Configurado",
+      "notConfigured": "Sin configurar",
+      "providers": {
+        "console": "Consola (desarrollo)",
+        "brevo": "Brevo"
+      },
+      "sms": "Mensajes de texto",
+      "push": "Notificaciones push",
+      "on": "Activado",
+      "off": "Desactivado",
+      "operators": "Operadores",
+      "lastBackup": "Último respaldo",
+      "failingJobs": "Tareas con fallas",
+      "staleJobs": "Tareas atrasadas",
+      "none": "Ninguna",
+      "run": {
+        "running": "En curso",
+        "ok": "Correcto",
+        "failed": "Falló",
+        "never": "Nunca se ejecutó"
+      },
+      "jobs": {
+        "month_close": "Cierre del mes",
+        "milestone_badges": "Insignias por logros",
+        "push_outbox": "Notificaciones push",
+        "backup": "Respaldo",
+        "restore_drill": "Prueba de restauración"
+      },
+      "jobsTitle": "Tareas programadas",
+      "jobsLead": "Una tarea está atrasada cuando lleva varios turnos sin ejecutarse.",
+      "backupsTitle": "Respaldos",
+      "backupsLead": "El respaldo de cada noche y la prueba que demuestra que se puede restaurar.",
+      "columns": {
+        "job": "Tarea",
+        "status": "Estado",
+        "every": "Frecuencia",
+        "last": "Última ejecución",
+        "error": "Último error"
+      },
+      "late": "Atrasada",
+      "never": "Nunca",
+      "everyNone": "Cuando se pide",
+      "everyHours": "Cada {count, plural, one {# hora} other {# horas}}",
+      "everyMinutes": "Cada {count, plural, one {# minuto} other {# minutos}}"
+    },
+    "audit": {
+      "title": "Registro de auditoría",
+      "lead": "Todo lo que se hizo en el back office, lo más reciente primero, con el motivo de cada cambio.",
+      "heading": "Qué pasó",
+      "noAccess": "Tu rol no incluye el registro de auditoría.",
+      "loadError": "El registro de auditoría no cargó.",
+      "listLabel": "Registro de auditoría del back office",
+      "system": "Crew Stars",
+      "anOperator": "un operador",
+      "reason": "Motivo",
+      "ip": "desde {ip}",
+      "showChange": "Ver el cambio",
+      "before": "Antes",
+      "after": "Después",
+      "more": "Detalles",
+      "at": "Cuándo",
+      "requestId": "Solicitud",
+      "actions": {
+        "operator_create": "creó el operador",
+        "operator_update": "editó el operador",
+        "operator_suspend": "suspendió el operador",
+        "operator_reactivate": "reactivó el operador",
+        "owner_invite": "invitó a un dueño",
+        "owner_invite_resend": "volvió a enviar la invitación de un dueño",
+        "owner_mfa_reset": "desactivó la app de autenticación de un dueño",
+        "owner_suspend": "suspendió a un dueño",
+        "owner_reactivate": "reactivó a un dueño",
+        "staff_invite": "invitó a un colega",
+        "staff_invite_accept": "se unió al back office",
+        "staff_invite_resend": "volvió a enviar la invitación de un colega",
+        "staff_mfa_reset": "desactivó la app de autenticación de un colega",
+        "staff_suspend": "suspendió a un colega",
+        "staff_reactivate": "reactivó a un colega",
+        "auth_login": "inició sesión",
+        "auth_lockout": "quedó bloqueado tras intentos fallidos",
+        "auth_refresh_reuse": "tuvo una sesión cerrada: volvió un token antiguo",
+        "mfa_enable": "configuró su app de autenticación",
+        "mfa_recovery_used": "inició sesión con un código de recuperación",
+        "platform_denied": "intentó algo que su rol no permite",
+        "staff_create": "agregó a alguien al back office"
+      },
+      "kinds": {
+        "operator": "Operadores",
+        "owner": "Dueños",
+        "staff": "Equipo",
+        "auth": "Inicios de sesión",
+        "mfa": "Autenticación",
+        "platform_denied": "Rechazados"
+      },
+      "filters": {
+        "label": "Filtrar el registro de auditoría",
+        "apply": "Aplicar",
+        "operator": "Operador",
+        "anyOperator": "Cualquier operador",
+        "actor": "Hecho por",
+        "anyActor": "Cualquiera",
+        "kinds": "Tipo de acción",
+        "all": "Todo"
+      },
+      "empty": {
+        "all": "Todavía no hay nada en el registro.",
+        "filtered": "Nada coincide con estos filtros.",
+        "filteredLead": "Prueba otro tipo de acción u otro operador.",
+        "older": "No hay nada más antiguo.",
+        "showAll": "Ver todo"
+      },
+      "paging": "Páginas del registro de auditoría",
+      "newest": "Lo más reciente",
+      "older": "Más antiguo"
+    },
+    "operators": {
+      "title": "Operadores",
+      "lead": "Todas las empresas de Crew Stars, con las cifras de este mes.",
+      "noAccess": "Tu rol no incluye los operadores.",
+      "loadError": "Los operadores no cargaron.",
+      "caption": "Operadores ({count})",
+      "columns": {
+        "operator": "Operador",
+        "status": "Estado",
+        "stores": "Tiendas",
+        "people": "Personas",
+        "owners": "Dueños",
+        "shoutouts": "Reconocimientos del mes",
+        "activity": "Última actividad",
+        "created": "Creado"
+      },
+      "filters": {
+        "label": "Buscar operadores",
+        "apply": "Buscar",
+        "search": "Nombre o dirección",
+        "searchPlaceholder": "p. ej. acme",
+        "status": "Estado",
+        "anyStatus": "Cualquier estado"
+      },
+      "empty": {
+        "filtered": "Ningún operador coincide",
+        "filteredLead": "Prueba otro nombre o cualquier estado.",
+        "clear": "Ver todos los operadores"
+      }
+    },
+    "newOperator": {
+      "title": "Nuevo operador",
+      "lead": "Una empresa recibe su propia dirección de portal y su configuración, y su primer dueño recibe una invitación por correo.",
+      "noAccess": "Solo los superadministradores crean operadores.",
+      "slugPlaceholder": "direccion",
+      "company": {
+        "title": "Empresa",
+        "lead": "Cómo se llama, dónde vive su portal y la zona horaria de sus meses.",
+        "name": "Nombre de la empresa",
+        "slug": "Dirección",
+        "slugHint": "El portal estará en {host}. También es el código de empresa que se escribe en la app.",
+        "slugRules": "Minúsculas, números y guiones, hasta {max} caracteres, empezando y terminando con una letra o un número.",
+        "reserved": "Reservadas:",
+        "tz": "Zona horaria",
+        "tzHint": "Los meses, el reinicio mensual y las horas de silencio siguen esta hora."
+      },
+      "owner": {
+        "title": "Primer dueño",
+        "lead": "Recibe un correo para elegir una contraseña e iniciar sesión. Se pueden agregar más dueños después.",
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "emailHint": "La invitación llega aquí, y es con lo que iniciará sesión.",
+        "language": "Idioma del correo",
+        "languageHint": "La invitación se escribe en este idioma y el portal se abre en él."
+      },
+      "defaults": "La configuración y las recompensas empiezan con los valores de Crew Stars; los dueños pueden cambiarlos.",
+      "cancel": "Cancelar",
+      "submit": "Crear operador",
+      "confirm": {
+        "title": "¿Crear este operador?",
+        "subtitle": "{name} en {host}",
+        "notice": "La invitación sale hacia {email} en cuanto se cree."
+      },
+      "problems": {
+        "name": {
+          "required": "Ponle un nombre a la empresa.",
+          "tooLong": "Usa como máximo 100 caracteres en el nombre.",
+          "invalid": "Ese nombre no se puede usar."
+        },
+        "slug": {
+          "empty": "Elige una dirección.",
+          "tooLong": "Usa como máximo 32 caracteres en la dirección.",
+          "characters": "Usa solo minúsculas, números y guiones.",
+          "edges": "Empieza y termina la dirección con una letra o un número.",
+          "reserved": "Esa dirección está reservada. Elige otra.",
+          "taken": "Otra empresa ya tiene esa dirección.",
+          "invalid": "Esa dirección no se puede usar."
+        },
+        "tz": {
+          "invalid": "Elige una zona horaria."
+        },
+        "ownerName": {
+          "required": "Escribe el nombre del dueño.",
+          "tooLong": "Usa como máximo 100 caracteres en el nombre.",
+          "invalid": "Ese nombre no se puede usar."
+        },
+        "ownerEmail": {
+          "required": "Escribe el correo del dueño.",
+          "invalid": "Ese correo no parece correcto."
+        },
+        "ownerLanguage": {
+          "invalid": "Elige inglés o español."
+        }
+      }
+    },
+    "operator": {
+      "title": "Operador",
+      "back": "Operadores",
+      "lead": "Código de empresa {slug}",
+      "noAccess": "Tu rol no incluye los operadores.",
+      "loadError": "Este operador no cargó.",
+      "suspendedNote": "Este operador está suspendido: nadie ahí puede usar la app ni el portal hasta que se reactive.",
+      "setup": {
+        "title": "Termina de configurarlo",
+        "lead": "Dos cosas antes de que los dueños de {name} puedan iniciar sesión.",
+        "created": "{name} está creado, con su configuración y sus recompensas.",
+        "address": "1. Pon en línea la dirección del portal",
+        "invite": "2. La invitación del dueño",
+        "inviteSent": "Enviada a {email}. El enlace dura 7 días, una vez que la dirección esté en línea.",
+        "inviteFailed": "No se pudo enviar la invitación a {email}. Vuelve a enviarla cuando el correo funcione (revisa Estado)."
+      },
+      "address": {
+        "newTab": "(se abre en una pestaña nueva)",
+        "copy": "Copiar",
+        "copied": "Dirección copiada.",
+        "dns": "En Hostinger, en la zona DNS de <b>{zone}</b>: agrega un registro CNAME llamado <code>{record}</code> que apunte al destino que Vercel muestra para el dominio (normalmente <code>cname.vercel-dns.com</code>).",
+        "vercel": "En Vercel, en el proyecto del portal, Settings → Domains: agrega <code>{host}</code>.",
+        "wait": "Espera a que Vercel marque el dominio como válido. Desde entonces funcionan el portal y el enlace de la invitación.",
+        "local": "En local no hay nada que configurar: toda dirección *.localhost llega a esta computadora."
+      },
+      "usage": {
+        "title": "Este mes ({month})",
+        "active": "Personas con monedas",
+        "activeHint": "{people} en la nómina",
+        "shoutouts": "Reconocimientos",
+        "coins": "Monedas ganadas",
+        "redemptions": "Canjes",
+        "waiting": "Solicitudes en espera",
+        "waitingHint": "Para que un gerente o un dueño decida"
+      },
+      "owners": {
+        "title": "Dueños ({count})",
+        "lead": "Las personas que inician sesión en el portal de esta empresa.",
+        "caption": "Dueños de {name}",
+        "empty": "Todavía no hay dueños",
+        "emptyLead": "Agrega uno para que alguien pueda iniciar sesión en el portal.",
+        "never": "Todavía no",
+        "mfaOn": "Activada",
+        "mfaOff": "Desactivada",
+        "noActions": "Nada que hacer",
+        "columns": {
+          "owner": "Dueño",
+          "state": "Estado",
+          "mfa": "Dos pasos",
+          "signedIn": "Último inicio de sesión",
+          "actions": "Acciones"
+        },
+        "add": "Agregar dueño",
+        "addTitle": "Agregar un dueño",
+        "addConfirm": "Agregar y enviar invitación",
+        "addNotice": "Recibe un correo con un enlace para elegir una contraseña. Dura 7 días.",
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "language": "Idioma del correo",
+        "languageHint": "La invitación se escribe en este idioma.",
+        "inviteSent": "Invitación enviada a {email}.",
+        "addedNotSent": "Se agregó el dueño, pero no se pudo enviar la invitación a {email}. Usa Reenviar invitación en su fila.",
+        "inviteFailed": "No se pudo enviar la invitación a {email}. Vuelve a intentarlo en un momento.",
+        "resend": "Reenviar invitación",
+        "resendFor": "Reenviar invitación a {name}",
+        "resendTitle": "¿Enviar la invitación otra vez?",
+        "resendNotice": "Sale un enlace nuevo; el anterior deja de funcionar.",
+        "resetMfa": "Restablecer dos pasos",
+        "resetMfaFor": "Restablecer dos pasos de {name}",
+        "resetMfaTitle": "¿Desactivar su app de autenticación?",
+        "resetMfaNotice": "Para un teléfono perdido. La vuelve a configurar en su próximo inicio de sesión, y sus sesiones se cierran ahora.",
+        "resetMfaDone": "La app de autenticación de {name} está desactivada.",
+        "suspend": "Suspender",
+        "suspendFor": "Suspender a {name}",
+        "suspendTitle": "¿Suspender a este dueño?",
+        "suspendNotice": "No podrá iniciar sesión y sus sesiones se cierran ahora. No se borra nada y se puede reactivar.",
+        "suspendDone": "{name} está suspendido.",
+        "reactivate": "Reactivar",
+        "reactivateFor": "Reactivar a {name}",
+        "reactivateTitle": "¿Reactivar a este dueño?",
+        "reactivateDone": "{name} ya puede iniciar sesión otra vez."
+      },
+      "activity": {
+        "title": "Actividad del back office",
+        "lead": "Los últimos cambios que el back office hizo en este operador.",
+        "empty": "Todavía nada."
+      },
+      "details": {
+        "title": "Detalles",
+        "slug": "Código de empresa y dirección",
+        "slugHint": "No cambia después de crearse.",
+        "tz": "Zona horaria",
+        "numbers": "Tamaño",
+        "numbersValue": "{stores, plural, one {# tienda} other {# tiendas}} · {people, plural, one {# persona} other {# personas}} · {owners, plural, one {# dueño} other {# dueños}}",
+        "created": "Creado",
+        "activity": "Última actividad",
+        "logo": "Logo",
+        "noLogo": "Ninguno",
+        "addressSteps": "Cómo se configura su dirección"
+      },
+      "danger": {
+        "title": "Zona de riesgo",
+        "activeLead": "Suspender detiene a todos en este operador - la app y el portal - hasta que se reactive. No se borra nada.",
+        "suspendedLead": "Este operador está suspendido. Al reactivarlo, todos vuelven a entrar con todo como estaba.",
+        "noPermission": "Solo un superadministrador puede suspender o reactivar un operador.",
+        "suspend": {
+          "button": "Suspender operador",
+          "title": "¿Suspender este operador?",
+          "confirm": "Suspender",
+          "explain": "Se rechaza toda solicitud de su app y su portal hasta que se reactive. Sus datos quedan como están.",
+          "done": "{name} está suspendido."
+        },
+        "reactivate": {
+          "button": "Reactivar operador",
+          "title": "¿Reactivar este operador?",
+          "confirm": "Reactivar",
+          "explain": "Sus personas y dueños pueden volver a usar Crew Stars de inmediato.",
+          "done": "{name} está activo otra vez."
+        }
+      },
+      "edit": {
+        "button": "Editar",
+        "title": "Editar operador",
+        "save": "Guardar",
+        "done": "Guardado.",
+        "name": "Nombre de la empresa",
+        "tz": "Zona horaria",
+        "tzHint": "Los meses, el reinicio mensual y las horas de silencio siguen esta hora.",
+        "logo": "Dirección del logo (opcional)",
+        "logoHint": "Un enlace https:// al logo que muestra la app. Déjalo vacío para no usar ninguno."
+      }
+    },
+    "staff": {
+      "title": "Equipo",
+      "lead": "Quién puede iniciar sesión en el back office y qué le permite su rol.",
+      "noAccess": "Solo los superadministradores administran el equipo.",
+      "loadError": "El equipo no cargó.",
+      "heading": "Equipo ({count})",
+      "roles": "Los superadministradores pueden hacer todo. Soporte puede ver todo y ayudar a los dueños a entrar: reenviar invitaciones y restablecer apps de autenticación.",
+      "caption": "Equipo del back office",
+      "you": "Tú",
+      "ownRow": "Otro superadministrador puede cambiar tu cuenta",
+      "never": "Todavía no",
+      "mfaOn": "Activada",
+      "mfaOff": "Desactivada",
+      "columns": {
+        "person": "Persona",
+        "role": "Rol",
+        "state": "Estado",
+        "mfa": "Dos pasos",
+        "signedIn": "Último inicio de sesión",
+        "actions": "Acciones"
+      },
+      "invite": "Invitar a alguien",
+      "inviteTitle": "Invitar al back office",
+      "inviteConfirm": "Enviar invitación",
+      "inviteNotice": "Recibe un correo con un enlace para elegir una contraseña y configurar una app de autenticación. Dura 7 días.",
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "role": "Rol",
+      "roleHint": "Soporte ve todo y ayuda a los dueños a entrar. Un superadministrador puede hacer todo, incluido el equipo.",
+      "language": "Idioma del correo",
+      "inviteSent": "Invitación enviada a {email}.",
+      "inviteFailed": "No se pudo enviar la invitación a {email}. Prueba Reenviar invitación en un momento.",
+      "resend": "Reenviar invitación",
+      "resendFor": "Reenviar invitación a {name}",
+      "resendTitle": "¿Enviar la invitación otra vez?",
+      "resendNotice": "Sale un enlace nuevo; el anterior deja de funcionar.",
+      "resetMfa": "Restablecer dos pasos",
+      "resetMfaFor": "Restablecer dos pasos de {name}",
+      "resetMfaTitle": "¿Desactivar su app de autenticación?",
+      "resetMfaNotice": "Para un teléfono perdido. La vuelve a configurar en su próximo inicio de sesión, y sus sesiones se cierran ahora.",
+      "resetMfaDone": "La app de autenticación de {name} está desactivada.",
+      "suspend": "Suspender",
+      "suspendFor": "Suspender a {name}",
+      "suspendTitle": "¿Suspender a esta persona?",
+      "suspendNotice": "No podrá iniciar sesión en el back office y sus sesiones se cierran ahora.",
+      "suspendDone": "{name} está suspendido.",
+      "reactivate": "Reactivar",
+      "reactivateFor": "Reactivar a {name}",
+      "reactivateTitle": "¿Reactivar a esta persona?",
+      "reactivateDone": "{name} ya puede iniciar sesión otra vez."
     }
   }
 }

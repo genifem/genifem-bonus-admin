@@ -1,11 +1,14 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-import { clearSessionCookies } from "@/lib/session";
+import { parseHost } from "@/lib/host";
+import { clearSessionCookies, jarFor } from "@/lib/session";
 
 /** Drop the session cookies without calling the API: the sign-out button's fallback when the
- *  API cannot be reached to revoke the refresh token, so the browser is signed out either way. */
-export async function POST(): Promise<NextResponse> {
+ *  API cannot be reached to revoke the refresh token, so the browser is signed out either way.
+ *  The host says which session (an owner's, or the back office's). */
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const response = new NextResponse(null, { status: 204 });
-  clearSessionCookies(response);
+  const jar = jarFor(parseHost(request.headers.get("host")));
+  if (jar) clearSessionCookies(response, jar);
   return response;
 }

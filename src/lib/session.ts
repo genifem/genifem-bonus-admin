@@ -1,21 +1,48 @@
 import type { NextRequest, NextResponse } from "next/server";
 
+import type { HostTarget } from "@/lib/host";
 import { clientIp, upstreamHeaders } from "@/lib/upstream";
 
 /**
- * Session cookies for the owner portal.
+ * Session cookies, for the owner portal and the back office.
  *
  * Tokens never reach page scripts: the API proxy strips them out of auth responses and stores
  * them here, host-only and httpOnly. The refresh token is injected back into refresh/logout
  * calls by the proxy.
+ *
+ * Host-only means each operator's portal (acme.<base>) keeps its own owner session and the
+ * back office (admin.<base>) its own: a cookie set on one host is never sent to another (P7).
+ * The back office's cookies also have names of their own, so code that reads the wrong jar
+ * finds nothing rather than another kind of session; the API would refuse one anyway (401
+ * token_wrong_kind).
  */
-export const ACCESS_COOKIE = "cs_access";
-export const REFRESH_COOKIE = "cs_refresh";
+
+/** The two cookies one session lives in. */
+export interface CookieJar {
+  access: string;
+  refresh: string;
+}
+
+/** An owner's session, on their operator's host. */
+export const OWNER_JAR: CookieJar = { access: "cs_access", refresh: "cs_refresh" };
+/** A Crew Stars admin's session, on the back office's host. */
+export const BACK_OFFICE_JAR: CookieJar = { access: "cs_bo_access", refresh: "cs_bo_refresh" };
+
+export const ACCESS_COOKIE = OWNER_JAR.access;
+export const REFRESH_COOKIE = OWNER_JAR.refresh;
+
+/** Which session a host keeps: none on the bare domain ("Find your company" signs nobody in)
+ *  or on a host that is not ours. */
+export function jarFor(target: HostTarget): CookieJar | null {
+  if (target.kind === "operator") return OWNER_JAR;
+  if (target.kind === "platform") return BACK_OFFICE_JAR;
+  return null;
+}
 
 /**
- * The portal session's hard cap (plan NF-04: 12 hours). The browser drops the refresh cookie
- * at this age whatever the API says, so an owner signs in at least once every 12 hours; the
- * API enforces the same cap on its side.
+ * The session's hard cap (plan NF-04: 12 hours), for owners and the back office alike. The
+ * browser drops the refresh cookie at this age whatever the API says, so everyone signs in at
+ * least once every 12 hours; the API enforces the same cap on its side.
  */
 export const SESSION_MAX_AGE_S = 12 * 60 * 60;
 
@@ -35,19 +62,23 @@ function cookieOptions(maxAge: number) {
   };
 }
 
-export function setSessionCookies(response: NextResponse, tokens: IssuedTokens): void {
+export function setSessionCookies(
+  response: NextResponse,
+  tokens: IssuedTokens,
+  jar: CookieJar = OWNER_JAR,
+): void {
   response.cookies.set(
-    ACCESS_COOKIE,
+    jar.access,
     tokens.access_token,
     cookieOptions(Math.min(tokens.expires_in, SESSION_MAX_AGE_S)),
   );
   if (tokens.refresh_token) {
-    response.cookies.set(REFRESH_COOKIE, tokens.refresh_token, cookieOptions(SESSION_MAX_AGE_S));
+    response.cookies.set(jar.refresh, tokens.refresh_token, cookieOptions(SESSION_MAX_AGE_S));
   }
 }
 
-export function clearSessionCookies(response: NextResponse): void {
-  for (const name of [ACCESS_COOKIE, REFRESH_COOKIE]) {
+export function clearSessionCookies(response: NextResponse, jar: CookieJar = OWNER_JAR): void {
+  for (const name of [jar.access, jar.refresh]) {
     response.cookies.set(name, "", cookieOptions(0));
   }
 }
@@ -61,6 +92,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
  *   OwnerAuthOut               { step, tokens: TokenOut | null, mfa_token }      (owner sign-in,
  *                                                                                 MFA verify)
  *   MfaEnabledOut              { recovery_codes, auth: OwnerAuthOut }            (MFA confirm)
+ * and the back office's same three (PlatformTokenOut, PlatformAuthOut, PlatformMfaEnabledOut).
  * Returns the object that holds (or would hold) access_token, so the caller can take them out
  * of the very body that goes on to the browser.
  */
@@ -88,26 +120,35 @@ export function takeTokens(body: unknown): IssuedTokens | null {
 }
 
 /** The language saved on the owner's record wins once they sign in (NF-02). Readable by the
- *  language switcher, which writes the same cookie. */
+ *  language switcher, which writes the same cookie. A back office admin has none on record,
+ *  so their language stays the one they picked. */
 export function takeLocale(body: unknown): string | null {
   const user = tokenHolder(body)?.user;
   return isRecord(user) && typeof user.language === "string" ? user.language : null;
 }
 
-/** API errors after which the session cannot continue and its cookies go, with no refresh. */
+/** API errors after which the session cannot continue and its cookies go, with no refresh:
+ *  the back office signs out after 20 minutes without a request (P7, 401 session_idle). */
 export const SESSION_OVER_CODES: ReadonlySet<string> = new Set(["session_idle"]);
 
 export interface RefreshOutcome {
   tokens: IssuedTokens | null;
-  /** The API's reason when it refused (refresh_expired...); null otherwise. */
+  /** The API's reason when it refused (session_idle, refresh_expired...); null otherwise. */
   code: string | null;
 }
 
-/** Exchange the refresh cookie for a new pair, and say why not when the session is over. */
-export async function refreshSession(request: NextRequest, apiBase: string): Promise<RefreshOutcome> {
-  const refresh = request.cookies.get(REFRESH_COOKIE)?.value;
+/** Exchange the refresh cookie for a new pair, and say why not when the session is over. An
+ *  owner's session renews at /auth/refresh, for the operator on this host (X-Tenant); the back
+ *  office's at /auth/platform/refresh. */
+export async function refreshSession(
+  request: NextRequest,
+  apiBase: string,
+  jar: CookieJar = OWNER_JAR,
+): Promise<RefreshOutcome> {
+  const refresh = request.cookies.get(jar.refresh)?.value;
   if (!refresh) return { tokens: null, code: null };
-  const response = await fetch(new URL("/api/v1/auth/refresh", apiBase), {
+  const endpoint = jar === BACK_OFFICE_JAR ? "/api/v1/auth/platform/refresh" : "/api/v1/auth/refresh";
+  const response = await fetch(new URL(endpoint, apiBase), {
     method: "POST",
     headers: {
       "content-type": "application/json",
