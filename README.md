@@ -1,4 +1,4 @@
-# Crew Stars - owner portal and back office
+# Crew Stars - owner portal and back office 
 
 The web portal where the owners run Crew Stars: recognition across the stores, redemptions,
 and the rules (rewards, coins and limits, spins, badges and tiers, monthly awards), plus the
