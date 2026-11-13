@@ -182,6 +182,7 @@
     "owners_only": "Solo los dueños pueden hacer esto.",
     "settings_invalid": "Algunos de estos valores no están permitidos. Revisa los campos marcados.",
     "settings_busy": "Alguien más está guardando la configuración en este momento. Espera un poco y vuelve a intentarlo.",
+    "busy_try_again": "Hay muchos cambios a la vez. No se guardó nada, así que vuelve a intentarlo en un momento.",
     "validation_failed": "Hay datos que no están bien. Revisa el formulario y vuelve a intentarlo.",
     "not_found": "Ese registro ya no existe. Vuelve a cargar la página para ver lo más reciente.",
     "eid_taken": "Alguien del personal ya tiene ese ID de empleado.",

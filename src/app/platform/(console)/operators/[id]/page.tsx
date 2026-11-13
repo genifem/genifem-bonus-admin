@@ -28,6 +28,7 @@ import {
   ResendInvite,
 } from "@/components/backoffice/OperatorActions";
 import { timeZoneLabel } from "@/components/backoffice/operator-form";
+import { ownerPermissionsOf } from "@/components/backoffice/owner-actions";
 import { Ago, NoAccess, OPERATOR_TONE, ownerState, StateBadge, when } from "@/components/backoffice/parts";
 import { formatCount } from "@/components/recognition/numbers";
 import { Panel } from "@/components/recognition/Panel";
@@ -144,11 +145,8 @@ export default async function OperatorPage({ params, searchParams }: PageProps<"
   const invite = readString(query, "invite");
   const firstOwner = owners.find((owner) => owner.invited) ?? owners[0];
   const canWrite = can(admin, "operators.write");
-  const ownerPermissions = {
-    invite: can(admin, "owners.invite"),
-    mfaReset: can(admin, "owners.mfa_reset"),
-    manage: can(admin, "owners.manage"),
-  };
+  // Adding an owner is super_admin's; support can resend an invite (owner-actions.ts).
+  const ownerPermissions = ownerPermissionsOf(admin.permissions);
   const month = format.dateTime(new Date(`${operator.usage.month}-01T00:00:00Z`), {
     month: "long",
     year: "numeric",
@@ -243,7 +241,7 @@ export default async function OperatorPage({ params, searchParams }: PageProps<"
                       <MailWarning aria-hidden="true" className="mt-px size-4.5 shrink-0" strokeWidth={2.2} />
                       {t("setup.inviteFailed", { email: firstOwner.email })}
                     </p>
-                    {ownerPermissions.invite && firstOwner.invited ? (
+                    {ownerPermissions.resend && firstOwner.invited ? (
                       <ResendInvite operatorId={operator.id} owner={firstOwner} variant="primary" />
                     ) : null}
                   </div>
@@ -308,7 +306,7 @@ export default async function OperatorPage({ params, searchParams }: PageProps<"
             icon={Users}
             lead={t("owners.lead")}
             flush
-            action={ownerPermissions.invite ? <AddOwner operator={operator} /> : undefined}
+            action={ownerPermissions.add ? <AddOwner operator={operator} /> : undefined}
           >
             <DataTable
               caption={t("owners.caption", { name: operator.name })}

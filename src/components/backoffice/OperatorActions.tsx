@@ -9,6 +9,7 @@ import { Field, SelectField } from "@/components/ui";
 import { apiPatch, apiPost, ApiCallError } from "@/lib/api";
 
 import { NAME_MAX, timeZoneChoices } from "./operator-form";
+import { ownerActions, type OwnerPermissions } from "./owner-actions";
 import { ReasonAction, type ActionOutcome } from "./ReasonDialog";
 
 type OperatorDetail = Schemas["OperatorDetailOut"];
@@ -192,7 +193,7 @@ export function ResendInvite({
 }
 
 /** One owner's actions: send the invite again, turn their authenticator off (a lost phone),
- *  suspend or reactivate them - each only when it applies and the role may. */
+ *  suspend or reactivate them - each only when it applies and the role may (owner-actions.ts). */
 export function OwnerActions({
   operatorId,
   owner,
@@ -200,69 +201,69 @@ export function OwnerActions({
 }: {
   operatorId: string;
   owner: Owner;
-  permissions: { invite: boolean; mfaReset: boolean; manage: boolean };
+  permissions: OwnerPermissions;
 }) {
   const t = useTranslations("platform.operator.owners");
   const base = `/platform/operators/${operatorId}/owners/${owner.id}`;
   const subtitle = `${owner.name} · ${owner.email}`;
-  const actions: React.ReactNode[] = [];
-  if (permissions.invite && owner.invited && owner.status === "active") {
-    actions.push(<ResendInvite key="resend" operatorId={operatorId} owner={owner} />);
-  }
-  if (permissions.mfaReset && owner.mfa_enabled) {
-    actions.push(
-      <ReasonAction
-        key="mfa"
-        label={t("resetMfa")}
-        ariaLabel={t("resetMfaFor", { name: owner.name })}
-        size="xs"
-        title={t("resetMfaTitle")}
-        subtitle={subtitle}
-        confirmLabel={t("resetMfa")}
-        notice={<p className="text-sm">{t("resetMfaNotice")}</p>}
-        done={t("resetMfaDone", { name: owner.name })}
-        onConfirm={async (reason) => {
-          await apiPost(`${base}/reset-mfa`, { reason });
-        }}
-      />,
-    );
-  }
-  if (permissions.manage) {
-    actions.push(
-      owner.status === "active" ? (
-        <ReasonAction
-          key="suspend"
-          label={t("suspend")}
-          ariaLabel={t("suspendFor", { name: owner.name })}
-          size="xs"
-          variant="danger"
-          tone="danger"
-          title={t("suspendTitle")}
-          subtitle={subtitle}
-          confirmLabel={t("suspend")}
-          notice={<p className="text-sm">{t("suspendNotice")}</p>}
-          done={t("suspendDone", { name: owner.name })}
-          onConfirm={async (reason) => {
-            await apiPost(`${base}/suspend`, { reason });
-          }}
-        />
-      ) : (
-        <ReasonAction
-          key="reactivate"
-          label={t("reactivate")}
-          ariaLabel={t("reactivateFor", { name: owner.name })}
-          size="xs"
-          title={t("reactivateTitle")}
-          subtitle={subtitle}
-          confirmLabel={t("reactivate")}
-          done={t("reactivateDone", { name: owner.name })}
-          onConfirm={async (reason) => {
-            await apiPost(`${base}/reactivate`, { reason });
-          }}
-        />
-      ),
-    );
-  }
+  const actions = ownerActions(owner, permissions).map((action) => {
+    switch (action) {
+      case "resend":
+        return <ResendInvite key="resend" operatorId={operatorId} owner={owner} />;
+      case "mfaReset":
+        return (
+          <ReasonAction
+            key="mfa"
+            label={t("resetMfa")}
+            ariaLabel={t("resetMfaFor", { name: owner.name })}
+            size="xs"
+            title={t("resetMfaTitle")}
+            subtitle={subtitle}
+            confirmLabel={t("resetMfa")}
+            notice={<p className="text-sm">{t("resetMfaNotice")}</p>}
+            done={t("resetMfaDone", { name: owner.name })}
+            onConfirm={async (reason) => {
+              await apiPost(`${base}/reset-mfa`, { reason });
+            }}
+          />
+        );
+      case "suspend":
+        return (
+          <ReasonAction
+            key="suspend"
+            label={t("suspend")}
+            ariaLabel={t("suspendFor", { name: owner.name })}
+            size="xs"
+            variant="danger"
+            tone="danger"
+            title={t("suspendTitle")}
+            subtitle={subtitle}
+            confirmLabel={t("suspend")}
+            notice={<p className="text-sm">{t("suspendNotice")}</p>}
+            done={t("suspendDone", { name: owner.name })}
+            onConfirm={async (reason) => {
+              await apiPost(`${base}/suspend`, { reason });
+            }}
+          />
+        );
+      case "reactivate":
+        return (
+          <ReasonAction
+            key="reactivate"
+            label={t("reactivate")}
+            ariaLabel={t("reactivateFor", { name: owner.name })}
+            size="xs"
+            title={t("reactivateTitle")}
+            subtitle={subtitle}
+            confirmLabel={t("reactivate")}
+            done={t("reactivateDone", { name: owner.name })}
+            onConfirm={async (reason) => {
+              await apiPost(`${base}/reactivate`, { reason });
+            }}
+          />
+        );
+    }
+  });
   if (actions.length === 0) return <span className="text-caption text-muted">{t("noActions")}</span>;
   return <div className="flex flex-wrap gap-2 spread:flex-nowrap spread:justify-end">{actions}</div>;
 }

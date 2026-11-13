@@ -182,6 +182,7 @@
     "owners_only": "Only owners can do this.",
     "settings_invalid": "Some of these values aren't allowed. Check the highlighted fields.",
     "settings_busy": "Someone else is saving the settings right now. Wait a moment and try again.",
+    "busy_try_again": "Lots of changes are happening at once. Nothing was saved, so try again in a moment.",
     "validation_failed": "Some of this isn't filled in correctly. Check the form and try again.",
     "not_found": "That record isn't there any more. Reload the page to see the latest.",
     "eid_taken": "Someone on the roster already has that Employee ID.",
