@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function FindCompanyPage() {
   const [t, tBrand] = await Promise.all([getTranslations("findCompany"), getTranslations("brand")]);
   return (
-    <AuthFrame subtitle={tBrand("portal")}>
+    <AuthFrame subtitle={tBrand("portal")} variant="site">
       <EmailRequestForm
         endpoint="/public/find-company"
         labels={{

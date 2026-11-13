@@ -1350,7 +1350,7 @@
     },
     "signIn": {
       "title": "Back office sign-in",
-      "lead": "For Crew Stars staff. Sign in with your email and password, then a code from your authenticator app.",
+      "lead": "For Crew Stars staff. Sign in with your email and password. If you've set up an authenticator app, we'll ask for its code next.",
       "submit": "Continue",
       "idle": "You were signed out after a while without activity. Sign in again to carry on.",
       "signedOut": "Your session ended. Sign in again to carry on.",
@@ -1384,7 +1384,7 @@
       },
       "invite": {
         "title": "Join the back office",
-        "lead": "Choose a password for your account ({min} characters or more). Next you'll set up an authenticator app.",
+        "lead": "Choose a password for your account ({min} characters or more).",
         "password": "New password",
         "repeat": "Type it again",
         "rules": "At least {min} characters, with at least one number.",
@@ -1865,5 +1865,29 @@
       "reactivateTitle": "Reactivate this person?",
       "reactivateDone": "{name} can sign in again."
     }
+  },
+  "authPanel": {
+    "owner": {
+      "title": "Recognition that runs itself",
+      "lead": "Your crews' shout-outs, coins, rewards and monthly awards, with every rule behind them, in one place.",
+      "point1": "See recognition across every store",
+      "point2": "Set the coins, rewards and the wheel",
+      "point3": "Approve redemptions and export payroll"
+    },
+    "backoffice": {
+      "title": "Every Crew Stars company, one console",
+      "lead": "Create operators, invite their owners and keep an eye on the platform.",
+      "point1": "Create an operator and invite its first owner",
+      "point2": "Suspend or reactivate a company in one step",
+      "point3": "Health, scheduled jobs and a full audit trail"
+    },
+    "site": {
+      "title": "Sign in to your company's Crew Stars",
+      "lead": "Enter your work email and we'll send you the link to your company's portal.",
+      "point1": "Shout-outs your crew can feel",
+      "point2": "Rewards they choose for themselves",
+      "point3": "Rules the owners set"
+    },
+    "footer": "Crew Stars by Genifem"
   }
 }

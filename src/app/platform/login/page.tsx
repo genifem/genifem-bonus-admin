@@ -37,7 +37,7 @@ export default async function PlatformLoginPage({ searchParams }: PageProps<"/pl
     ) : null;
 
   return (
-    <AuthFrame subtitle={tShell("subtitle")}>
+    <AuthFrame subtitle={tShell("subtitle")} variant="backoffice">
       <PlatformSignIn next={next} notice={notice} />
     </AuthFrame>
   );

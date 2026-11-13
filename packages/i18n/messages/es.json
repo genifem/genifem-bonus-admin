@@ -1350,7 +1350,7 @@
     },
     "signIn": {
       "title": "Acceso al back office",
-      "lead": "Para el equipo de Crew Stars. Inicia sesión con tu correo y contraseña, y luego con un código de tu app de autenticación.",
+      "lead": "Para el equipo de Crew Stars. Inicia sesión con tu correo y contraseña. Si configuraste una app de autenticación, te pediremos su código después.",
       "submit": "Continuar",
       "idle": "Se cerró tu sesión tras un rato sin actividad. Vuelve a iniciar sesión para continuar.",
       "signedOut": "Tu sesión terminó. Vuelve a iniciar sesión para continuar.",
@@ -1384,7 +1384,7 @@
       },
       "invite": {
         "title": "Únete al back office",
-        "lead": "Elige una contraseña para tu cuenta ({min} caracteres o más). Después configurarás una app de autenticación.",
+        "lead": "Elige una contraseña para tu cuenta ({min} caracteres o más).",
         "password": "Contraseña nueva",
         "repeat": "Escríbela otra vez",
         "rules": "Al menos {min} caracteres, con al menos un número.",
@@ -1865,5 +1865,29 @@
       "reactivateTitle": "¿Reactivar a esta persona?",
       "reactivateDone": "{name} ya puede iniciar sesión otra vez."
     }
+  },
+  "authPanel": {
+    "owner": {
+      "title": "Reconocimiento que funciona solo",
+      "lead": "Los reconocimientos, las monedas, las recompensas y los premios del mes de tus equipos, con todas sus reglas, en un solo lugar.",
+      "point1": "Mira el reconocimiento en cada tienda",
+      "point2": "Define las monedas, las recompensas y la ruleta",
+      "point3": "Aprueba canjes y exporta la nómina"
+    },
+    "backoffice": {
+      "title": "Todas las empresas de Crew Stars en una consola",
+      "lead": "Crea operadores, invita a sus dueños y vigila la plataforma.",
+      "point1": "Crea un operador e invita a su primer dueño",
+      "point2": "Suspende o reactiva una empresa en un paso",
+      "point3": "Salud, tareas programadas y un registro de auditoría completo"
+    },
+    "site": {
+      "title": "Entra a Crew Stars de tu empresa",
+      "lead": "Escribe tu correo de trabajo y te enviaremos el enlace al portal de tu empresa.",
+      "point1": "Reconocimientos que tu equipo siente",
+      "point2": "Recompensas que ellos mismos eligen",
+      "point3": "Reglas que definen los dueños"
+    },
+    "footer": "Crew Stars, de Genifem"
   }
 }

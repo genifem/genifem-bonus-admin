@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PlatformInvitePage() {
   const t = await getTranslations("platform.shell");
   return (
-    <AuthFrame subtitle={t("subtitle")}>
+    <AuthFrame subtitle={t("subtitle")} variant="backoffice">
       <PlatformSignIn next="/" invite />
     </AuthFrame>
   );
