@@ -25,9 +25,18 @@ export const OWNER_PUBLIC_PATHS: ReadonlySet<string> = new Set([SIGN_IN, "/invit
 export const BACK_OFFICE_PUBLIC_PATHS: ReadonlySet<string> = new Set([SIGN_IN, "/invite"]);
 
 /** A same-site path to carry on to after signing in, or the overview. Never an absolute URL
- *  someone else supplied (`//evil.example` included). */
+ *  someone else supplied: not `//evil.example`, not `/\evil.example`, and not `/<tab>/evil.example`
+ *  (browsers drop tabs and line breaks inside a URL, which turns it into `//evil.example`).
+ *  The path is resolved the way a browser will and kept only if it stays on this site. */
 export function safeNext(next: string | null | undefined): string {
-  return next && next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/\\")
-    ? next
-    : "/";
+  if (!next) return "/";
+  const cleaned = next.replace(/[\t\r\n]/g, "");
+  if (!cleaned.startsWith("/") || cleaned.startsWith("//") || cleaned.startsWith("/\\")) return "/";
+  const base = "http://same-site.invalid";
+  try {
+    const url = new URL(cleaned, base);
+    return url.origin === base ? `${url.pathname}${url.search}${url.hash}` : "/";
+  } catch {
+    return "/";
+  }
 }

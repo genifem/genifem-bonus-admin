@@ -84,7 +84,8 @@ function serveFrom(request: NextRequest, folder: string): NextResponse {
 
 export const config = {
   matcher: [
-    // Everything except the API proxy, Next internals and public files.
-    "/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|manifest.webmanifest|.*\\.(?:png|svg|jpg|jpeg|webp|ico|txt)$).*)",
+    // Everything except the API proxy, Next internals and files at the root (the app icon).
+    // Only the root: `/platform/x.png` must still meet the host guard and the session gate.
+    "/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|manifest.webmanifest|[^/]+\\.(?:png|svg|jpg|jpeg|webp|ico|txt)$).*)",
   ],
 };

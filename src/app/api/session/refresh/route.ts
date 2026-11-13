@@ -17,8 +17,9 @@ import { apiBase } from "@/lib/server-api";
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const destination = safeNext(request.nextUrl.searchParams.get("next"));
-  // Redirect against the host the browser used, not the address the server was reached on.
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  // Redirect against the host the browser used (the same Host header the proxy routed on),
+  // falling back to the forwarded one only when there is none.
+  const host = request.headers.get("host") ?? request.headers.get("x-forwarded-host");
   const proto = request.headers.get("x-forwarded-proto") ?? request.nextUrl.protocol.replace(":", "");
   const base = host ? `${proto}://${host}` : request.url;
 
